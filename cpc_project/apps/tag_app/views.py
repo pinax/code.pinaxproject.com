@@ -4,7 +4,6 @@ from django.template import RequestContext
 from blog.models import Post
 from tagging.models import Tag, TaggedItem
 from photos.models import Image
-from bookmarks.models import BookmarkInstance
 from projects.models import Project, Task
 from projects.models import Topic as ProjectTopic
 
@@ -19,7 +18,6 @@ def tags(request, tag, template_name='tags/index.html'):
     alltags = TaggedItem.objects.get_by_model(Post, tag).filter(status=2)
     
     phototags = TaggedItem.objects.get_by_model(Image, tag)
-    bookmarktags = TaggedItem.objects.get_by_model(BookmarkInstance, tag)
     
     project_tags = TaggedItem.objects.get_by_model(Project, tag).filter(deleted=False)
     project_topic_tags = TaggedItem.objects.get_by_model(ProjectTopic, tag).filter(project__deleted=False)
@@ -35,7 +33,6 @@ def tags(request, tag, template_name='tags/index.html'):
         'tag': tag,
         'alltags': alltags,
         'phototags': phototags,
-        'bookmarktags': bookmarktags,
         'project_tags': project_tags,
         'project_topic_tags': project_topic_tags,
         'project_task_tags': project_task_tags,
