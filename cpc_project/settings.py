@@ -75,12 +75,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_openid.consumer.SessionConsumer',
+    'intranet_account.middleware.LocaleMiddleware',
+    'intranet_account.middleware.AuthenticatedMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'pagination.middleware.PaginationMiddleware',
 )
 
-#ROOT_URLCONF = 'code.pinaxproject.com.urls'
-ROOT_URLCONF = 'cpc_project.urls'
+ROOT_URLCONF = 'code.pinaxproject.com.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), "templates"),
@@ -96,8 +97,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
+    "intranet_account.context_processors.openid",
+    "intranet_account.context_processors.account",
     "misc.context_processors.contact_email",
     "misc.context_processors.site_name",
 )
@@ -120,6 +121,7 @@ INSTALLED_APPS = (
     'pagination',
     'timezones',
     'ajax_validation',
+    'bookmarks',
     'avatar',
     'tagging',
     'threadedcomments',
@@ -128,7 +130,7 @@ INSTALLED_APPS = (
     
     # internal (for now)
     'basic_profiles',
-    'account',
+    'intranet_account',
     'misc',
     #'pastebin',
     #'quickbar',
@@ -157,8 +159,6 @@ LOGIN_REDIRECT_URLNAME = "home"
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
-
-
 try:
     from local_settings import *
 except ImportError:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
 __about__ = """
-This is the cpc_project for maintaining the Pinax project
+This is mostly just a test project at the moment, but is derived from a
+project designed for intranet use.
 """
