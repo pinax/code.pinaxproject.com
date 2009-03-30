@@ -156,6 +156,8 @@ SITE_NAME = "Pinax"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "home"
 
+WIKI_REQUIRES_LOGIN = True
+
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
