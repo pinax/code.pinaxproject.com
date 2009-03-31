@@ -14,7 +14,7 @@ wikiword_pattern = re.compile('^' + WIKI_WORD_RE + '$')
 
 class ArticleForm(forms.ModelForm):
 
-    summary = forms.CharField(widget=forms.Textarea)
+    summary = forms.CharField(widget=forms.Textarea,help_text="Limited to 150 characters")
 
     comment = forms.CharField(required=False)
     user_ip = forms.CharField(widget=forms.HiddenInput)

@@ -43,10 +43,12 @@ except AttributeError:
 class Article(models.Model):
     """ A wiki page.
     """
-    title = models.CharField(_(u"Title"), max_length=50)
+    title = models.CharField(_(u"Title"), max_length=50, help_text="Limited to 50 characters")
     content = models.TextField(_(u"Content"))
-    summary = models.CharField(_(u"Summary"), max_length=150,
-                               null=True, blank=True)
+    summary = models.CharField(_(u"Summary"), help_text="Limited to 150 characters", 
+                                max_length=150,
+                               null=True,
+                               blank=True)
     markup = models.CharField(_(u"Content Markup"), max_length=3,
                               choices=markup_choices,
                               null=True, blank=True)
