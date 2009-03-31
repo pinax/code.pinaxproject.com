@@ -1,6 +1,7 @@
 {% extends "tasks/base.html" %}
 
 {% load i18n %}
+{% load uni_form %}
 
 {% block head_title %}Add Task{% endblock %}
 
@@ -8,11 +9,12 @@
     <h1>Add Task</h1>
     
     {% if is_member %}
-        <form action="" method="POST">
-            <table>
-                {{ task_form }}
-                <tr><td></td><td><input type="submit" value="{% trans 'add task' %}"/></td></tr>
-            </table>
+		<form method="POST" action="" id="task_form" class="uniForm">    
+                {{ task_form|as_uni_form }}
+
+                <div class="form_block">
+                    <input type="submit" class="primaryAction" value="{% trans 'add task' %}"/>
+                </div>                
         </form>
     {% else %}
         <p>{% trans 'You are not a member and so cannot add a task.' %}</p>

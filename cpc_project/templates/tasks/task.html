@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load tasks_tags %}
 {% load comments_tag %}
+{% load uni_form %}
 
 {% block head_title %}{{ task.summary }}{% endblock %}
 
@@ -16,11 +17,14 @@
     {% if is_member %}
         <h2>Edit</h2>
         
-        <form action="" method="POST">
-            <table>
-                {{ form }}
-                <tr><td></td><td><input type="submit" value="{% trans "Update Task" %}" /></td></tr>
-            </table>
+		<form method="POST" action="" id="task_form" class="uniForm"> 
+  		    
+                {{ form|as_uni_form }}
+                
+                <div class="form_block">
+                    <input type="submit" value="{% trans "Update Task" %}" />
+                </div>
+
         </form>
     {% endif %}
     
