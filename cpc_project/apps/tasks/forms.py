@@ -12,7 +12,7 @@ class TaskForm(forms.ModelForm):
     def __init__(self, group, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
-        # self.fields["assignee"].queryset = self.fields["assignee"].queryset.filter(project=project)
+        self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')
     
     class Meta:
         model = Task
@@ -27,6 +27,7 @@ class EditTaskForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(EditTaskForm, self).__init__(*args, **kwargs)
+        self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')        
         
         self.fields.keyOrder = ["tags", "status", "assignee", "state"]
         
