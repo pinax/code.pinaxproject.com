@@ -30,10 +30,11 @@ class EditTaskForm(forms.ModelForm):
         super(EditTaskForm, self).__init__(*args, **kwargs)
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')        
         
-        self.fields.keyOrder = ["tags", "status", "assignee", "state"]
+        self.fields.keyOrder = ["tags", "status", "assignee", "state", "resolution"]
         
         if self.instance.assignee != user:
             del self.fields["status"]
+            
         
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
         # self.fields["assignee"].queryset = self.fields["assignee"].queryset.filter(project=project)
@@ -43,5 +44,5 @@ class EditTaskForm(forms.ModelForm):
         
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))
     
-    class Meta(TaskForm.Meta):
-        fields = ('status', 'assignee', 'state', 'tags')
+    class Meta(TaskForm.Meta):     
+        fields = ('status', 'assignee', 'state', 'tags', 'resolution')
