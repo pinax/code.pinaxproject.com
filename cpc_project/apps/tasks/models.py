@@ -36,7 +36,8 @@ class Task(models.Model):
     
     
     RESOLUTION_CHOICES = (
-        ('1', 'Resolved'),    
+        ('0', 'Not yet resolved'),        
+        ('1', 'Fixed'),    
         ('2', 'Duplicate'),
         ('3', 'Already done - We have fixed this'),
         ('4', 'No longer relevant - Done in a previous release'),
@@ -64,7 +65,7 @@ class Task(models.Model):
     # status is a short message the assignee can give on their current status
     status = models.CharField(_('status'), max_length=100, blank=True)
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
-    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, default=1, blank=True)
+    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, default=0, blank=True)
     
     def __unicode__(self):
         return self.summary
