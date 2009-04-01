@@ -24,19 +24,19 @@ except ImproperlyConfigured:
 
 def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
     group = None # get_object_or_404(Project, slug=slug)
-    
+
     # @@@ if group.deleted:
     # @@@     raise Http404
-    
+
     is_member = True # @@@ groups.has_member(request.user)
-    
+
     group_by = request.GET.get("group_by")
-    
+
     if group:
         tasks = group.tasks.all() # @@@ assumes GR
     else:
         tasks = Task.objects.filter(object_id__isnull=True)
-    
+
     return render_to_response(template_name, {
         "group": group,
         "tasks": tasks,
@@ -47,17 +47,17 @@ def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
 
 def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks/add.html"):
     group = None # get_object_or_404(Project, slug=slug)
-    
+
     # @@@ if group.deleted:
     # @@@     raise Http404
-    
+
     if group:
         notify_list = group.member_users.all() # @@@
     else:
         notify_list = User.objects.all()
-    
+
     is_member = True # @@@ groups.has_member(request.user)
-    
+
     if request.user.is_authenticated() and request.method == "POST":
         task_form = form_class(group, request.POST)
         if task_form.is_valid():
@@ -72,7 +72,7 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
             return HttpResponseRedirect(reverse("task_list"))
     else:
         task_form = form_class(group=group)
-    
+
     return render_to_response(template_name, {
         "group": group,
         "is_member": is_member,
@@ -83,17 +83,17 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
 def task(request, id, template_name="tasks/task.html"):
     task = get_object_or_404(Task, id=id)
     group = task.group
-    
+
     # @@@ if group.deleted:
     # @@@     raise Http404
-    
+
     if group:
         notify_list = group.member_users.all() # @@@
     else:
         notify_list = User.objects.all()
-    
-    is_member = True # @@@ groups.has_member(request.user)
-    
+
+    is_member = request.user.is_authenticated() # @@@ groups.has_member(request.user)
+
     if is_member and request.method == "POST":
         form = EditTaskForm(request.user, request.POST, instance=task)
         if form.is_valid():
@@ -117,7 +117,7 @@ def task(request, id, template_name="tasks/task.html"):
             form = EditTaskForm(request.user, instance=task)
     else:
         form = EditTaskForm(request.user, instance=task)
-    
+
     return render_to_response(template_name, {
         "task": task,
         "is_member": is_member,
@@ -130,16 +130,16 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     other_user = get_object_or_404(User, username=username)
     assigned_tasks = other_user.assigned_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
     created_tasks = other_user.created_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
-    
+
     url = reverse("tasks_mini_list")
-    
+
     bookmarklet = """javascript:(
             function() {
                 url = '%s';
                 window.open(url, 'tasklist', 'height=500, width=250, title=no, location=no, scrollbars=yes, menubars=no, navigation=no, statusbar=no, directories=no, resizable=yes, status=no, toolbar=no, menuBar=no');
             }
         )()""" % url
-    
+
     return render_to_response(template_name, {
         "assigned_tasks": assigned_tasks,
         "created_tasks": created_tasks,
@@ -158,19 +158,19 @@ def mini_list(request, template_name="tasks/mini_list.html"):
 
 def focus(request, field, value, group_slug=None, template_name="tasks/focus.html"):
     group = None # get_object_or_404(Project, slug=slug)
-    
+
     # @@@ if group.deleted:
     # @@@     raise Http404
-    
+
     is_member = True # @@@ groups.has_member(request.user)
-    
+
     group_by = request.GET.get("group_by")
-    
+
     if group:
         qs = group.tasks.all()
     else:
         qs = Task.objects.filter(object_id__isnull=True)
-    
+
     if field == "modified":
         try:
             # @@@ this seems hackish and brittle but I couldn't work out another way
@@ -200,7 +200,7 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
             tasks = Task.objects.none() # @@@ or throw 404?
     else:
         tasks = qs
-        
+
     return render_to_response(template_name, {
         "group": group,
         "tasks": tasks,
