@@ -13,6 +13,7 @@ class TaskForm(forms.ModelForm):
         super(TaskForm, self).__init__(*args, **kwargs)
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')
+        self.fields['summary'].widget.attrs["size"] = 65
     
     class Meta:
         model = Task
