@@ -33,6 +33,17 @@ class Task(models.Model):
         ('2', 'resolved'), # the assignee thinks it's done
         ('3', 'closed'), # the creator has confirmed it's done
     )
+    
+    
+    RESOLUTION_CHOICES = (
+        ('1', 'Resolved'),    
+        ('2', 'Duplicate'),
+        ('3', 'Already done - We have fixed this'),
+        ('4', 'No longer relevant - Done in a previous release'),
+        ('5', "Wontfix - Bugs we aren't going to fix"),
+        ('6', 'Invalid - bad ticket entry')
+    )
+    
     REVERSE_STATE_CHOICES = dict((item[1], item[0]) for item in STATE_CHOICES)
     
     content_type = models.ForeignKey(ContentType, null=True)
@@ -53,6 +64,7 @@ class Task(models.Model):
     # status is a short message the assignee can give on their current status
     status = models.CharField(_('status'), max_length=100, blank=True)
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
+    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, default=1, blank=True)
     
     def __unicode__(self):
         return self.summary
