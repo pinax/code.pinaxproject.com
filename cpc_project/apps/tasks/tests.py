@@ -16,7 +16,8 @@ class AnonymousTaskTest(TestCase):
         """Anonymous users should not edit tasks"""
         response = self.client.get('/tasks/task/1/')
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(response.content.find('<h2>Edit</h2>'), -1)
+        self.failUnless(response.content.find('<h2>Edit</h2>') == -1,
+            'Anonymous user is able to edit tasks.')
 
 
 class AuthenticatedTaskTest(TestCase):
@@ -33,5 +34,6 @@ class AuthenticatedTaskTest(TestCase):
         self.client.login(username='admin', password='test')
         response = self.client.get('/tasks/task/1/')
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(response.content.find('<h2>Edit</h2>') != -1)
+        self.failUnless(response.content.find('<h2>Edit</h2>') != -1,
+            'Authenticated users cannot edit tasks.')
         self.client.logout()
