@@ -11,10 +11,79 @@
     
     <h2>{% trans "Edit Article" %} {{ article.title }}</h2>
     
-    <form action="" method="post">
-        <table>
-            {{ form }}
-            <tr><td></td><td><input type="submit" value="{% trans "Save Article" %}" /></td></tr>
-        </table>
+    <form action="" class="uniForm" method="post">
+        {% if form.non_field_errors %}
+            <div id="errorMsg">
+                  <ul>
+                    {{ form.non_field_errors|unordered_list }}
+                 </ul>
+            </div>
+            {% endif %}
+            {% for field in form %}
+                {% if field.is_hidden %}
+                    {{ field }}
+                {% else %}
+                    <div id="div_{{ field.auto_id }}" class="ctrlHolder {% if field.errors %}error{% endif %}">
+                        {% for error in field.errors %}
+                            <p id="error_{{ field.auto_id }}" class="errorField">
+                                <strong>{{ error }}</strong>
+                            </p>
+                        {% endfor %}
+                        {% if field.label %}
+                            <label for="{{ field.auto_id }}">
+                                {% if field.field.required %}*{% endif %}
+                                {{ field.label }}
+                            </label>
+                        {% endif %}
+                        {{ field }}
+                        {% ifequal field.auto_id "id_summary"  %}
+                            <p id="hint_{{ field.auto_id }}" class="formHint">
+                                <span id="chars_left"></span> {% trans "chars left." %}
+                            </p>
+                            
+                        {% endifequal %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+           <input type="submit" value="{% trans "Save Article" %}" />
     </form>
+{% endblock %}
+
+
+{% block extra_body %}
+    <script>
+        $(document).ready(function() {
+            function update_chars_left() {
+                var max_len = 150;
+                var textarea = $('#id_summary')[0];
+                var tweet_len = textarea.value.length;
+                if (tweet_len >= max_len) {
+                    textarea.value = textarea.value.substring(0, max_len); // truncate
+                    $('#chars_left').html("0");
+                } else {
+                    $('#chars_left').html(max_len - tweet_len);
+                }
+            }
+            $('#id_summary').keyup(function() {
+                update_chars_left();
+            });
+            update_chars_left();
+            $('#id_summary').focus();
+            {% if reply %}
+            var offset = {{ reply|length }} + 2;
+            var textarea = $('#id_summary')[0];
+            if (textarea.setSelectionRange) { // Safari, Firefox
+                textarea.setSelectionRange(offset, offset);
+            } else if (textarea.createTextRange) { // IE
+                var range = textarea.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', offset);
+                range.moveStart('character', offset);
+                range.select();
+            }
+            {% endif %}
+        });
+    </script>
+    
+    
 {% endblock %}
