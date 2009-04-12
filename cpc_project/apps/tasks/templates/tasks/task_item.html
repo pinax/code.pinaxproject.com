@@ -20,7 +20,10 @@
     </div>
     <div class="bulk">
         <h2 class="task_{{ task.get_state_display }}">#{{ task.id }}: <a href="{{ task.get_absolute_url }}">{{ task.summary }}</a></h2>
-        <div class="body">{{ task.detail|urlize|linebreaks }}</div>
+        <div class="body">
+            <p><a href="{% url tasks_history task.id %}">history</a></p>
+            {{ task.detail|urlize|linebreaks }}
+        </div>
         <div class="task-meta2">
             {% get_comment_count for task as comment_count %}
             {% if comment_count %}

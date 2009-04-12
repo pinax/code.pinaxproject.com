@@ -20,32 +20,37 @@ else:
     notification = None
 
 
+STATE_CHOICES = (
+    ('1', 'open'),
+    ('4', 'in progress'), # the assignee is working on it
+    ('5', 'discussion needed'), # discussion needed before work can proceed
+    ('6', 'blocked'), # blocked on something or someone (other than discussion)
+    ('2', 'resolved'), # the assignee thinks it's done
+    ('3', 'closed'), # the creator has confirmed it's done
+)
+
+
+RESOLUTION_CHOICES = (
+    ('0', 'Not yet resolved'),        
+    ('1', 'Fixed'),    
+    ('2', 'Duplicate'),
+    ('3', 'Already done - We have fixed this'),
+    ('4', 'No longer relevant - Done in a previous release'),
+    ('5', "Wontfix - Bugs we aren't going to fix"),
+    ('6', 'Invalid - bad ticket entry')
+)
+
+REVERSE_STATE_CHOICES = dict((item[1], item[0]) for item in STATE_CHOICES)
+
+
 class Task(models.Model):
     """
     a task to be performed.
-    """
+    """    
     
-    STATE_CHOICES = (
-        ('1', 'open'),
-        ('4', 'in progress'), # the assignee is working on it
-        ('5', 'discussion needed'), # discussion needed before work can proceed
-        ('6', 'blocked'), # blocked on something or someone (other than discussion)
-        ('2', 'resolved'), # the assignee thinks it's done
-        ('3', 'closed'), # the creator has confirmed it's done
-    )
-    
-    
-    RESOLUTION_CHOICES = (
-        ('0', 'Not yet resolved'),        
-        ('1', 'Fixed'),    
-        ('2', 'Duplicate'),
-        ('3', 'Already done - We have fixed this'),
-        ('4', 'No longer relevant - Done in a previous release'),
-        ('5', "Wontfix - Bugs we aren't going to fix"),
-        ('6', 'Invalid - bad ticket entry')
-    )
-    
-    REVERSE_STATE_CHOICES = dict((item[1], item[0]) for item in STATE_CHOICES)
+    STATE_CHOICES = STATE_CHOICES
+    RESOLUTION_CHOICES = RESOLUTION_CHOICES
+    REVERSE_STATE_CHOICES = REVERSE_STATE_CHOICES
     
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
@@ -73,6 +78,17 @@ class Task(models.Model):
     def save(self, force_insert=False, force_update=False):
         self.modified = datetime.now()
         super(Task, self).save(force_insert, force_update)
+        
+        th = TaskHistory()
+        th.task = self
+
+        fields = ('summary','detail','creator','created','assignee','tags','status','state','resolution')
+        for field in fields:
+            value = getattr(self,field)
+            setattr(th,field,value)
+        
+        th.save()        
+        
     
     def allowable_states(self, user):
         """
@@ -120,8 +136,6 @@ class Task(models.Model):
         return ("task_detail", [self.pk])
 
 
-
-
 from threadedcomments.models import ThreadedComment
 def new_comment(sender, instance, **kwargs):
     if isinstance(instance.content_object, Task):
@@ -140,3 +154,43 @@ def new_comment(sender, instance, **kwargs):
                 "user": instance.user, "task": task, "comment": instance, "group": group,
             })
 models.signals.post_save.connect(new_comment, sender=ThreadedComment)
+
+class TaskHistory(models.Model):
+    STATE_CHOICES = STATE_CHOICES
+    RESOLUTION_CHOICES = RESOLUTION_CHOICES
+    REVERSE_STATE_CHOICES = REVERSE_STATE_CHOICES
+
+    task = models.ForeignKey(Task, related_name="history_task", verbose_name=_('tasks'))
+
+    # stock task fields.
+    # did not subclass because oddly that did not work. WTF?
+    # TODO: fix subclass
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    group = generic.GenericForeignKey("content_type", "object_id")
+    summary = models.CharField(_('summary'), max_length=100)
+    detail = models.TextField(_('detail'), blank=True)
+    creator = models.ForeignKey(User, related_name="history_created_tasks", verbose_name=_('creator'))
+    created = models.DateTimeField(_('created'), default=datetime.now)
+    modified = models.DateTimeField(_('modified'), default=datetime.now) # task modified when commented on or when various fields changed
+    assignee = models.ForeignKey(User, related_name="history_assigned_tasks", verbose_name=_('assignee'), null=True, blank=True)
+    
+    tags = TagField()
+    
+    # status is a short message the assignee can give on their current status
+    status = models.CharField(_('status'), max_length=100, blank=True)
+    state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
+    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, default=0, blank=True)
+    
+    def __unicode__(self):
+        return 'for ' + str(self.task)
+    
+    def save(self, force_insert=False, force_update=False):
+        self.modified = datetime.now()
+        super(TaskHistory, self).save(force_insert, force_update)
+    
+
+class Nudge(models.Model):
+    
+    nudger = models.ForeignKey(User, related_name="nudger", verbose_name=_('nudger'))
+    nudged = models.ForeignKey(User, related_name="nudged", verbose_name=_('nudged'))    

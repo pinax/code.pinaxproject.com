@@ -28,3 +28,10 @@ def task_tags(obj):
     return {
         "tags": tags,
     }
+
+
+@register.filter
+def simple_linebreak(text):
+    # TODO: replace with better tooltip feature or detail page
+    return '<br />'.join(text.splitlines())
+    

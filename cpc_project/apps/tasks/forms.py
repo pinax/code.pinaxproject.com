@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models import get_app
 from django.contrib.auth.models import User
 
-from tasks.models import Task
+from tasks.models import Task, TaskHistory
 
 
 class TaskForm(forms.ModelForm):
@@ -14,6 +14,11 @@ class TaskForm(forms.ModelForm):
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')
         self.fields['summary'].widget.attrs["size"] = 65
+        
+    def save(self, commit=True):
+        #t - 
+
+        return super(TaskForm, self).save(commit)        
     
     class Meta:
         model = Task
@@ -30,7 +35,7 @@ class EditTaskForm(forms.ModelForm):
         super(EditTaskForm, self).__init__(*args, **kwargs)
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')        
         
-        self.fields.keyOrder = ["tags", "status", "assignee", "state", "resolution"]
+        self.fields.keyOrder = ["summary","tags", "status", "assignee", "state", "resolution"]
         
         if self.instance.assignee != user:
             del self.fields["status"]
@@ -45,4 +50,4 @@ class EditTaskForm(forms.ModelForm):
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))
     
     class Meta(TaskForm.Meta):     
-        fields = ('status', 'assignee', 'state', 'tags', 'resolution')
+        fields = ('summary','status', 'assignee', 'state', 'tags', 'resolution')

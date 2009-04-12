@@ -209,3 +209,13 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
         "group_by": group_by,
         "is_member": is_member,
     }, context_instance=RequestContext(request))
+
+
+def tasks_history(request, id, template_name="tasks/task_history.html"):
+    task = get_object_or_404(Task, id=id)
+    task_history = task.history_task.all()
+    return render_to_response(template_name, {
+        "task": task,
+        "task_history": task_history
+    
+    }, context_instance=RequestContext(request))
