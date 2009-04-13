@@ -81,14 +81,13 @@ class Task(models.Model):
         
         th = TaskHistory()
         th.task = self
-
-        fields = ('summary','detail','creator','created','assignee','tags','status','state','resolution')
+        
+        fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'tags', 'status', 'state', 'resolution')
         for field in fields:
-            value = getattr(self,field)
-            setattr(th,field,value)
+            value = getattr(self, field)
+            setattr(th, field, value)
         
-        th.save()        
-        
+        th.save()
     
     def allowable_states(self, user):
         """
