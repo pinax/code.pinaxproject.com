@@ -52,8 +52,8 @@ class Task(models.Model):
     RESOLUTION_CHOICES = RESOLUTION_CHOICES
     REVERSE_STATE_CHOICES = REVERSE_STATE_CHOICES
     
-    content_type = models.ForeignKey(ContentType, null=True)
-    object_id = models.PositiveIntegerField(null=True)
+    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
     group = generic.GenericForeignKey("content_type", "object_id")
     
     # @@@ project = models.ForeignKey(Project, related_name="tasks", verbose_name=_('project'))
