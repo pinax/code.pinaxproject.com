@@ -158,9 +158,9 @@ class TaskHistory(models.Model):
     STATE_CHOICES = STATE_CHOICES
     RESOLUTION_CHOICES = RESOLUTION_CHOICES
     REVERSE_STATE_CHOICES = REVERSE_STATE_CHOICES
-
+    
     task = models.ForeignKey(Task, related_name="history_task", verbose_name=_('tasks'))
-
+    
     # stock task fields.
     # did not subclass because oddly that did not work. WTF?
     # TODO: fix subclass
@@ -187,9 +187,9 @@ class TaskHistory(models.Model):
     def save(self, force_insert=False, force_update=False):
         self.modified = datetime.now()
         super(TaskHistory, self).save(force_insert, force_update)
-    
+
 
 class Nudge(models.Model):
     
     nudger = models.ForeignKey(User, related_name="nudger", verbose_name=_('nudger'))
-    nudged = models.ForeignKey(User, related_name="nudged", verbose_name=_('nudged'))    
+    nudged = models.ForeignKey(User, related_name="nudged", verbose_name=_('nudged'))
