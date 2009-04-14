@@ -13,7 +13,9 @@ from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
 
-from tasks.models import Task, STATE_CHOICES, RESOLUTION_CHOICES
+from tasks.models import (Task, STATE_CHOICES, RESOLUTION_CHOICES, 
+                            STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
+
 from tasks.forms import TaskForm, EditTaskForm
 
 try:
@@ -210,22 +212,13 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
         "is_member": is_member,
     }, context_instance=RequestContext(request))
 
-# maybe replace this with something lighter?
-# 
-def tuples_to_dict(tupel):
-    results = {}
-    for element in tupel:
-        results[element[0]] = element[1]
-    return results
 
 def tasks_history(request, id, template_name="tasks/task_history.html"):
     task = get_object_or_404(Task, id=id)
     task_history = task.history_task.all()
-    state_choices = tuples_to_dict(STATE_CHOICES)
-    resolution_choices = tuples_to_dict(RESOLUTION_CHOICES)
     for change in task_history:
-        change.humanized_state = state_choices.get(change.state, None)
-        change.humanized_resolution = resolution_choices.get(change.resolution, None)        
+        change.humanized_state = STATE_CHOICES_DICT.get(change.state, None)
+        change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None)        
         
     return render_to_response(template_name, {
         "task": task,
