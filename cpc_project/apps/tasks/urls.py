@@ -6,8 +6,7 @@ urlpatterns = patterns('',
         url(r'^add/$', 'tasks.views.add_task', name="task_add"),
         url(r'^task/(\d+)/$', 'tasks.views.task', name="task_detail"),
         url(r'^tasks_for_user/([-\w]+)/$', 'tasks.views.user_tasks', name="tasks_for_user"),
-        url(r'^mini_list/$', 'tasks.views.mini_list', name="tasks_mini_list"),
-        url(r'^mini_list/$', 'tasks.views.mini_list', name="tasks_mini_list"),        
+        url(r'^mini_list/$', 'tasks.views.mini_list', name="tasks_mini_list"),      
         
         # history
         url(r'^task_history/(?P<id>\d+)/$', 'tasks.views.tasks_history', name="tasks_history")

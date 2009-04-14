@@ -8,13 +8,14 @@
 {% load tagging_tags %}
 
 
-{% block head_title %}Tasks{% endblock %}
+{% block head_title %}Tasks History{% endblock %}
 
 {% block body %}
 
     <h1>History for Task 
         <a href="{% url task_detail task.id %}">#{{ task.id }}: {{ task.summary }}</a>
     </h1>
+    {{ task.detail|linebreaks|urlize }}
     <table class="task_list">
         <thead>
             <tr>
@@ -23,14 +24,16 @@
                 <th>Last Modified</th>
                 <th>Assignee</th>
                 <th>Tags</th>
+                <th>State</th>                
                 <th>Status</th>
             </tr>
         </thead>
         <tbody> 
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
-                <td>{{ change.id }}</td>
-                <td><span class="tooltip" title="{{ change.detail|simple_linebreak }}">{{ change.summary }}</span></td>
+                    
+                <td>{{ forloop.counter }}</td>
+                <td>{{ change.summary }}</td>
                 <td>{{ change.modified|shorttimesince }}</td>
                 <td>
                     {% if change.assignee %}
@@ -40,76 +43,15 @@
                     {% endif %}                    
                 </td>
                 <td>{{ change.tags }}</td>              
-                <td>{{ change.status }}</td>                                                                                
+                <td>{{ change.humanized_state }}
+                    {% if change.humanized_resolution %}
+                        <br />{{ change.humanized_resolution }}
+                    {% endif %}
+                </td>                                              
+                <td>{{ change.status }}</td>                                                                          
                 </tr>                
             {% endfor %}
 
         </tbody> 
     </table>
 {% endblock %}
-
-{% block extra_body %}
-    <style>
-        #tooltip{
-        	position:absolute;
-        	border:1px solid #333;
-        	background:#f7f5d1;
-        	padding:2px 5px;
-        	color:#333;
-        	display:none;
-        	}
-        	
-        	    
-    </style>
-
-    <script type="text/javascript">
-    
-        /*
-         * Tooltip script 
-         * powered by jQuery (http://www.jquery.com)
-         * 
-         * written by Alen Grakalic (http://cssglobe.com)
-         * 
-         * for more info visit http://cssglobe.com/post/1695/easiest-tooltip-and-image-preview-using-jquery
-         *
-         */
-
-
-
-        this.tooltip = function(){	
-        	/* CONFIG */		
-        		xOffset = 10;
-        		yOffset = 20;		
-        		// these 2 variable determine popup's distance from the cursor
-        		// you might want to adjust to get the right result		
-        	/* END CONFIG */		
-        	$("span.tooltip").hover(function(e){											  
-        		this.t = this.title;
-        		this.title = "";									  
-        		$("body").append("<p id='tooltip'>"+ this.t +"</p>");
-        		$("#tooltip")
-        			.css("top",(e.pageY - xOffset) + "px")
-        			.css("left",(e.pageX + yOffset) + "px")
-        			.fadeIn("fast");		
-            },
-        	function(){
-        		this.title = this.t;		
-        		$("#tooltip").remove();
-            });	
-        	$("span.tooltip").mousemove(function(e){
-        		$("#tooltip")
-        			.css("top",(e.pageY - xOffset) + "px")
-        			.css("left",(e.pageX + yOffset) + "px");
-        	});			
-        };
-
-
-
-        // starting the script on page load
-        $(document).ready(function(){
-        	tooltip();
-        });
-    
-    </script>
-{% endblock %}
-
