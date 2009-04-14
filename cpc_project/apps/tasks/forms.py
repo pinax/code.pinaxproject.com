@@ -16,7 +16,6 @@ class TaskForm(forms.ModelForm):
         self.fields['summary'].widget.attrs["size"] = 65
         
     def save(self, commit=True):
-        #t - 
 
         return super(TaskForm, self).save(commit)        
     
