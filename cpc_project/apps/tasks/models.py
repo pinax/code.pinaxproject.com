@@ -18,6 +18,88 @@ if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
     notification = None
+    
+def is_assignee(task, user):
+    if task.assignee == user:
+        return True
+    return False
+    
+def no_assignee(task, user):
+    if not task.assignee:
+        return True
+    return False
+    
+def other_than_assignee(task, user):    
+    if task.assignee != user:
+        return True
+    return False
+
+STATE_TRANSITIONS = [
+    # open
+    (1, 1, is_assignee),
+    (1, 4, is_assignee),      
+    (1, 5, is_assignee),
+    (1, 6, is_assignee),    
+    (1, 2, is_assignee),        
+    (1, 1, no_assignee),
+    (1, 5, no_assignee),
+    (1, 6, no_assignee),
+    (1, 1, other_than_assignee),    
+          
+    # resolved  
+    (2, 2, is_assignee),      
+    (2, 1, is_assignee),      
+    (2, 3, is_assignee),      
+    (2, 2, no_assignee),
+    (2, 1, no_assignee),    
+    (2, 2, other_than_assignee),
+    (2, 1, other_than_assignee),   
+    
+    # closed
+    (3, 3, is_assignee),     
+    (3, 1, is_assignee),     
+    (3, 3, no_assignee),     
+    (3, 1, no_assignee),
+    (3, 3, other_than_assignee),     
+    (3, 1, other_than_assignee),        
+    
+    # in progress
+    (4, 4, is_assignee),
+    (4, 1, is_assignee),    
+    (4, 5, is_assignee),        
+    (4, 6, is_assignee),            
+    (4, 2, is_assignee),                
+    (4, 4, no_assignee),
+    (4, 4, other_than_assignee),   
+    
+    # discussion needed
+    (5, 5, is_assignee),      
+    (5, 1, is_assignee),          
+    (5, 4, is_assignee),          
+    (5, 6, is_assignee),                  
+    (5, 2, is_assignee),                      
+    (5, 5, no_assignee),      
+    (5, 1, no_assignee),          
+    (5, 4, no_assignee),          
+    (5, 6, no_assignee),                  
+    (5, 2, no_assignee),   
+    (5, 5, other_than_assignee),   
+    
+    # blocked
+    (6, 6, is_assignee),      
+    (6, 1, is_assignee),          
+    (6, 5, is_assignee),          
+    (6, 4, is_assignee),              
+    (6, 2, is_assignee),                  
+    (6, 6, no_assignee),      
+    (6, 1, no_assignee),          
+    (6, 5, no_assignee),          
+    (6, 4, no_assignee),              
+    (6, 2, no_assignee),      
+    (6, 6, other_than_assignee),       
+]    
+
+
 
 
 STATE_CHOICES = (
@@ -40,7 +122,11 @@ RESOLUTION_CHOICES = (
     ('6', 'Invalid - bad ticket entry')
 )
 
+
 REVERSE_STATE_CHOICES = dict((item[1], item[0]) for item in STATE_CHOICES)
+
+STATE_CHOICES_DICT = dict((item[0], item[1]) for item in STATE_CHOICES)
+RESOLUTION_CHOICES_DICT = dict((item[0], item[1]) for item in RESOLUTION_CHOICES)
 
 
 class Task(models.Model):
@@ -94,40 +180,27 @@ class Task(models.Model):
         return state choices allowed given current state and user
         """
         
-        if self.state == '1': # open
-            if user == self.assignee:
-                choices = [('1', 'leave open'), ('4', 'in progress'), ('5', 'discussion needed'), ('6', 'blocked'), ('2', 'resolve')]
-            elif self.assignee is None:
-                choices = [('1', 'leave open'), ('5', 'discussion needed'), ('6', 'blocked')]
-            else:
-                choices = [('1', 'leave open')]
-        elif self.state == '2': # resolved
-            if user == self.creator:
-                choices = [('2', 'leave resolved'), ('1', 'reopen'), ('3', 'close')]
-            else:
-                choices = [('2', 'leave resolved'), ('1', 'reopen')]
-        elif self.state == '3': # closed
-            choices = [('3', 'leave closed'), ('1', 'reopen')]
-        elif self.state == '4': # in progress
-            if user == self.assignee:
-                choices = [('4', 'still in progress'), ('1', 'revert to open'), ('5', 'discussion needed'), ('6', 'blocked'), ('2', 'resolve'), ]
-            else:
-                choices = [('4', 'still in progress')]
-        elif self.state == '5': # discussion needed
-            if user == self.assignee:
-                choices = [('5', 'discussion still needed'), ('1', 'revert to open'), ('4', 'in progress'), ('6', 'blocked'), ('2', 'resolve')]
-            elif self.assignee is None:
-                choices = [('5', 'discussion still needed'), ('1', 'revert to open'), ('4', 'in progress'), ('6', 'blocked'), ('2', 'resolve')]
-            else:
-                choices = [('5', 'discussion still needed')]
-        elif self.state == '6': # blocked
-            if user == self.assignee:
-                choices = [('6', 'still blocked'), ('1', 'revert to open'), ('5', 'discussion needed'), ('4', 'in progress'), ('2', 'resolve')]
-            elif self.assignee is None:
-                choices = [('6', 'still blocked'), ('1', 'revert to open'), ('5', 'discussion needed'), ('4', 'in progress'), ('2', 'resolve')]
-            else:
-                choices = [('6', 'still blocked')]
+        choices = []
+        
+        for transition in STATE_TRANSITIONS:
+            
+            if self.state != str(transition[0]):
+                # if the current state does not match a first element in the
+                # state transitions we skip to the next transition
+                continue
                 
+            # Fire the validation function.
+            if transition[2](self, user): 
+                
+                # grab the new state
+                new_state = str(transition[1]) 
+                
+                # build new element
+                element = (new_state, STATE_CHOICES_DICT[new_state]) 
+                
+                # append new element to choices
+                choices.append(element) 
+                            
         return choices
     
     @models.permalink
