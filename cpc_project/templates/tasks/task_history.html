@@ -33,8 +33,8 @@
                 <td><span class="tooltip" title="{{ change.detail|simple_linebreak }}">{{ change.summary }}</span></td>
                 <td>{{ change.modified|shorttimesince }}</td>
                 <td>
-                    {% if changed.assignee %}
-                        {{ changed..assignee }}
+                    {% if change.assignee %}
+                        {{ change.assignee }}
                     {% else %}
                         <span class="warning">unassigned</span>
                     {% endif %}                    
