@@ -161,19 +161,28 @@ class Task(models.Model):
     def __unicode__(self):
         return self.summary
     
-    def save(self, force_insert=False, force_update=False):
+    def save(self, force_insert=False, force_update=False, comment_instance=None):
+            
+        # Do the stock save
         self.modified = datetime.now()
         super(Task, self).save(force_insert, force_update)
         
+        # get the task history object
         th = TaskHistory()
         th.task = self
         
+        # save the simple fields
         fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'tags', 'status', 'state', 'resolution')
         for field in fields:
             value = getattr(self, field)
             setattr(th, field, value)
         
+        # handle the comments
+        if comment_instance:
+            th.comment = comment_instance.comment
+
         th.save()
+        
     
     def allowable_states(self, user):
         """
@@ -213,7 +222,7 @@ def new_comment(sender, instance, **kwargs):
     if isinstance(instance.content_object, Task):
         task = instance.content_object
         task.modified = datetime.now()
-        task.save()
+        task.save(comment_instance=instance)
         group = task.group
         if notification:
             
@@ -249,10 +258,16 @@ class TaskHistory(models.Model):
     
     tags = TagField()
     
-    # status is a short message the assignee can give on their current status
     status = models.CharField(_('status'), max_length=100, blank=True)
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
     resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, default=0, blank=True)
+    
+    # this stores the comment
+    comment = models.TextField(_('comment'), blank=True)
+    
+    # this stores the responsible party.
+    # TODO: work on this for CPC ticket #131
+    #responsible_party = models.ForeignKey(User, related_name="responsible_party", verbose_name=_('Responsible Party'))
     
     def __unicode__(self):
         return 'for ' + str(self.task)

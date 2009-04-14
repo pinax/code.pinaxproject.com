@@ -26,13 +26,14 @@
                 <th>Tags</th>
                 <th>State</th>                
                 <th>Status</th>
+                <th>Comment</th>                
             </tr>
         </thead>
         <tbody> 
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
                     
-                <td>{{ forloop.counter }}</td>
+                <td>{{ forloop.counter }} {{ change.responsible_party }}</td>
                 <td>{{ change.summary }}</td>
                 <td>{{ change.modified|shorttimesince }}</td>
                 <td>
@@ -48,7 +49,12 @@
                         <br />{{ change.humanized_resolution }}
                     {% endif %}
                 </td>                                              
-                <td>{{ change.status }}</td>                                                                          
+                <td>{{ change.status }}</td>
+                <td>
+                    {% if change.comment %}
+                        {{ change.comment|linebreaks|urlize }}
+                    {% endif %}
+                </td>                                                                                        
                 </tr>                
             {% endfor %}
 
