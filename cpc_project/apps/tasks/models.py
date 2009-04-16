@@ -29,74 +29,57 @@ def no_assignee(task, user):
         return True
     return False
     
-def other_than_assignee(task, user):
-    if task.assignee != user:
-        return True
-    return False
+def always(task, user):
+    return True
+
 
 STATE_TRANSITIONS = [
     # open
-    (1, 1, is_assignee, "leave open"),
+    (1, 1, always, "leave open"),
+    (1, 2, is_assignee, "resolved"),
     (1, 4, is_assignee, "in progress"),
     (1, 5, is_assignee, "discussion needed"),
-    (1, 6, is_assignee, "blocked"),
-    (1, 2, is_assignee, "resolved"),
-    (1, 1, no_assignee, "leave open"),
     (1, 5, no_assignee, "discussion needed"),
+    (1, 6, is_assignee, "blocked"),
     (1, 6, no_assignee, "blocked"),
-    (1, 1, other_than_assignee, "leave open"),
           
     # resolved
-    (2, 2, is_assignee, "leave resolved"),
-    (2, 1, is_assignee, "re-open"),
+    (2, 1, always, "re-open"),
+    (2, 2, always, "leave resolved"),
     (2, 3, is_assignee, "close"),
-    (2, 2, no_assignee, "leave resolved"),
-    (2, 1, no_assignee, "re-open"),
-    (2, 2, other_than_assignee, "leave resolved"),
-    (2, 1, other_than_assignee, "re-open"),
     
     # closed
-    (3, 3, is_assignee, "leave closed"),
-    (3, 1, is_assignee, "re-open"),
-    (3, 3, no_assignee, "leave closed"),
-    (3, 1, no_assignee, "re-open"),
-    (3, 3, other_than_assignee, "leave closed"),
-    (3, 1, other_than_assignee, "re-open"),
+    (3, 1, always, "re-open"),
+    (3, 3, always, "leave closed"),
     
     # in progress
-    (4, 4, is_assignee, "still in progress"),
+    (4, 4, always, "still in progress"),
     (4, 1, is_assignee, "open"),
+    (4, 2, is_assignee, "resolved"),
     (4, 5, is_assignee, "discussion needed"),
     (4, 6, is_assignee, "blocked"),
-    (4, 2, is_assignee, "resolved"),
-    (4, 4, no_assignee, "still in progress"),
-    (4, 4, other_than_assignee, "still in progress"),
     
     # discussion needed
-    (5, 5, is_assignee, "discussion still needed"),
+    (5, 5, always, "discussion still needed"),
     (5, 1, is_assignee, "open"),
-    (5, 4, is_assignee, "in progress"),
-    (5, 6, is_assignee, "blocked"),
-    (5, 2, is_assignee, "resolved"),
-    (5, 5, no_assignee, "discussion still needed"),
     (5, 1, no_assignee, "open"),
-    (5, 4, no_assignee, "in progress"),
-    (5, 6, no_assignee, "blocked"),
+    (5, 2, is_assignee, "resolved"),
     (5, 2, no_assignee, "resolved"),
-    (5, 5, other_than_assignee, "discussion still needed"),
+    (5, 4, is_assignee, "in progress"),
+    (5, 4, no_assignee, "in progress"),
+    (5, 6, is_assignee, "blocked"),
+    (5, 6, no_assignee, "blocked"),
     
     # blocked
-    (6, 6, is_assignee, "still blocked"),
+    (6, 6, always, "still blocked"),
     (6, 1, is_assignee, "open"),
-    (6, 5, is_assignee, "discussion needed"),
-    (6, 4, is_assignee, "in progress"),
-    (6, 2, is_assignee, "resolved"),
-    (6, 6, no_assignee, "still blocked"),
     (6, 1, no_assignee, "open"),
-    (6, 5, no_assignee, "discussion needed"),
-    (6, 4, no_assignee, "in progress"),
+    (6, 2, is_assignee, "resolved"),
     (6, 2, no_assignee, "resolved"),
-    (6, 6, other_than_assignee, "still blocked"),
+    (6, 4, is_assignee, "in progress"),
+    (6, 4, no_assignee, "in progress"),
+    (6, 5, is_assignee, "discussion needed"),
+    (6, 5, no_assignee, "discussion needed"),
 ]
 
 
