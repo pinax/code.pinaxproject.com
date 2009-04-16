@@ -29,7 +29,7 @@ def no_assignee(task, user):
         return True
     return False
     
-def other_than_assignee(task, user):    
+def other_than_assignee(task, user):
     if task.assignee != user:
         return True
     return False
@@ -39,65 +39,65 @@ STATE_TRANSITIONS = [
     (1, 1, is_assignee, "Open"),
     (1, 4, is_assignee, "In Progress"),
     (1, 5, is_assignee, "Discussion Needed"),
-    (1, 6, is_assignee, "Block"),    
-    (1, 2, is_assignee, "Resolve"),        
+    (1, 6, is_assignee, "Block"),
+    (1, 2, is_assignee, "Resolve"),
     (1, 1, no_assignee, "Open"),
     (1, 5, no_assignee, "Discussion Needed"),
     (1, 6, no_assignee, "Block"),
-    (1, 1, other_than_assignee, "Open"),    
+    (1, 1, other_than_assignee, "Open"),
           
-    # resolved  
-    (2, 2, is_assignee, "Resolved"),      
-    (2, 1, is_assignee, "Reopen"),      
-    (2, 3, is_assignee, "Close"),      
+    # resolved
+    (2, 2, is_assignee, "Resolved"),
+    (2, 1, is_assignee, "Reopen"),
+    (2, 3, is_assignee, "Close"),
     (2, 2, no_assignee, "Resolved"),
-    (2, 1, no_assignee, "Reopen"),    
+    (2, 1, no_assignee, "Reopen"),
     (2, 2, other_than_assignee, "Resolved"),
-    (2, 1, other_than_assignee, "Reopen"),   
+    (2, 1, other_than_assignee, "Reopen"),
     
     # closed
-    (3, 3, is_assignee, "Closed"),     
-    (3, 1, is_assignee, "Reopen"),     
-    (3, 3, no_assignee, "Closed"),     
+    (3, 3, is_assignee, "Closed"),
+    (3, 1, is_assignee, "Reopen"),
+    (3, 3, no_assignee, "Closed"),
     (3, 1, no_assignee, "Reopen"),
-    (3, 3, other_than_assignee, "Closed"),     
-    (3, 1, other_than_assignee, "Reopen"),        
+    (3, 3, other_than_assignee, "Closed"),
+    (3, 1, other_than_assignee, "Reopen"),
     
     # in progress
     (4, 4, is_assignee, "In progress"),
-    (4, 1, is_assignee, "Move to open"),    
-    (4, 5, is_assignee, "Discussion needed"),        
-    (4, 6, is_assignee, "Block"),            
-    (4, 2, is_assignee, "Resolve"),                
+    (4, 1, is_assignee, "Move to open"),
+    (4, 5, is_assignee, "Discussion needed"),
+    (4, 6, is_assignee, "Block"),
+    (4, 2, is_assignee, "Resolve"),
     (4, 4, no_assignee, "In progress"),
-    (4, 4, other_than_assignee, "In progress"),   
+    (4, 4, other_than_assignee, "In progress"),
     
     # discussion needed
-    (5, 5, is_assignee, "Discussion Needed"),      
-    (5, 1, is_assignee, "Reopen"),          
-    (5, 4, is_assignee, "In Progress"), 
-    (5, 6, is_assignee, "Block"),                  
-    (5, 2, is_assignee, "Resolved"),                      
-    (5, 5, no_assignee, "Discussion Needed"),      
-    (5, 1, no_assignee, "Reopen"),          
-    (5, 4, no_assignee, "In Progress"),          
-    (5, 6, no_assignee, "Block"),                  
-    (5, 2, no_assignee, "Resolved"),   
-    (5, 5, other_than_assignee, "Discussion Needed"),   
+    (5, 5, is_assignee, "Discussion Needed"),
+    (5, 1, is_assignee, "Reopen"),
+    (5, 4, is_assignee, "In Progress"),
+    (5, 6, is_assignee, "Block"),
+    (5, 2, is_assignee, "Resolved"),
+    (5, 5, no_assignee, "Discussion Needed"),
+    (5, 1, no_assignee, "Reopen"),
+    (5, 4, no_assignee, "In Progress"),
+    (5, 6, no_assignee, "Block"),
+    (5, 2, no_assignee, "Resolved"),
+    (5, 5, other_than_assignee, "Discussion Needed"),
     
     # blocked
-    (6, 6, is_assignee, "Block"),      
-    (6, 1, is_assignee, "Reopen"),          
-    (6, 5, is_assignee, "Discussion Needed"),          
-    (6, 4, is_assignee, "In Progress"),              
-    (6, 2, is_assignee, "Resolve"),                  
-    (6, 6, no_assignee, "Block"),      
-    (6, 1, no_assignee, "Reopen"),          
-    (6, 5, no_assignee, "Discussion Needed"),          
-    (6, 4, no_assignee, "In Progress"),              
-    (6, 2, no_assignee, "Resolve"),      
-    (6, 6, other_than_assignee, "Block"),       
-]    
+    (6, 6, is_assignee, "Block"),
+    (6, 1, is_assignee, "Reopen"),
+    (6, 5, is_assignee, "Discussion Needed"),
+    (6, 4, is_assignee, "In Progress"),
+    (6, 2, is_assignee, "Resolve"),
+    (6, 6, no_assignee, "Block"),
+    (6, 1, no_assignee, "Reopen"),
+    (6, 5, no_assignee, "Discussion Needed"),
+    (6, 4, no_assignee, "In Progress"),
+    (6, 2, no_assignee, "Resolve"),
+    (6, 6, other_than_assignee, "Block"),
+]
 
 
 
@@ -113,8 +113,8 @@ STATE_CHOICES = (
 
 
 RESOLUTION_CHOICES = (
-    ('0', 'Not yet resolved'),        
-    ('1', 'Fixed'),    
+    ('0', 'Not yet resolved'),
+    ('1', 'Fixed'),
     ('2', 'Duplicate'),
     ('3', 'Already done - We have fixed this'),
     ('4', 'No longer relevant - Done in a previous release'),
