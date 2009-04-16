@@ -6,6 +6,7 @@
 
 {% block subnav %}
     <ul>
-        <li><a href="{% url wiki_index %} ">{% trans "All Articles" %}</a></li>
+        <li><a href='{% url wiki_article "HomePage" %}'>HomePage</a></li>
+        <li><a href="{% url wiki_index %}">{% trans "All Articles" %}</a></li>
     </ul>
 {% endblock %}
