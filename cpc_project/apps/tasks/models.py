@@ -25,7 +25,12 @@ def is_assignee(task, user):
     if task.assignee == user:
         return True
     return False
-    
+
+def is_creator(task, user):
+    if task.creator == user:
+        return True
+    return False
+
 def no_assignee(task, user):
     if not task.assignee:
         return True
@@ -52,7 +57,7 @@ STATE_TRANSITIONS = [
     # resolved
     (2, 1, always, "re-open"),
     (2, 2, always, "leave resolved"),
-    (2, 3, is_assignee, "close"),
+    (2, 3, is_creator, "close"),
     
     # closed
     (3, 1, always, "re-open"),
