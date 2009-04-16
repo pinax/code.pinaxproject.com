@@ -28,6 +28,12 @@ def no_assignee(task, user):
     if not task.assignee:
         return True
     return False
+
+def is_assignee_or_none(task, user):
+    # current user is assignee or there is no assignee
+    if task.assignee == user or not task.assignee:
+        return True
+    return False
     
 def always(task, user):
     return True
@@ -38,10 +44,8 @@ STATE_TRANSITIONS = [
     (1, 1, always, "leave open"),
     (1, 2, is_assignee, "resolved"),
     (1, 4, is_assignee, "in progress"),
-    (1, 5, is_assignee, "discussion needed"),
-    (1, 5, no_assignee, "discussion needed"),
-    (1, 6, is_assignee, "blocked"),
-    (1, 6, no_assignee, "blocked"),
+    (1, 5, is_assignee_or_none, "discussion needed"),
+    (1, 6, is_assignee_or_none, "blocked"),
           
     # resolved
     (2, 1, always, "re-open"),
@@ -61,28 +65,18 @@ STATE_TRANSITIONS = [
     
     # discussion needed
     (5, 5, always, "discussion still needed"),
-    (5, 1, is_assignee, "open"),
-    (5, 1, no_assignee, "open"),
-    (5, 2, is_assignee, "resolved"),
-    (5, 2, no_assignee, "resolved"),
-    (5, 4, is_assignee, "in progress"),
-    (5, 4, no_assignee, "in progress"),
-    (5, 6, is_assignee, "blocked"),
-    (5, 6, no_assignee, "blocked"),
+    (5, 1, is_assignee_or_none, "open"),
+    (5, 2, is_assignee_or_none, "resolved"),
+    (5, 4, is_assignee_or_none, "in progress"),
+    (5, 6, is_assignee_or_none, "blocked"),
     
     # blocked
     (6, 6, always, "still blocked"),
-    (6, 1, is_assignee, "open"),
-    (6, 1, no_assignee, "open"),
-    (6, 2, is_assignee, "resolved"),
-    (6, 2, no_assignee, "resolved"),
-    (6, 4, is_assignee, "in progress"),
-    (6, 4, no_assignee, "in progress"),
-    (6, 5, is_assignee, "discussion needed"),
-    (6, 5, no_assignee, "discussion needed"),
+    (6, 1, is_assignee_or_none, "open"),
+    (6, 2, is_assignee_or_none, "resolved"),
+    (6, 4, is_assignee_or_none, "in progress"),
+    (6, 5, is_assignee_or_none, "discussion needed"),
 ]
-
-
 
 
 STATE_CHOICES = (
