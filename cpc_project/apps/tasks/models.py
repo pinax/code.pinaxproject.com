@@ -36,67 +36,67 @@ def other_than_assignee(task, user):
 
 STATE_TRANSITIONS = [
     # open
-    (1, 1, is_assignee),
-    (1, 4, is_assignee),      
-    (1, 5, is_assignee),
-    (1, 6, is_assignee),    
-    (1, 2, is_assignee),        
-    (1, 1, no_assignee),
-    (1, 5, no_assignee),
-    (1, 6, no_assignee),
-    (1, 1, other_than_assignee),    
+    (1, 1, is_assignee, "Open"),
+    (1, 4, is_assignee, "In Progress"),
+    (1, 5, is_assignee, "Discussion Needed"),
+    (1, 6, is_assignee, "Block"),    
+    (1, 2, is_assignee, "Resolve"),        
+    (1, 1, no_assignee, "Open"),
+    (1, 5, no_assignee, "Discussion Needed"),
+    (1, 6, no_assignee, "Block"),
+    (1, 1, other_than_assignee, "Open"),    
           
     # resolved  
-    (2, 2, is_assignee),      
-    (2, 1, is_assignee),      
-    (2, 3, is_assignee),      
-    (2, 2, no_assignee),
-    (2, 1, no_assignee),    
-    (2, 2, other_than_assignee),
-    (2, 1, other_than_assignee),   
+    (2, 2, is_assignee, "Resolved"),      
+    (2, 1, is_assignee, "Reopen"),      
+    (2, 3, is_assignee, "Close"),      
+    (2, 2, no_assignee, "Resolved"),
+    (2, 1, no_assignee, "Reopen"),    
+    (2, 2, other_than_assignee, "Resolved"),
+    (2, 1, other_than_assignee, "Reopen"),   
     
     # closed
-    (3, 3, is_assignee),     
-    (3, 1, is_assignee),     
-    (3, 3, no_assignee),     
-    (3, 1, no_assignee),
-    (3, 3, other_than_assignee),     
-    (3, 1, other_than_assignee),        
+    (3, 3, is_assignee, "Closed"),     
+    (3, 1, is_assignee, "Reopen"),     
+    (3, 3, no_assignee, "Closed"),     
+    (3, 1, no_assignee, "Reopen"),
+    (3, 3, other_than_assignee, "Closed"),     
+    (3, 1, other_than_assignee, "Reopen"),        
     
     # in progress
-    (4, 4, is_assignee),
-    (4, 1, is_assignee),    
-    (4, 5, is_assignee),        
-    (4, 6, is_assignee),            
-    (4, 2, is_assignee),                
-    (4, 4, no_assignee),
-    (4, 4, other_than_assignee),   
+    (4, 4, is_assignee, "In progress"),
+    (4, 1, is_assignee, "Move to open"),    
+    (4, 5, is_assignee, "Discussion needed"),        
+    (4, 6, is_assignee, "Block"),            
+    (4, 2, is_assignee, "Resolve"),                
+    (4, 4, no_assignee, "In progress"),
+    (4, 4, other_than_assignee, "In progress"),   
     
     # discussion needed
-    (5, 5, is_assignee),      
-    (5, 1, is_assignee),          
-    (5, 4, is_assignee),          
-    (5, 6, is_assignee),                  
-    (5, 2, is_assignee),                      
-    (5, 5, no_assignee),      
-    (5, 1, no_assignee),          
-    (5, 4, no_assignee),          
-    (5, 6, no_assignee),                  
-    (5, 2, no_assignee),   
-    (5, 5, other_than_assignee),   
+    (5, 5, is_assignee, "Discussion Needed"),      
+    (5, 1, is_assignee, "Reopen"),          
+    (5, 4, is_assignee, "In Progress"), 
+    (5, 6, is_assignee, "Block"),                  
+    (5, 2, is_assignee, "Resolved"),                      
+    (5, 5, no_assignee, "Discussion Needed"),      
+    (5, 1, no_assignee, "Reopen"),          
+    (5, 4, no_assignee, "In Progress"),          
+    (5, 6, no_assignee, "Block"),                  
+    (5, 2, no_assignee, "Resolved"),   
+    (5, 5, other_than_assignee, "Discussion Needed"),   
     
     # blocked
-    (6, 6, is_assignee),      
-    (6, 1, is_assignee),          
-    (6, 5, is_assignee),          
-    (6, 4, is_assignee),              
-    (6, 2, is_assignee),                  
-    (6, 6, no_assignee),      
-    (6, 1, no_assignee),          
-    (6, 5, no_assignee),          
-    (6, 4, no_assignee),              
-    (6, 2, no_assignee),      
-    (6, 6, other_than_assignee),       
+    (6, 6, is_assignee, "Block"),      
+    (6, 1, is_assignee, "Reopen"),          
+    (6, 5, is_assignee, "Discussion Needed"),          
+    (6, 4, is_assignee, "In Progress"),              
+    (6, 2, is_assignee, "Resolve"),                  
+    (6, 6, no_assignee, "Block"),      
+    (6, 1, no_assignee, "Reopen"),          
+    (6, 5, no_assignee, "Discussion Needed"),          
+    (6, 4, no_assignee, "In Progress"),              
+    (6, 2, no_assignee, "Resolve"),      
+    (6, 6, other_than_assignee, "Block"),       
 ]    
 
 
@@ -161,7 +161,7 @@ class Task(models.Model):
     def __unicode__(self):
         return self.summary
     
-    def save(self, force_insert=False, force_update=False, comment_instance=None):
+    def save(self, force_insert=False, force_update=False, comment_instance=None, user=None):
             
         # Do the stock save
         self.modified = datetime.now()
@@ -176,6 +176,12 @@ class Task(models.Model):
         for field in fields:
             value = getattr(self, field)
             setattr(th, field, value)
+            
+        # TODO: fix responsible party   
+        #if user:
+        #    th.responsible_party = user
+        #else:
+        #    th.responsible_party = self.creator
         
         # handle the comments
         if comment_instance:
@@ -201,11 +207,12 @@ class Task(models.Model):
             # Fire the validation function.
             if transition[2](self, user): 
                 
-                # grab the new state
+                # grab the new state and state description
                 new_state = str(transition[1]) 
+                description = transition[3]
                 
                 # build new element
-                element = (new_state, STATE_CHOICES_DICT[new_state]) 
+                element = (new_state, description) 
                 
                 # append new element to choices
                 choices.append(element) 
@@ -222,6 +229,7 @@ def new_comment(sender, instance, **kwargs):
     if isinstance(instance.content_object, Task):
         task = instance.content_object
         task.modified = datetime.now()
+        #task.save(comment_instance=instance,user=comment_instance.user)
         task.save(comment_instance=instance)
         group = task.group
         if notification:
@@ -267,7 +275,7 @@ class TaskHistory(models.Model):
     
     # this stores the responsible party.
     # TODO: work on this for CPC ticket #131
-    #responsible_party = models.ForeignKey(User, related_name="responsible_party", verbose_name=_('Responsible Party'))
+    # responsible_party = models.ForeignKey(User, related_name="responsible_party", verbose_name=_('Responsible Party'))
     
     def __unicode__(self):
         return 'for ' + str(self.task)

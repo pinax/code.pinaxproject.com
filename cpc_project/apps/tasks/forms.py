@@ -44,6 +44,15 @@ class EditTaskForm(forms.ModelForm):
         # self.fields["assignee"].queryset = self.fields["assignee"].queryset.filter(project=project)
         
         self.fields["state"].choices = self.instance.allowable_states(user)
+
+    # TODO: work on this for CPC ticket #131
+    #def save(self, commit=True):
+    #    task = Task.objects.get(pk__exact=self.instance.pk)
+    #    for field in self.fields.keyOrder:
+    #        value = getattr(self.instance, field)
+    #        setattr(task, field, value)
+    #    return task.save(user = self.user)
+    #    #return super(EditTaskForm, self).save(commit)
         
         
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))

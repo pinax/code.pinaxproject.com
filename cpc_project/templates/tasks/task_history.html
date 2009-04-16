@@ -33,7 +33,7 @@
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
                     
-                <td>{{ forloop.counter }} {{ change.responsible_party }}</td>
+                <td>{{ forloop.counter }} {{ change.creator }}</td>
                 <td>{{ change.summary }}</td>
                 <td>{{ change.modified|shorttimesince }}</td>
                 <td>
