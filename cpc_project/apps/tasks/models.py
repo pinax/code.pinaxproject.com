@@ -90,13 +90,15 @@ STATE_CHOICES = (
 
 
 RESOLUTION_CHOICES = (
-    ('0', 'Not yet resolved'),
-    ('1', 'Fixed'),
-    ('2', 'Duplicate'),
-    ('3', 'Already done - We have fixed this'),
-    ('4', 'No longer relevant - Done in a previous release'),
-    ('5', "Wontfix - Bugs we aren't going to fix"),
-    ('6', 'Invalid - bad ticket entry')
+    ('0', 'n/a'),
+    ('1', 'fixed'),
+    ('2', 'duplicate'),
+    ('3', 'alreadydone — we have fixed this'),
+    ('4', 'irrelevant — another change made this no longer an issue'),
+    ('5', 'rejected — current behavior is as intended'),
+    ('6', 'nonsense — bad ticket entry'),
+    ('7', "worksforme — can't reproduce problem"),
+    
 )
 
 
