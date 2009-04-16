@@ -215,7 +215,7 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
 
 def tasks_history(request, id, template_name="tasks/task_history.html"):
     task = get_object_or_404(Task, id=id)
-    task_history = task.history_task.all()
+    task_history = task.history_task.all().order_by('-modified')
     for change in task_history:
         change.humanized_state = STATE_CHOICES_DICT.get(change.state, None)
         change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None)        

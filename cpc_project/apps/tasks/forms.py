@@ -46,13 +46,18 @@ class EditTaskForm(forms.ModelForm):
         self.fields["state"].choices = self.instance.allowable_states(user)
 
     # TODO: work on this for CPC ticket #131
-    #def save(self, commit=True):
-    #    task = Task.objects.get(pk__exact=self.instance.pk)
-    #    for field in self.fields.keyOrder:
-    #        value = getattr(self.instance, field)
-    #        setattr(task, field, value)
-    #    return task.save(user = self.user)
-    #    #return super(EditTaskForm, self).save(commit)
+    def save(self, commit=True):
+        
+        # we manually save to the Task object so we can ensure that the user
+        #is passed to the custom Task save method
+        task = Task.objects.get(pk__exact=self.instance.pk)
+        for field in self.fields.keyOrder:
+            value = getattr(self.instance, field)
+            setattr(task, field, value)    
+        task.save(user = self.user)            
+        
+        return super(EditTaskForm, self).save(commit)  
+            
         
         
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))

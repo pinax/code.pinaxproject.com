@@ -160,12 +160,15 @@ class Task(models.Model):
         for field in fields:
             value = getattr(self, field)
             setattr(th, field, value)
-            
-        # TODO: fix responsible party   
-        #if user:
-        #    th.responsible_party = user
-        #else:
-        #    th.responsible_party = self.creator
+              
+        if user:
+            # If a user is provided then we are editing a record.
+            # So the owner of the change is the editor.
+            th.owner = user
+        else:
+            # This record is being created right now, hence the assignment
+            # of the creator to the task history object's owner field.
+            th.owner = self.creator
         
         # handle the comments
         if comment_instance:
@@ -213,8 +216,10 @@ def new_comment(sender, instance, **kwargs):
     if isinstance(instance.content_object, Task):
         task = instance.content_object
         task.modified = datetime.now()
-        #task.save(comment_instance=instance,user=comment_instance.user)
-        task.save(comment_instance=instance)
+        
+        # pass in the instance.user so that the task history owner is recorded
+        # as the commenter
+        task.save(comment_instance=instance,user=instance.user)
         group = task.group
         if notification:
             
@@ -257,9 +262,8 @@ class TaskHistory(models.Model):
     # this stores the comment
     comment = models.TextField(_('comment'), blank=True)
     
-    # this stores the responsible party.
-    # TODO: work on this for CPC ticket #131
-    # responsible_party = models.ForeignKey(User, related_name="responsible_party", verbose_name=_('Responsible Party'))
+    # this stores the owner of this ticket change
+    owner = models.ForeignKey(User, related_name="owner", verbose_name=_('Owner'))
     
     def __unicode__(self):
         return 'for ' + str(self.task)

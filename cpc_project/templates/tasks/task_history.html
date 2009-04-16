@@ -20,8 +20,9 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Modifier</th>                
+                <th>Modified</th>                
                 <th>Summary</th>
-                <th>Last Modified</th>
                 <th>Assignee</th>
                 <th>Tags</th>
                 <th>State</th>                
@@ -32,13 +33,13 @@
         <tbody> 
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
-                    
-                <td>{{ forloop.counter }} {{ change.creator }}</td>
+                <td>{{ forloop.counter }}</td> 
+                <td><a href="{{ change.owner.get_profile.get_absolute_url }}">{{ change.owner }}</a></td>
+                <td>{{ change.modified|shorttimesince }}</td>                
                 <td>{{ change.summary }}</td>
-                <td>{{ change.modified|shorttimesince }}</td>
                 <td>
                     {% if change.assignee %}
-                        {{ change.assignee }}
+                        <a href="{{ change.assignee.get_profile.get_absolute_url }}">{{ change.assignee }}</a>
                     {% else %}
                         <span class="warning">unassigned</span>
                     {% endif %}                    
