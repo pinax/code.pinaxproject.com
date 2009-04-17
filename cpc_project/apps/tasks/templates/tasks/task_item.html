@@ -7,17 +7,33 @@
 
 <div class="task clearfix">
     <div class="task-meta">
+
         {% if task.assignee %}
             <div class="avatar">{% avatar task.assignee 40 %}</div>
             <div class="details"><b>{% trans "Assignee" %}</b>: <a href="{{ task.assignee.get_profile.get_absolute_url }}">{{ task.assignee }}</a></div>
         {% else %}
             <span class="warning">{% trans "Unassigned" %}</span>
-        {% endif %}
+        {% endif %}        
         <div><b>{% trans "State" %}</b>: {{ task.get_state_display }}</div>
         <div><b>{% trans "Creator" %}</b>: <a href="{{ task.creator.get_profile.get_absolute_url }}">{{ task.creator }}</a></div>
         <div><b>{% trans "Created" %}</b>: {{ task.created|date }}</div>
         <div><b>{% trans "Modified" %}</b>: {{ task.modified|shorttimesince }} ago</div>
-        <div><b>Nudges</b>: {{ nudge.count }}</div>          
+        <div><a href="{% url tasks_history task.id %}">{% trans "History of this Task" %}</a></div>                        
+        <div><b>Nudges</b>: {{ nudge.count }}
+            {% if nudge.history %}
+                <a href="#" id="nudge-history">nudge history</a>
+            {% endif %}
+        </div>
+        {% if nudge.history %}        
+            <div id="nudge-history-target">
+                <ol>
+                {% for item in nudge.history %}
+                     <li><a href="{{ item.nudger.get_profile.get_absolute_url }}">{{ item.nudger }}</a>
+                    {{ item.nudge_date|shorttimesince }}</li>
+                {% endfor %}
+                </ol>
+            </div>
+        {% endif %}
         <div>
             {% if nudge.nudgeable %}
                 {% if nudge.nudge %}
@@ -27,7 +43,6 @@
                 {% endif %}
             {% endif %}
         </div>
-        <div><a href="{% url tasks_history task.id %}">{% trans "History of this Task" %}</a></div>        
     </div>
     <div class="bulk">
         <h2 class="task_{{ task.get_state_display }}">#{{ task.id }}: <a href="{{ task.get_absolute_url }}">{{ task.summary }}</a></h2>

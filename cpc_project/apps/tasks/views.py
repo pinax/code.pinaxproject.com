@@ -164,6 +164,9 @@ def task(request, id, template_name="tasks/task.html"):
             nudge['nudge'] = Nudge.objects.filter(nudger__exact=request.user, task__exact=task)[0]
         except IndexError:
             nudge['nudge'] = None
+            
+    # get the nudge history
+    nudge['history'] = Nudge.objects.filter(task__exact=task)
 
     return render_to_response(template_name, {
         "nudge": nudge,
