@@ -49,9 +49,9 @@
         	});
         	
         	$('#id_state').change(function(){
-        	    // We enable the resolution field when the 
-        	    // the state is resolved (state==2)   	
-                var state_value = $('#id_state')[0].value;    
+        	    // We enable the resolution field when the
+        	    // the state is resolved (state==2)
+                var state_value = $('#id_state')[0].value;
         	    if (state_value == "2" || state_value == "3") {
         	        $('#id_resolution').attr("disabled", false); 
         	    } else {
