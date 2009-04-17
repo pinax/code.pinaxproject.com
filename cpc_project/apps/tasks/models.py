@@ -277,4 +277,4 @@ class Nudge(models.Model):
     
     nudger = models.ForeignKey(User, related_name="nudger", verbose_name=_('nudger'))
     task = models.ForeignKey(Task, related_name="task", verbose_name=_('task'))
-    nudge_date = models.DateTimeField(_('nudge date'), default=datetime.now) 
+    nudge_date = models.DateTimeField(_('nudge date'), default=datetime.now)
