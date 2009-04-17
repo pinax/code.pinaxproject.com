@@ -36,24 +36,23 @@
   	<script type="text/javascript">  	
         	$().ready(function() {
 
-                // TODO: Which one?
-    	        // $('#id_status').focus();
-
-        	    
+    	        $('#id_summary').focus();
         	    
         	    // We disable the the resolution by default
         	    // when the page loads. Unless, of course,
         	    // the ticket is already in the resolved state (state==2)
                 $('#id_resolution').attr("disabled", true);
-                if  ($('#id_state')[0].value == "2") {
+                var state_value = $('#id_state')[0].value;
+                if  (state_value == "2" || state_value == "3") {
                     $('#id_resolution').attr("disabled", false); 
                 }
         	});
         	
         	$('#id_state').change(function(){
         	    // We enable the resolution field when the 
-        	    // the state is resolved (state==2)   	    
-        	    if ($('#id_state')[0].value == "2") {
+        	    // the state is resolved (state==2)   	
+                var state_value = $('#id_state')[0].value;    
+        	    if (state_value == "2" || state_value == "3") {
         	        $('#id_resolution').attr("disabled", false); 
         	    } else {
         	        $('#id_resolution').attr("disabled", true); 
