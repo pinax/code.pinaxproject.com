@@ -8,8 +8,10 @@ from tagging.models import Tag
 register = template.Library()
 
 @register.inclusion_tag("tasks/task_item.html")
-def show_task(task):
+def show_task(task, nudge):
+    
     return {
+        "nudge": nudge,
         "task": task,
         "MEDIA_URL": settings.MEDIA_URL,
     }

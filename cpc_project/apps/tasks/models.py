@@ -276,4 +276,5 @@ class TaskHistory(models.Model):
 class Nudge(models.Model):
     
     nudger = models.ForeignKey(User, related_name="nudger", verbose_name=_('nudger'))
-    nudged = models.ForeignKey(User, related_name="nudged", verbose_name=_('nudged'))
+    task = models.ForeignKey(Task, related_name="task", verbose_name=_('task'))
+    nudge_date = models.DateTimeField(_('nudge date'), default=datetime.now) 

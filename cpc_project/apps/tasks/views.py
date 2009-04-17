@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
 
-from tasks.models import (Task, STATE_CHOICES, RESOLUTION_CHOICES, 
+from tasks.models import (Task, Nudge, STATE_CHOICES, RESOLUTION_CHOICES, 
                             STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
 
 from tasks.forms import TaskForm, EditTaskForm
@@ -38,6 +38,7 @@ def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
         tasks = group.tasks.all() # @@@ assumes GR
     else:
         tasks = Task.objects.filter(object_id__isnull=True)
+    
 
     return render_to_response(template_name, {
         "group": group,
@@ -81,6 +82,35 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
         "task_form": task_form,
     }, context_instance=RequestContext(request))
 
+@login_required
+def nudge(request, id):
+    """ Called when a user nudges a ticket """
+
+    task = get_object_or_404(Task, id=id)    
+    task_url = task.get_absolute_url()
+
+    if Nudge.objects.filter(task__exact=task,nudger__exact=request.user):
+        # you've already nudged this task.
+        message = "You've already nudged this task"
+        request.user.message_set.create(message=message)        
+        return HttpResponseRedirect(task_url)
+    
+
+    nudge = Nudge(nudger = request.user, task = task)    
+    nudge.save()
+
+    count = Nudge.objects.filter(task__exact=task).count()
+    
+    # send the message to the user
+    message = "%s has been nudged about this task" % task.assignee
+    request.user.message_set.create(message=message)
+    
+    # send out the nudge notification
+    if notification:    
+        notify_list = [task.assignee]
+        notification.send(notify_list, "tasks_nudge", {"nudger": request.user, "task": task, "count": count})      
+    
+    return HttpResponseRedirect(task_url)
 
 def task(request, id, template_name="tasks/task.html"):
     task = get_object_or_404(Task, id=id)
@@ -119,8 +149,24 @@ def task(request, id, template_name="tasks/task.html"):
             form = EditTaskForm(request.user, instance=task)
     else:
         form = EditTaskForm(request.user, instance=task)
+        
+    # The NUDGE dictionary
+    nudge = {}
+    nudge['nudgeable'] = False
+    
+    # get the count of nudges so assignee can see general level of interest.
+    nudge['count'] = Nudge.objects.filter(task__exact=task).count()    
+        
+    # get the nudge if you are not the assignee otherwise just a None
+    if is_member and request.user != task.assignee:
+        nudge['nudgeable'] = True
+        try:
+            nudge['nudge'] = Nudge.objects.filter(nudger__exact=request.user, task__exact=task)[0]
+        except IndexError:
+            nudge['nudge'] = None
 
     return render_to_response(template_name, {
+        "nudge": nudge,
         "task": task,
         "is_member": is_member,
         "form": form,

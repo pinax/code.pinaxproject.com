@@ -12,11 +12,10 @@
     
     <p><a href="{% url task_list %}">&larr; {% trans "Back to Task List" %}</a></p>
     
-    {% show_task task %}
+    {% show_task task nudge %}
     
     {% if is_member %}
         <h2>Edit</h2>
-        
 		<form method="POST" action="" id="task_form" class="uniForm"> 
   		    
                 {{ form|as_uni_form }}

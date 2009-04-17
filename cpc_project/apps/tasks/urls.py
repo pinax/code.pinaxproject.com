@@ -9,5 +9,8 @@ urlpatterns = patterns('',
         url(r'^mini_list/$', 'tasks.views.mini_list', name="tasks_mini_list"),      
         
         # history
-        url(r'^history/(?P<id>\d+)/$', 'tasks.views.tasks_history', name="tasks_history")
+        url(r'^history/(?P<id>\d+)/$', 'tasks.views.tasks_history', name="tasks_history"),
+        
+        # nudge
+        url(r'^nudge/(\d+)/$', 'tasks.views.nudge', name="tasks_nudge"),
     )

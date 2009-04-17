@@ -17,11 +17,21 @@
         <div><b>{% trans "Creator" %}</b>: <a href="{{ task.creator.get_profile.get_absolute_url }}">{{ task.creator }}</a></div>
         <div><b>{% trans "Created" %}</b>: {{ task.created|date }}</div>
         <div><b>{% trans "Modified" %}</b>: {{ task.modified|shorttimesince }} ago</div>
+        <div><b>Nudges</b>: {{ nudge.count }}</div>          
+        <div>
+            {% if nudge.nudgeable %}
+                {% if nudge.nudge %}
+                    You have nudged this ticket.
+                {% else %}
+                    <a href="{% url tasks_nudge task.id %}">nudge ticket</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div><a href="{% url tasks_history task.id %}">{% trans "History of this Task" %}</a></div>        
     </div>
     <div class="bulk">
         <h2 class="task_{{ task.get_state_display }}">#{{ task.id }}: <a href="{{ task.get_absolute_url }}">{{ task.summary }}</a></h2>
         <div class="body">
-            <p><a href="{% url tasks_history task.id %}">history</a></p>
             {{ task.detail|urlize|linebreaks }}
         </div>
         <div class="task-meta2">

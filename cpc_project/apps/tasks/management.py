@@ -14,6 +14,7 @@ try:
         notification.create_notice_type("tasks_assignment", _("Task Assignment"), _("a task has been (re)assigned"), default=2)
         notification.create_notice_type("tasks_status", _("Task Status Update"), _("there has been a status update to a task"), default=2)
         notification.create_notice_type("tasks_tags", _("Task Tag Update"), _("there has been a change in the tagging of a task"), default=2)
+        notification.create_notice_type("tasks_nudge", _("Task Nudge"), _("there has been a nudge of a task"), default=2)        
         
     signals.post_syncdb.connect(create_notice_types, sender=notification)
 except ImproperlyConfigured:
