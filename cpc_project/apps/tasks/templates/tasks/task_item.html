@@ -37,9 +37,9 @@
         <div>
             {% if nudge.nudgeable %}
                 {% if nudge.nudge %}
-                    You have nudged this ticket.
+                    You have nudged this task.
                 {% else %}
-                    <a href="{% url tasks_nudge task.id %}">nudge ticket</a>
+                    <a href="{% url tasks_nudge task.id %}">nudge task</a>
                 {% endif %}
             {% endif %}
         </div>
