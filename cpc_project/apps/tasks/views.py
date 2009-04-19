@@ -1,4 +1,7 @@
 from datetime import date
+from itertools import chain
+from operator import attrgetter
+
 
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
@@ -158,7 +161,7 @@ def task(request, id, template_name="tasks/task.html"):
     nudge['count'] = Nudge.objects.filter(task__exact=task).count()    
         
     # get the nudge if you are not the assignee otherwise just a None
-    if is_member and request.user != task.assignee:
+    if is_member and request.user != task.assignee and task.assignee:
         nudge['nudgeable'] = True
         try:
             nudge['nudge'] = Nudge.objects.filter(nudger__exact=request.user, task__exact=task)[0]
@@ -265,12 +268,23 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
 def tasks_history(request, id, template_name="tasks/task_history.html"):
     task = get_object_or_404(Task, id=id)
     task_history = task.history_task.all().order_by('-modified')
+    nudge_history = task.task_nudge.all().order_by('-modified')
+    
+    result_list = sorted(
+        chain(task_history, nudge_history),
+        key=attrgetter('modified')
+        )
+    result_list.reverse()
+    
+    
     for change in task_history:
         change.humanized_state = STATE_CHOICES_DICT.get(change.state, None)
-        change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None)        
+        change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None) 
+               
         
     return render_to_response(template_name, {
         "task": task,
-        "task_history": task_history
+        "task_history": result_list,
+        "nudge_history":nudge_history
     
     }, context_instance=RequestContext(request))
