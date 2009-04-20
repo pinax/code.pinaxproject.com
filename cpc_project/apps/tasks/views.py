@@ -184,6 +184,8 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     other_user = get_object_or_404(User, username=username)
     assigned_tasks = other_user.assigned_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
     created_tasks = other_user.created_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
+    #nudged_tasks =  set([x.task for x in other_user.nudger.all().order_by('-modified')])
+    nudged_tasks =  set([x.task for x in other_user.nudger.all().order_by('-modified')])
 
     url = reverse("tasks_mini_list")
 
@@ -197,6 +199,7 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     return render_to_response(template_name, {
         "assigned_tasks": assigned_tasks,
         "created_tasks": created_tasks,
+        "nudged_tasks": nudged_tasks,
         "other_user": other_user,
         "bookmarklet": bookmarklet,
     }, context_instance=RequestContext(request))

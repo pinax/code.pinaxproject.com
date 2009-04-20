@@ -36,7 +36,7 @@
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
                 <td>{{ forloop.counter }}</td> 
-                <td>
+                <td>{{ change.owner }}{{ change.nudger }}
                     {% if change.owner %}
                         <a href="{{ change.owner.get_profile.get_absolute_url }}">{{ change.owner }}</a>
                     {% endif %}

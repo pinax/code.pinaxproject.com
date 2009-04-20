@@ -12,6 +12,48 @@
     
     <p>You can drag this '<a href="{{ bookmarklet }}">{{ site_name }} Tasks</a>' link to your bookmark bar to quickly get to your open tasks!</p>
     
+    <h2>Nudged Tasks</h2>
+    
+    {% if nudged_tasks %}
+        {% regroup nudged_tasks by get_state_display as grouped_tasks %}
+        
+        <table class="task_list">
+            <tr>
+                <th>ID</th>
+                <th>Summary</th>
+                <th>Last Modified</th>
+                <th>Tags</th>
+                <th>Status</th>
+            </tr>
+            {% for section in grouped_tasks %}
+                <tbody><tr class="task_grouping">
+                    <td colspan="5">
+                        <span class="toggle">
+                            <span class="arrow">&#x25BE;</span>
+                            {{ section.grouper }}
+                            <span class="count">({{ section.list|length }})</span>
+                        </span>
+                    </td>
+                </tr></tbody>
+                <tbody class="task_group" id="group_{{ forloop.counter }}">
+                    {% for task in section.list %}
+                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
+                            <td>{{ task.id }}</td>
+                            <td><a href="{% url task_detail task.id %}">{{ task.summary }}</a></td>
+                            <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
+                            <td>{% task_tags task %}</td>
+                            <td>{{ task.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% endfor %}
+        </table>
+        
+    {% else %}
+        {% trans "You have no nudged tasks right now." %}
+    
+    {% endif %}
+    
     <h2>Assigned Tasks</h2>
     
     {% if assigned_tasks %}
