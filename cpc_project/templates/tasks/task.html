@@ -34,6 +34,8 @@
 <script type="text/javascript">
     $().ready(function() {
         
+        $('#id_assignee').after(' <a href="#" onclick="$(\'#id_assignee\').val({{ user.id }}); return false;">{% trans "assign to me" %}</a>');
+        
         $('#id_summary').focus();
         
         // We disable the the resolution by default
