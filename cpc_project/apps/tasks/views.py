@@ -188,7 +188,8 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     assigned_tasks = other_user.assigned_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
     created_tasks = other_user.created_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
 
-    nudged_tasks =  set([x.task for x in other_user.nudger.all().order_by('-modified')])
+    # get the list of your tasks that have been nudged
+    nudged_tasks =[x for x in other_user.assigned_tasks.all().order_by('-modified') if x.task_nudge.all()]
 
     url = reverse("tasks_mini_list")
 
