@@ -157,6 +157,10 @@ LOGIN_REDIRECT_URLNAME = "home"
 
 WIKI_REQUIRES_LOGIN = True
 
+# For now we stick to a rather loose RE for the URL until the wikiapp 
+# supports urls for non-wikiwords
+WIKI_WORD_RE = r'(?:[A-Z]+([0-9]|[a-z])+){2,}'
+WIKI_URL_RE  = r'[\w0-9]+'
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:

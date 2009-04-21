@@ -9,12 +9,12 @@
     <h1>Add Task</h1>
     
     {% if is_member %}
-		<form method="POST" action="" id="task_form" class="uniForm">    
-                {{ task_form|as_uni_form }}
-
+        <form method="POST" action="" id="task_form" class="uniForm">
+            {{ task_form|as_uni_form }}
+                
                 <div class="form_block">
                     <input type="submit" class="primaryAction" value="{% trans 'add task' %}"/>
-                </div>                
+                </div>
         </form>
     {% else %}
         <p>{% trans 'You are not a member and so cannot add a task.' %}</p>
@@ -24,10 +24,10 @@
 
 {% block extra_body %}
     <script type="text/javascript">
-    
-
-        	$().ready(function() {
-    	        $('#id_summary').focus();
-        	});
+        $().ready(function() {
+            $('#id_assignee').after(' <a href="#" onclick="$(\'#id_assignee\').val({{ user.id }}); return false;">{% trans "assign to me" %}</a>');
+            
+            $('#id_summary').focus();
+        });
     </script>
 {% endblock %}

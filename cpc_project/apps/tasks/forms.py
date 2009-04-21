@@ -33,7 +33,7 @@ class EditTaskForm(forms.ModelForm):
         self.user = user
         super(EditTaskForm, self).__init__(*args, **kwargs)
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')        
-        
+        self.fields['summary'].widget.attrs["size"] = 55
         self.fields.keyOrder = ["summary","tags", "status", "assignee", "state", "resolution"]
         
         if self.instance.assignee != user:
