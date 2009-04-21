@@ -1,9 +1,17 @@
 # -*- coding: utf-8 -*-
 
-""" 
-We break out workflow elements to enable us to more easily refactor in the 
+"""
+We break out workflow elements to enable us to more easily refactor in the
 future.
 """
+
+from django.contrib.auth.models import Group
+
+def is_core_dev(task, user):
+    " is the user a member of the coredev group?"
+    if Group.objects.filter(name__exact='coredev').filter(user=user):
+        return True
+    return False
 
 def is_assignee(task, user):
     if task.assignee == user:
@@ -25,7 +33,7 @@ def is_assignee_or_none(task, user):
     if task.assignee == user or not task.assignee:
         return True
     return False
-    
+
 def always(task, user):
     return True
 
@@ -37,30 +45,30 @@ STATE_TRANSITIONS = [
     (1, 4, is_assignee, "in progress"),
     (1, 5, is_assignee_or_none, "discussion needed"),
     (1, 6, is_assignee_or_none, "blocked"),
-
+    
     # resolved
     (2, 1, always, "re-open"),
     (2, 2, always, "leave resolved"),
     (2, 3, is_creator, "close"),
-
+    
     # closed
     (3, 1, always, "re-open"),
     (3, 3, always, "leave closed"),
-
+    
     # in progress
     (4, 4, always, "still in progress"),
     (4, 1, is_assignee, "open"),
     (4, 2, is_assignee, "resolved"),
     (4, 5, is_assignee, "discussion needed"),
     (4, 6, is_assignee, "blocked"),
-
+    
     # discussion needed
     (5, 5, always, "discussion still needed"),
     (5, 1, is_assignee_or_none, "open"),
     (5, 2, is_assignee_or_none, "resolved"),
     (5, 4, is_assignee_or_none, "in progress"),
     (5, 6, is_assignee_or_none, "blocked"),
-
+    
     # blocked
     (6, 6, always, "still blocked"),
     (6, 1, is_assignee_or_none, "open"),
