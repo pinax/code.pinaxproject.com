@@ -20,20 +20,44 @@ if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
     notification = None
-    
+
 # import task workflow methods
-from tasks.workflow import (is_assignee, is_creator, no_assignee, 
+from tasks.workflow import (is_assignee, is_creator, no_assignee,
                             is_assignee_or_none, always)
-    
+
 # import workflow states and resolutions
-from tasks.workflow import (STATE_TRANSITIONS, STATE_CHOICES, 
+from tasks.workflow import (STATE_TRANSITIONS, STATE_CHOICES,
                             RESOLUTION_CHOICES, REVERSE_STATE_CHOICES,
                             STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
+
+class BaseTaskContainer(models.Model):
+    title = models.CharField(_('title'), max_length=100)
+    description = models.TextField(_('description'), blank=True)
+    modified = models.DateTimeField(_('modified'), default=datetime.now)
+    created = models.DateTimeField(_('created'), default=datetime.now)
+    status = models.CharField(_('status'), max_length=100, blank=True)
+    state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
+    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
+    managers = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('release managers'))
+    
+    class Meta:
+        abstract = True
+        
+    def __unicode__(self):
+        return self.title
+
+class Release(BaseTaskContainer):
+    creator = models.ForeignKey(User, related_name="created_release", verbose_name=_('creator'))
+
+class Iteration(BaseTaskContainer):
+    release = models.ForeignKey(Release, null=True, blank=True, verbose_name=_('release'))
+    creator = models.ForeignKey(User, related_name="created_iteration", verbose_name=_('creator'))
+
 
 class Task(models.Model):
     """
     a task to be performed.
-    """    
+    """
     
     STATE_CHOICES = STATE_CHOICES
     RESOLUTION_CHOICES = RESOLUTION_CHOICES
@@ -59,11 +83,14 @@ class Task(models.Model):
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
     resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
     
+    release = models.ForeignKey(Release, null=True, blank=True, verbose_name=_('release'))
+    iteration = models.ForeignKey(Iteration, null=True, blank=True, verbose_name=_('iteration'))
+    
     def __unicode__(self):
         return self.summary
     
     def save(self, force_insert=False, force_update=False, comment_instance=None, user=None):
-            
+        
         # Do the stock save
         self.modified = datetime.now()
         super(Task, self).save(force_insert, force_update)
@@ -77,7 +104,7 @@ class Task(models.Model):
         for field in fields:
             value = getattr(self, field)
             setattr(th, field, value)
-              
+        
         if user:
             # If a user is provided then we are editing a record.
             # So the owner of the change is the editor.
@@ -90,9 +117,9 @@ class Task(models.Model):
         # handle the comments
         if comment_instance:
             th.comment = comment_instance.comment
-
-        th.save()
         
+        th.save()
+    
     
     def allowable_states(self, user):
         """
@@ -107,20 +134,20 @@ class Task(models.Model):
                 # if the current state does not match a first element in the
                 # state transitions we skip to the next transition
                 continue
-                
+            
             # Fire the validation function.
-            if transition[2](self, user): 
+            if transition[2](self, user):
                 
                 # grab the new state and state description
-                new_state = str(transition[1]) 
+                new_state = str(transition[1])
                 description = transition[3]
                 
                 # build new element
-                element = (new_state, description) 
+                element = (new_state, description)
                 
                 # append new element to choices
-                choices.append(element) 
-                            
+                choices.append(element)
+        
         return choices
     
     @models.permalink

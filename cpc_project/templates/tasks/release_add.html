@@ -1,0 +1,28 @@
+{% extends "tasks/base.html" %}
+
+{% load i18n %}
+{% load uni_form %}
+
+{% block head_title %}Add Release{% endblock %}
+
+{% block body %}
+    <h1>Add Release</h1>
+    
+        <form method="POST" action="" id="task_form" class="uniForm">
+            {{ form|as_uni_form }}
+                
+                <div class="form_block">
+                    <input type="submit" class="primaryAction" value="{% trans 'add release' %}"/>
+                </div>
+        </form>
+    
+{% endblock %}
+
+{% block extra_body %}
+    <script type="text/javascript">
+        $().ready(function() {
+            
+            $('#id_title').focus();
+        });
+    </script>
+{% endblock %}

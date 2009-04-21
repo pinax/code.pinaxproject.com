@@ -1,0 +1,29 @@
+{% extends "tasks/base.html" %}
+
+{% load i18n %}
+{% load tasks_tags %}
+{% load comments_tag %}
+{% load uni_form %}
+
+{% block head_title %}{{ release.title }}{% endblock %}
+
+{% block body %}
+    
+    <p><a href="{% url task_releases %}">&larr; {% trans "Back to Release List" %}</a></p>
+    
+    {% if form %}
+        <h2>Edit</h2>
+        <p><a href="">Attach tasks to this release</a></p>
+        <form method="POST" action="" id="task_form" class="uniForm">
+            {{ form|as_uni_form }}
+            
+            <div class="form_block">
+                <input type="submit" value="{% trans "Update Task" %}" />
+            </div>
+            
+        </form>
+    {% else %}
+        
+    {% endif %}
+    
+{% endblock %}

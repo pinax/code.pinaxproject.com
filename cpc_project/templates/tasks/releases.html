@@ -1,0 +1,47 @@
+{% extends "tasks/base.html" %}
+
+{% load i18n %}
+{% load tasks_tags %}
+{% load shorttimesince_tag %}
+{% load humanize %}
+
+{% block head_title %}Releases}{% endblock %}
+
+{% block body %}
+    <h1>{% blocktrans %}Releases{% endblocktrans %}</h1>
+    
+    
+    {% if releases %}
+        
+        <table class="task_list">
+            <tr>
+                <th>Title</th>
+                <th>Summary</th>
+                <th>Last Modified</th>
+                <th>Managers</th>
+                <th>Status</th>
+            </tr>
+
+            <tbody class="task_group" id="group_{{ forloop.counter }}">
+                {% for release in releases %}
+                    <tr class="{% cycle odd,even %}">
+                        <td><a href="{% url task_release release.id %}">{{ release.title }}</a></td>
+                        <td><a href="{% url task_release release.id %}">{{ release.description }}</a></td>
+                        <td style="white-space: nowrap">{{ release.modified|shorttimesince }} ago</td>
+                        <td>
+                            {% for manager in release.managers.all %}
+                                <a href="{{ manager.get_profile.get_absolute_url }}">{{ manager }}</a>
+                            {% endfor %}
+                            
+                        </td>
+                        <td>{{ release.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    {% else %}    
+        {% trans "No releases yet." %}
+    {% endif %}    
+        
+{% endblock %}

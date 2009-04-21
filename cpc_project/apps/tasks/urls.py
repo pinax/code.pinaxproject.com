@@ -13,4 +13,9 @@ urlpatterns = patterns('',
         
         # nudge
         url(r'^nudge/(\d+)/$', 'tasks.views.nudge', name="tasks_nudge"),
+        
+        # releases
+        url(r'^releases/$', 'tasks.views.releases', name="task_releases"),
+        url(r'^releases/add$', 'tasks.views.release_add', name="task_release_add"),        
+        url(r'^releases/(\d+)/$', 'tasks.views.release', name="task_release"),        
     )

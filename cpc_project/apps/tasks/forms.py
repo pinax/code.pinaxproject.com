@@ -5,7 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models import get_app
 from django.contrib.auth.models import User
 
-from tasks.models import Task, TaskHistory
+from tasks.models import Task, TaskHistory, Release, Iteration
 
 
 class TaskForm(forms.ModelForm):
@@ -14,10 +14,10 @@ class TaskForm(forms.ModelForm):
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
         self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')
         self.fields['summary'].widget.attrs["size"] = 65
-        
+    
     def save(self, commit=True):
-
-        return super(TaskForm, self).save(commit)        
+        
+        return super(TaskForm, self).save(commit)
     
     class Meta:
         model = Task
@@ -32,19 +32,19 @@ class EditTaskForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(EditTaskForm, self).__init__(*args, **kwargs)
-        self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')        
+        self.fields["assignee"].queryset = self.fields["assignee"].queryset.order_by('username')
         self.fields['summary'].widget.attrs["size"] = 55
         self.fields.keyOrder = ["summary","tags", "status", "assignee", "state", "resolution"]
         
         if self.instance.assignee != user:
             del self.fields["status"]
-            
+        
         
         # @@@ for now this following filtering is commented out until we work out how to do generic membership
         # self.fields["assignee"].queryset = self.fields["assignee"].queryset.filter(project=project)
         
         self.fields["state"].choices = self.instance.allowable_states(user)
-
+    
     # TODO: work on this for CPC ticket #131
     def save(self, commit=False):
         
@@ -54,14 +54,41 @@ class EditTaskForm(forms.ModelForm):
             task = Task.objects.get(pk__exact=self.instance.pk)
             for field in self.fields.keyOrder:
                 value = getattr(self.instance, field)
-                setattr(task, field, value)    
-            task.save(user = self.user)            
+                setattr(task, field, value)
+            task.save(user = self.user)
         
-        return super(EditTaskForm, self).save(True) 
-            
+        return super(EditTaskForm, self).save(True)
         
         
+    
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))
     
-    class Meta(TaskForm.Meta):     
+    class Meta(TaskForm.Meta):
         fields = ('summary','status', 'assignee', 'state', 'tags', 'resolution')
+
+
+class ReleaseForm(forms.ModelForm):
+    def __init__(self,  *args, **kwargs):
+        super(ReleaseForm, self).__init__(*args, **kwargs)
+    
+    def save(self, commit=True):
+        
+        return super(ReleaseForm, self).save(commit)
+    
+    class Meta:
+        model = Release
+        fields = ('title', 'description', 'managers')
+
+class ReleaseEditForm(forms.ModelForm):
+    
+    #tasks = forms.ModelMultipleChoiceField(queryset=Task.objects.all())
+    
+    def __init__(self,  *args, **kwargs):
+        super(ReleaseEditForm, self).__init__(*args, **kwargs)
+
+        self.fields.keyOrder = ['title', 'description', 'managers']
+        #self.fields["tasks"].queryset = Task.objects.all()#self.instance.task_set.all()      
+    
+    class Meta:
+        model = Release
+        fields = ('title', 'description', 'managers')
