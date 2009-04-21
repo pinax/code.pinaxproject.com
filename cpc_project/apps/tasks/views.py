@@ -92,10 +92,13 @@ def nudge(request, id):
     task = get_object_or_404(Task, id=id)    
     task_url = task.get_absolute_url()
 
-    if Nudge.objects.filter(task__exact=task,nudger__exact=request.user):
+    nudged = Nudge.objects.filter(task__exact=task,nudger__exact=request.user)
+    if nudged:
         # you've already nudged this task.
-        message = "You've already nudged this task"
-        request.user.message_set.create(message=message)        
+        nudge = nudged[0]
+        nudge.delete()       
+        message = "You've removed your nudge from this task"
+        request.user.message_set.create(message=message) 
         return HttpResponseRedirect(task_url)
     
 
