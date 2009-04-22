@@ -32,7 +32,6 @@ def is_task_manager(task, user):
     if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
         return True
     return False
-
     
 def no_assignee(task, user):
     if not task.assignee:
