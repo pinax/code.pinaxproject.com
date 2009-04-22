@@ -9,35 +9,35 @@ from django.contrib.auth.models import Group
 
 TASK_MANAGER = 'coredev'
 
-def is_task_manager(task, user):
-    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
-        return True
-    return False
+def always(task, user):
+    return True
 
 def is_assignee(task, user):
     if task.assignee == user:
         return True
     return False
+    
+def is_assignee_or_none(task, user):
+    # current user is assignee or there is no assignee
+    if task.assignee == user or not task.assignee:
+        return True
+    return False    
 
 def is_creator(task, user):
     if task.creator == user:
         return True
     return False
 
+def is_task_manager(task, user):
+    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
+        return True
+    return False
+
+    
 def no_assignee(task, user):
     if not task.assignee:
         return True
-    return False
-
-def is_assignee_or_none(task, user):
-    # current user is assignee or there is no assignee
-    if task.assignee == user or not task.assignee:
-        return True
-    return False
-
-def always(task, user):
-    return True
-
+    return False    
 
 STATE_TRANSITIONS = [
     # open
