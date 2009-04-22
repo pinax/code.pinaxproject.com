@@ -19,12 +19,15 @@ from tagging.models import Tag
 
 from tasks.models import (Task, Nudge, STATE_CHOICES, RESOLUTION_CHOICES, 
                             STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
-                            
-from tasks.models import Release
 
-from tasks.forms import TaskForm, EditTaskForm, ReleaseForm, ReleaseEditForm
+from tasks.forms import TaskForm, EditTaskForm
 
 TASK_MANAGER = 'coredev'
+
+def is_task_manager(user):
+    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
+        return True
+    return False
 
 try:
     notification = get_app('notification')
@@ -300,58 +303,3 @@ def tasks_history(request, id, template_name="tasks/task_history.html"):
         "nudge_history":nudge_history
     
     }, context_instance=RequestContext(request))
-    
-def releases(request, template_name="tasks/releases.html"):
-    return render_to_response(template_name, {
-        "releases": Release.objects.all().order_by('-modified')
-    }, context_instance=RequestContext(request))
-    
-@login_required
-def release_add(request, form=ReleaseForm, template_name='tasks/release_add.html'):
-    
-    # does the user have the right permissions?
-    if not Group.objects.filter(name__exact=TASK_MANAGER).filter(user=request.user):
-        request.user.message_set.create(message="You do not have core developer permissions and cannot add or edit a release.")
-        return HttpResponseRedirect(reverse("task_list"))    
-        
-    # now lets do their form
-    if request.method == "POST":
-        form = ReleaseForm(request.POST)
-        if form.is_valid():
-            release = form.save(commit=False)
-            release.creator = request.user          
-            release.save()
-            form.save(commit=True)            
-            message = "Release %s added" % release
-            request.user.message_set.create(message=message)
-            return HttpResponseRedirect(reverse("task_releases"))    
-    else:
-        form = ReleaseForm()
-        
-    return render_to_response(template_name, {
-        "form": form
-    }, context_instance=RequestContext(request))
-    
-
-def release(request, id, form=ReleaseEditForm, template_name='tasks/release.html'):
-    release = get_object_or_404(Release, id=id)
-    
-    # user is a coredev so lets give them release management ability
-    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=request.user):
-        if request.method == "POST":
-            form = ReleaseEditForm(request.POST, instance=release)
-            if form.is_valid():
-                form.save(commit=True)
-                message = "Release %s modified" % release
-                request.user.message_set.create(message=message)
-                return HttpResponseRedirect(reverse("task_releases"))  
-        else:
-            form = ReleaseEditForm(instance=release)
-    else:
-        form = None
-        
-    return render_to_response(template_name, {
-        "release":release,
-        "form": form
-    }, context_instance=RequestContext(request))
-    

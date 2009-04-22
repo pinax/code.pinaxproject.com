@@ -7,11 +7,13 @@ future.
 
 from django.contrib.auth.models import Group
 
-def is_core_dev(task, user):
-    " is the user a member of the coredev group?"
-    if Group.objects.filter(name__exact='coredev').filter(user=user):
+TASK_MANAGER = 'coredev'
+ 
+def is_task_manager(task, user):
+    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
         return True
     return False
+
 
 def is_assignee(task, user):
     if task.assignee == user:

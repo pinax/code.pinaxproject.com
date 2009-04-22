@@ -30,29 +30,6 @@ from tasks.workflow import (STATE_TRANSITIONS, STATE_CHOICES,
                             RESOLUTION_CHOICES, REVERSE_STATE_CHOICES,
                             STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
 
-class BaseTaskContainer(models.Model):
-    title = models.CharField(_('title'), max_length=100)
-    description = models.TextField(_('description'), blank=True)
-    modified = models.DateTimeField(_('modified'), default=datetime.now)
-    created = models.DateTimeField(_('created'), default=datetime.now)
-    status = models.CharField(_('status'), max_length=100, blank=True)
-    state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
-    resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
-    managers = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('release managers'))
-    
-    class Meta:
-        abstract = True
-        
-    def __unicode__(self):
-        return self.title
-
-class Release(BaseTaskContainer):
-    creator = models.ForeignKey(User, related_name="created_release", verbose_name=_('creator'))
-
-class Iteration(BaseTaskContainer):
-    release = models.ForeignKey(Release, null=True, blank=True, verbose_name=_('release'))
-    creator = models.ForeignKey(User, related_name="created_iteration", verbose_name=_('creator'))
-
 
 class Task(models.Model):
     """
@@ -82,10 +59,7 @@ class Task(models.Model):
     status = models.CharField(_('status'), max_length=100, blank=True)
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
     resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
-    
-    release = models.ForeignKey(Release, null=True, blank=True, verbose_name=_('release'))
-    iteration = models.ForeignKey(Iteration, null=True, blank=True, verbose_name=_('iteration'))
-    
+        
     def __unicode__(self):
         return self.summary
     

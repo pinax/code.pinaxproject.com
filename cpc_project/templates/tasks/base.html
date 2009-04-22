@@ -7,10 +7,6 @@
 {% block subnav %}
     {% if user.is_authenticated %}
         <ul>
-            {% comment %}
-                <li><a href="{% url task_release_add %}">{% trans "Add Release" %}</a></li>
-                <li><a href="{% url task_releases %}">{% trans "Releases" %}</a></li>            
-            {% endcomment %}            
             <li><a href="{% url task_add %}">{% trans "Add Task" %}</a></li>
             <li><a href="{% url tasks_for_user user.username %}">{% trans "Your Tasks" %}</a></li>
             <li><a href="{% url task_list %}">{% trans "All Tasks" %}</a></li>
