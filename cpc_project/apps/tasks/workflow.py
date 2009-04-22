@@ -14,7 +14,6 @@ def is_task_manager(task, user):
         return True
     return False
 
-
 def is_assignee(task, user):
     if task.assignee == user:
         return True
