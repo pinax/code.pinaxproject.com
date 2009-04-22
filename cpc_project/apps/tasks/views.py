@@ -17,17 +17,10 @@ from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
 
-from tasks.models import (Task, Nudge, STATE_CHOICES, RESOLUTION_CHOICES, 
+from tasks.models import (Task, Nudge, STATE_CHOICES, RESOLUTION_CHOICES,
                             STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
 
 from tasks.forms import TaskForm, EditTaskForm
-
-TASK_MANAGER = 'coredev'
-
-def is_task_manager(user):
-    if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
-        return True
-    return False
 
 try:
     notification = get_app('notification')
@@ -37,20 +30,20 @@ except ImproperlyConfigured:
 
 def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
     group = None # get_object_or_404(Project, slug=slug)
-
+    
     # @@@ if group.deleted:
     # @@@     raise Http404
-
+    
     is_member = True # @@@ groups.has_member(request.user)
-
+    
     group_by = request.GET.get("group_by")
-
+    
     if group:
         tasks = group.tasks.all() # @@@ assumes GR
     else:
         tasks = Task.objects.filter(object_id__isnull=True)
-    
 
+    
     return render_to_response(template_name, {
         "group": group,
         "tasks": tasks,
@@ -61,17 +54,17 @@ def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
 
 def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks/add.html"):
     group = None # get_object_or_404(Project, slug=slug)
-
+    
     # @@@ if group.deleted:
     # @@@     raise Http404
-
+    
     if group:
         notify_list = group.member_users.all() # @@@
     else:
         notify_list = User.objects.all()
-
+    
     is_member = True # @@@ groups.has_member(request.user)
-
+    
     if request.user.is_authenticated() and request.method == "POST":
         task_form = form_class(group, request.POST)
         if task_form.is_valid():
@@ -86,7 +79,7 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
             return HttpResponseRedirect(reverse("task_list"))
     else:
         task_form = form_class(group=group)
-
+    
     return render_to_response(template_name, {
         "group": group,
         "is_member": is_member,
@@ -96,23 +89,23 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
 @login_required
 def nudge(request, id):
     """ Called when a user nudges a ticket """
-
-    task = get_object_or_404(Task, id=id)    
+    
+    task = get_object_or_404(Task, id=id)
     task_url = task.get_absolute_url()
-
+    
     nudged = Nudge.objects.filter(task__exact=task,nudger__exact=request.user)
     if nudged:
         # you've already nudged this task.
         nudge = nudged[0]
-        nudge.delete()       
+        nudge.delete()
         message = "You've removed your nudge from this task"
-        request.user.message_set.create(message=message) 
+        request.user.message_set.create(message=message)
         return HttpResponseRedirect(task_url)
+
     
-
-    nudge = Nudge(nudger = request.user, task = task)    
+    nudge = Nudge(nudger = request.user, task = task)
     nudge.save()
-
+    
     count = Nudge.objects.filter(task__exact=task).count()
     
     # send the message to the user
@@ -120,26 +113,26 @@ def nudge(request, id):
     request.user.message_set.create(message=message)
     
     # send out the nudge notification
-    if notification:    
+    if notification:
         notify_list = [task.assignee]
-        notification.send(notify_list, "tasks_nudge", {"nudger": request.user, "task": task, "count": count})      
+        notification.send(notify_list, "tasks_nudge", {"nudger": request.user, "task": task, "count": count})
     
     return HttpResponseRedirect(task_url)
 
 def task(request, id, template_name="tasks/task.html"):
     task = get_object_or_404(Task, id=id)
     group = task.group
-
+    
     # @@@ if group.deleted:
     # @@@     raise Http404
-
+    
     if group:
         notify_list = group.member_users.all() # @@@
     else:
         notify_list = User.objects.all()
-
+    
     is_member = request.user.is_authenticated() # @@@ groups.has_member(request.user)
-
+    
     if is_member and request.method == "POST":
         form = EditTaskForm(request.user, request.POST, instance=task)
         if form.is_valid():
@@ -163,14 +156,14 @@ def task(request, id, template_name="tasks/task.html"):
             form = EditTaskForm(request.user, instance=task)
     else:
         form = EditTaskForm(request.user, instance=task)
-        
+    
     # The NUDGE dictionary
     nudge = {}
     nudge['nudgeable'] = False
     
     # get the count of nudges so assignee can see general level of interest.
-    nudge['count'] = Nudge.objects.filter(task__exact=task).count()    
-        
+    nudge['count'] = Nudge.objects.filter(task__exact=task).count()
+    
     # get the nudge if you are not the assignee otherwise just a None
     if is_member and request.user != task.assignee and task.assignee:
         nudge['nudgeable'] = True
@@ -178,10 +171,10 @@ def task(request, id, template_name="tasks/task.html"):
             nudge['nudge'] = Nudge.objects.filter(nudger__exact=request.user, task__exact=task)[0]
         except IndexError:
             nudge['nudge'] = None
-            
+    
     # get the nudge history
     nudge['history'] = Nudge.objects.filter(task__exact=task)
-
+    
     return render_to_response(template_name, {
         "nudge": nudge,
         "task": task,
@@ -195,19 +188,19 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     other_user = get_object_or_404(User, username=username)
     assigned_tasks = other_user.assigned_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
     created_tasks = other_user.created_tasks.all().order_by("state", "-modified") # @@@ filter(project__deleted=False)
-
+    
     # get the list of your tasks that have been nudged
     nudged_tasks =[x for x in other_user.assigned_tasks.all().order_by('-modified') if x.task_nudge.all()]
-
+    
     url = reverse("tasks_mini_list")
-
+    
     bookmarklet = """javascript:(
             function() {
                 url = '%s';
                 window.open(url, 'tasklist', 'height=500, width=250, title=no, location=no, scrollbars=yes, menubars=no, navigation=no, statusbar=no, directories=no, resizable=yes, status=no, toolbar=no, menuBar=no');
             }
         )()""" % url
-
+    
     return render_to_response(template_name, {
         "assigned_tasks": assigned_tasks,
         "created_tasks": created_tasks,
@@ -227,19 +220,19 @@ def mini_list(request, template_name="tasks/mini_list.html"):
 
 def focus(request, field, value, group_slug=None, template_name="tasks/focus.html"):
     group = None # get_object_or_404(Project, slug=slug)
-
+    
     # @@@ if group.deleted:
     # @@@     raise Http404
-
+    
     is_member = True # @@@ groups.has_member(request.user)
-
+    
     group_by = request.GET.get("group_by")
-
+    
     if group:
         qs = group.tasks.all()
     else:
         qs = Task.objects.filter(object_id__isnull=True)
-
+    
     if field == "modified":
         try:
             # @@@ this seems hackish and brittle but I couldn't work out another way
@@ -269,7 +262,7 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
             tasks = Task.objects.none() # @@@ or throw 404?
     else:
         tasks = qs
-
+    
     return render_to_response(template_name, {
         "group": group,
         "tasks": tasks,
@@ -294,9 +287,9 @@ def tasks_history(request, id, template_name="tasks/task_history.html"):
     
     for change in task_history:
         change.humanized_state = STATE_CHOICES_DICT.get(change.state, None)
-        change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None) 
-               
+        change.humanized_resolution = RESOLUTION_CHOICES_DICT.get(change.resolution, None)
         
+    
     return render_to_response(template_name, {
         "task": task,
         "task_history": result_list,
