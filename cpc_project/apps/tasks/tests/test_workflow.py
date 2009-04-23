@@ -19,7 +19,7 @@ class TestWorkflowFunctions(TestCase):
         # The task is assigned to user joe by user admin
         self.task = Task.objects.get(pk__exact=1)
         self.task.assignee = self.user_joe
-        self.task.save(user=self.user_admin)
+        self.task.save()
         
         # lets set up a sample group
         self.group = Group(name=TASK_MANAGER)
@@ -48,7 +48,7 @@ class TestWorkflowFunctions(TestCase):
         
         # now lets remove the assignee and see what happens
         self.task.assignee = None
-        self.task.save(user=self.user_admin)        
+        self.task.save()        
         self.assertEquals(True, is_assignee_or_none(self.task, self.user_admin))
         self.assertEquals(True, is_assignee_or_none(self.task, self.user_joe))        
         self.assertEquals(True, is_assignee_or_none(self.task, None))
@@ -66,7 +66,7 @@ class TestWorkflowFunctions(TestCase):
         
         # test again without assignee
         self.task.assignee = None
-        self.task.save(user=self.user_admin)
+        self.task.save()
         self.assertEquals(True, no_assignee(self.task, self.user_admin))
         self.assertEquals(True, no_assignee(self.task, self.user_joe))        
         self.assertEquals(True, no_assignee(self.task, None))         

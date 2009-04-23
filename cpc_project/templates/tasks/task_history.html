@@ -35,7 +35,7 @@
         <tbody> 
             {% for change in task_history %}   
                 <tr class="{% cycle odd,even %}">
-                <td>{{ forloop.counter }}</td> 
+                <td>{{ forloop.revcounter }}</td> 
                 <td>
                     {% if change.owner %}
                         <a href="{{ change.owner.get_profile.get_absolute_url }}">{{ change.owner }}</a>

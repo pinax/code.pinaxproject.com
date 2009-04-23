@@ -73,6 +73,7 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
             task.group = group
             # @@@ we should check that assignee is really a member
             task.save()
+            task.save_history()
             request.user.message_set.create(message="added task '%s'" % task.summary)
             if notification:
                 notification.send(notify_list, "tasks_new", {"creator": request.user, "task": task, "group": group})
@@ -137,6 +138,7 @@ def task(request, id, template_name="tasks/task.html"):
         form = EditTaskForm(request.user, request.POST, instance=task)
         if form.is_valid():
             task = form.save()
+            task.save_history(change_owner=request.user)
             if "status" in form.changed_data:
                 request.user.message_set.create(message="updated your status on the task")
                 if notification:

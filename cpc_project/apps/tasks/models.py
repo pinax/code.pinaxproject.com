@@ -72,11 +72,18 @@ class Task(models.Model):
         for nudge in Nudge.objects.filter(task__exact=self):
             nudge.delete()
     
-    def save(self, force_insert=False, force_update=False, comment_instance=None, user=None):
+    def save(self, force_insert=False, force_update=False, comment_instance=None, change_owner=None):
         
         # Do the stock save
         self.modified = datetime.now()
+        
+        # remove nudges
+        self.denudge()
+        
         super(Task, self).save(force_insert, force_update)
+                
+    def save_history(self, comment_instance=None, change_owner=None):
+        '''Create a new ChangeSet with the old content.'''
         
         # get the task history object
         th = TaskHistory()
@@ -87,23 +94,21 @@ class Task(models.Model):
         for field in self.fields:
             value = getattr(self, field)
             setattr(th, field, value)
-        
-        if user:
+
+
+        if change_owner:
             # If a user is provided then we are editing a record.
             # So the owner of the change is the editor.
-            th.owner = user
+            th.owner = change_owner
         else:
             # This record is being created right now, hence the assignment
             # of the creator to the task history object's owner field.
             th.owner = self.creator
-        
+
         # handle the comments
         if comment_instance:
             th.comment = comment_instance.comment
             
-        # remove any nudges
-        self.denudge()
-        
         th.save()
     
     
@@ -145,11 +150,12 @@ from threadedcomments.models import ThreadedComment
 def new_comment(sender, instance, **kwargs):
     if isinstance(instance.content_object, Task):
         task = instance.content_object
-        task.modified = datetime.now()
+        task.save()
         
         # pass in the instance.user so that the task history owner is recorded
-        # as the commenter
-        task.save(comment_instance=instance,user=instance.user)
+        # as the commenter        
+        task.save_history(comment_instance=instance,change_owner=instance.user)
+        
         group = task.group
         if notification:
             
