@@ -51,5 +51,49 @@
             "modified": "2009-03-31 15:14:47",
             "tags": ""
         }
+    }, 
+    {
+        "pk": 2,
+        "model": "tasks.task",
+        "fields": {
+            "status": "",
+            "creator": 1,
+            "created": "2009-03-31 15:14:47",
+            "detail": "A second test task",
+            "object_id": null,
+            "summary": "test task",
+            "assignee": 2,
+            "state": "1",
+            "content_type": null,
+            "modified": "2009-03-31 15:14:47",
+            "tags": ""
+        }
+    },       
+    {
+        "pk": 1,
+        "model": "tasks.nudge",
+        "fields": {
+            "nudger": 1,
+            "task": 1,
+            "modified": "2009-03-31 15:14:47"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "tasks.nudge",
+        "fields": {
+            "nudger": 2,
+            "task": 1,
+            "modified": "2009-03-31 15:14:47"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "tasks.nudge",
+        "fields": {
+            "nudger": 1,
+            "task": 2,
+            "modified": "2009-03-31 15:14:47"
+        }
     }
 ]

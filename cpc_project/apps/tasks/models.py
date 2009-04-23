@@ -59,9 +59,18 @@ class Task(models.Model):
     status = models.CharField(_('status'), max_length=100, blank=True)
     state = models.CharField(_('state'), max_length=1, choices=STATE_CHOICES, default=1)
     resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
+    
+    # fields for review and saves
+    fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'tags', 'status', 'state', 'resolution')
         
     def __unicode__(self):
         return self.summary
+        
+    def denudge(self):
+        # we remove all nudges for this Task
+        
+        for nudge in Nudge.objects.filter(task__exact=self):
+            nudge.delete()
     
     def save(self, force_insert=False, force_update=False, comment_instance=None, user=None):
         
@@ -74,8 +83,8 @@ class Task(models.Model):
         th.task = self
         
         # save the simple fields
-        fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'tags', 'status', 'state', 'resolution')
-        for field in fields:
+        
+        for field in self.fields:
             value = getattr(self, field)
             setattr(th, field, value)
         
@@ -91,6 +100,9 @@ class Task(models.Model):
         # handle the comments
         if comment_instance:
             th.comment = comment_instance.comment
+            
+        # remove any nudges
+        self.denudge()
         
         th.save()
     
