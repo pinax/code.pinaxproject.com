@@ -1,2 +1,0 @@
-ALTER TABLE tasks_task ADD COLUMN "release_id" integer NULL REFERENCES "tasks_release" ("id");
-ALTER TABLE tasks_task ADD COLUMN "iteration_id" integer NULL REFERENCES "tasks_iteration" ("id");
