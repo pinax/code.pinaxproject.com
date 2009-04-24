@@ -103,3 +103,6 @@ REVERSE_STATE_CHOICES = dict((item[1], item[0]) for item in STATE_CHOICES)
 
 STATE_CHOICES_DICT = dict((item[0], item[1]) for item in STATE_CHOICES)
 RESOLUTION_CHOICES_DICT = dict((item[0], item[1]) for item in RESOLUTION_CHOICES)
+
+STATE_ID_LIST = [x[0] for x in STATE_CHOICES]
+

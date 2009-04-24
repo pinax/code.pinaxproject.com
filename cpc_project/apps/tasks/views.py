@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import get_app
+from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
@@ -17,10 +18,13 @@ from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
 
-from tasks.models import (Task, Nudge, STATE_CHOICES, RESOLUTION_CHOICES,
-                            STATE_CHOICES_DICT, RESOLUTION_CHOICES_DICT)
+from tasks.models import (Task, Nudge)
 
 from tasks.forms import TaskForm, EditTaskForm
+
+from tasks.workflow import (REVERSE_STATE_CHOICES, STATE_ID_LIST, STATE_CHOICES,
+                            RESOLUTION_CHOICES, STATE_CHOICES_DICT, 
+                            RESOLUTION_CHOICES_DICT)
 
 try:
     notification = get_app('notification')
@@ -37,18 +41,36 @@ def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
     is_member = True # @@@ groups.has_member(request.user)
     
     group_by = request.GET.get("group_by")
+        
     
     if group:
         tasks = group.tasks.all() # @@@ assumes GR
     else:
         tasks = Task.objects.filter(object_id__isnull=True)
+    
+    # exclude states
+    hide_state  = request.GET.get("hide_state")
+    if hide_state:
+        for exclude in hide_state.split(','):
+            if exclude in STATE_ID_LIST:                
+                tasks = tasks.exclude(state__exact=exclude)            
 
+            state = REVERSE_STATE_CHOICES.get(exclude, None)
+            if state:
+                tasks = tasks.exclude(state__exact=state)
+                
+                
+    state_displays = []
+    for state in STATE_CHOICES:
+        state_displays.append(dict(id=state[0], description=state[1]))
     
     return render_to_response(template_name, {
         "group": group,
         "tasks": tasks,
         "group_by": group_by,
         "is_member": is_member,
+        "hide_state": hide_state,
+        "state_displays": state_displays,
     }, context_instance=RequestContext(request))
 
 
