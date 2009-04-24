@@ -36,8 +36,6 @@
         
         $('#id_assignee').after(' <a href="#" onclick="$(\'#id_assignee\').val({{ user.id }}); return false;">{% trans "assign to me" %}</a>');
         
-        $('#id_summary').focus();
-        
         // We disable the the resolution by default
         // when the page loads. Unless, of course,
         // the ticket is already in the resolved state (state==2)
