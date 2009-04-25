@@ -13,4 +13,7 @@ urlpatterns = patterns('',
         
         # nudge
         url(r'^nudge/(\d+)/$', 'tasks.views.nudge', name="tasks_nudge"),
+        
+        # exports
+        url(r'^export_state_transitions.csv$', 'tasks.views.export_state_transitions', name="tasks_export_state_transitions"),
     )

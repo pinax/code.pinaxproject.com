@@ -4,6 +4,7 @@ from operator import attrgetter
 
 
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -25,6 +26,8 @@ from tasks.forms import TaskForm, EditTaskForm
 from tasks.workflow import (REVERSE_STATE_CHOICES, STATE_ID_LIST, STATE_CHOICES,
                             RESOLUTION_CHOICES, STATE_CHOICES_DICT, 
                             RESOLUTION_CHOICES_DICT)
+
+from tasks.workflow import export_state_transitions as ext
 
 try:
     notification = get_app('notification')
@@ -230,7 +233,7 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
         "created_tasks": created_tasks,
         "nudged_tasks": nudged_tasks,
         "other_user": other_user,
-        "bookmarklet": bookmarklet,
+        "bookmarklet": bookmarklet
     }, context_instance=RequestContext(request))
 
 
@@ -320,3 +323,7 @@ def tasks_history(request, id, template_name="tasks/task_history.html"):
         "nudge_history":nudge_history
     
     }, context_instance=RequestContext(request))
+    
+def export_state_transitions(request):
+    export = ext()
+    return HttpResponse(export,mimetype='text/csv')

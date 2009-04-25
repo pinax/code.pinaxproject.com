@@ -28,15 +28,13 @@ class TestTask(TestCase):
         # Task is just created
         states = self.task.allowable_states(self.user_admin)
         self.assertEquals(states,
-            [('1', 'leave open'), ('5', 'discussion needed'), ('6', 'blocked')])
+            [('1', 'leave open')])
         
-        # Now we assign it. This is what the new user sees
+        # Now we assign it. This is what the assignee sees
         self.task.assignee = self.user_joe
         self.task.save()
         states = self.task.allowable_states(self.user_joe)
-        self.assertEquals(states,
-            [('1', 'leave open'), ('2', 'resolved'), ('4', 'in progress'),
-            ('5', 'discussion needed'), ('6', 'blocked')])
+        self.assertEquals(states, [('1', 'leave open')])
         
         # this is what the creator sees
         states = self.task.allowable_states(self.user_admin)
@@ -47,8 +45,8 @@ class TestTask(TestCase):
         self.task.save()
         states = self.task.allowable_states(self.user_joe)
         self.assertEquals(states,
-            [('4', 'still in progress'), ('1', 'open'), ('2', 'resolved'),
-            ('5', 'discussion needed'), ('6', 'blocked')])
+            [('4', 'still in progress'), ('5', 'discussion needed'),
+            ('8', 'fix needs review')] )
             
     def test_denudge(self):
         """ We check that:
