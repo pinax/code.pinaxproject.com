@@ -114,7 +114,7 @@
                             <td style="white-space: nowrap">{{ item.object.modified|shorttimesince }} ago</td>
                             <td>
                                 {% if item.object.assignee %}
-                                    {{ item.object.assignee }}
+                                    <a href="{% url tasks_for_user item.object.assignee %}">{{ item.object.assignee }}</a>
                                 {% else %}
                                     <span class="warning">unassigned</span>
                                 {% endif %}
@@ -153,7 +153,8 @@
                             <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
                             <td>
                                 {% if task.assignee %}
-                                    {{ task.assignee }}
+                                    <a href="{% url tasks_for_user task.assignee %}">{{ task.assignee }}</a>
+                                    
                                 {% else %}
                                     <span class="warning">unassigned</span>
                                 {% endif %}
