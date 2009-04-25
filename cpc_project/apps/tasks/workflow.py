@@ -44,7 +44,7 @@ def no_assignee(task, user):
 STATE_TRANSITIONS = [
     # open
     (1, 1, always, "leave open"),
-    (1, 7, is_task_manager, "accept?"),    
+    (1, 7, is_task_manager, "accept"),    
     (1, 2, is_task_manager, "resolved"),
     (1, 5, is_task_manager, "discussion needed"),
     (1, 6, is_task_manager, "blocked"),
@@ -70,14 +70,14 @@ STATE_TRANSITIONS = [
     # discussion needed
     (5, 5, always, "discussion still needed"),
     (5, 4, is_assignee, "in progress"),    
-    (5, 1, is_task_manager, "open"),
+    (5, 1, is_task_manager, "move back to new"),
     (5, 2, is_task_manager, "resolved"),
     (5, 4, is_task_manager, "in progress"),
     (5, 6, is_task_manager, "blocked"),
     
     # blocked
     (6, 6, always, "still blocked"),
-    (6, 1, is_task_manager, "open"),
+    (6, 1, is_task_manager, "move back to new"),
     (6, 2, is_task_manager, "resolved"),
     (6, 4, is_task_manager, "in progress"),
     (6, 5, is_task_manager, "discussion needed"),
