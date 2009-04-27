@@ -84,7 +84,7 @@ STATE_TRANSITIONS = [
     
     # accepted
     (7, 7, always, "accepted"),    
-    (7, 4, is_assignee, "in_progress"),   
+    (7, 4, is_assignee, "in progress"),   
     (7, 2, is_task_manager, "resolved"),
     (7, 5, is_task_manager, "discussion needed"),
     (7, 6, is_task_manager, "blocked"), 
