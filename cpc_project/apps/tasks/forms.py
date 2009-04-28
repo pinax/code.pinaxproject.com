@@ -55,3 +55,8 @@ class EditTaskForm(forms.ModelForm):
     
     class Meta(TaskForm.Meta):
         fields = ('summary','status', 'assignee', 'state', 'tags', 'resolution')
+
+class SearchTaskForm(forms.Form):
+    
+    search = forms.CharField(label="Search before adding a task",initial="search")
+    action = forms.CharField(initial="search",widget=forms.HiddenInput)

@@ -21,7 +21,7 @@ from tagging.models import Tag
 
 from tasks.models import (Task, Nudge)
 
-from tasks.forms import TaskForm, EditTaskForm
+from tasks.forms import TaskForm, EditTaskForm, SearchTaskForm
 
 from tasks.workflow import (REVERSE_STATE_CHOICES, STATE_ID_LIST, STATE_CHOICES,
                             RESOLUTION_CHOICES, STATE_CHOICES_DICT, 
@@ -90,19 +90,35 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
     
     is_member = True # @@@ groups.has_member(request.user)
     
-    if request.user.is_authenticated() and request.method == "POST":
-        task_form = form_class(group, request.POST)
-        if task_form.is_valid():
-            task = task_form.save(commit=False)
-            task.creator = request.user
-            task.group = group
-            # @@@ we should check that assignee is really a member
-            task.save()
-            task.save_history()
-            request.user.message_set.create(message="added task '%s'" % task.summary)
-            if notification:
-                notification.send(notify_list, "tasks_new", {"creator": request.user, "task": task, "group": group})
-            return HttpResponseRedirect(reverse("task_list"))
+    search_form = SearchTaskForm()
+    search_results = []
+    if request.method == "POST":
+        action = request.POST.get('action', None)
+        if action == 'search':
+            search_form = SearchTaskForm(request.POST)
+            search = request.POST.get('search', None)
+            task_form = form_class(group=group)
+            if search:
+                qset = (
+                    Q(summary__contains=search)|
+                    Q(detail__contains=search)
+                    )
+                search_results = Task.objects.filter(qset).distinct()
+
+            
+        if request.user.is_authenticated() and not action:
+            task_form = form_class(group, request.POST)
+            if task_form.is_valid():
+                task = task_form.save(commit=False)
+                task.creator = request.user
+                task.group = group
+                # @@@ we should check that assignee is really a member
+                task.save()
+                task.save_history()
+                request.user.message_set.create(message="added task '%s'" % task.summary)
+                if notification:
+                    notification.send(notify_list, "tasks_new", {"creator": request.user, "task": task, "group": group})
+                return HttpResponseRedirect(reverse("task_list"))
     else:
         task_form = form_class(group=group)
     
@@ -110,6 +126,8 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
         "group": group,
         "is_member": is_member,
         "task_form": task_form,
+        "search_form": search_form,
+        "search_results":search_results
     }, context_instance=RequestContext(request))
 
 @login_required
