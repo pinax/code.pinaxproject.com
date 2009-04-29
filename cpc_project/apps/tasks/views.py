@@ -182,6 +182,8 @@ def task(request, id, template_name="tasks/task.html"):
         if form.is_valid():
             task = form.save()
             task.save_history(change_owner=request.user)
+            if task.assignee == request.user:
+                task.denudge()
             if "status" in form.changed_data:
                 request.user.message_set.create(message="updated your status on the task")
                 if notification:

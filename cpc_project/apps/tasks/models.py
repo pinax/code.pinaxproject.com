@@ -77,9 +77,6 @@ class Task(models.Model):
         # Do the stock save
         self.modified = datetime.now()
         
-        # remove nudges
-        self.denudge()
-        
         super(Task, self).save(force_insert, force_update)
                 
     def save_history(self, comment_instance=None, change_owner=None):
