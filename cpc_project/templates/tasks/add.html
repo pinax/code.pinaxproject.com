@@ -9,7 +9,7 @@
     <h1>Add Task</h1>
     
     {% if is_member %}
-                
+        {% comment %}
         <div class="search">
             <form method="POST" action="" id="search_form">
                 {{ search_form.as_p }}
@@ -26,6 +26,7 @@
             {% endif %}
             <hr />
         </div>
+        {% endcomment %}
         
          <div class="main-form">
             <form method="POST" action="" id="task_form" class="uniForm">
