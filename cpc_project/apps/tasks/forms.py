@@ -7,6 +7,7 @@ from django.db.models import get_app
 from django.contrib.auth.models import User
 
 from tasks.models import Task, TaskHistory
+from tasks.widgets import ReadOnlyWidget
 
 
 class TaskForm(forms.ModelForm):
@@ -45,6 +46,9 @@ class EditTaskForm(forms.ModelForm):
         # self.fields["assignee"].queryset = self.fields["assignee"].queryset.filter(project=project)
         
         self.fields["state"].choices = self.instance.allowable_states(user)
+        
+        if self.instance.state == '3':
+            self.fields['resolution'].widget = ReadOnlyWidget(field=self.instance._meta.get_field('resolution'))
     
     # TODO: work on this for CPC ticket #131
     def save(self, commit=False):            
