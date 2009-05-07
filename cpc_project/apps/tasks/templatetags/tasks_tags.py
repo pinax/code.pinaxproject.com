@@ -51,7 +51,7 @@ class TasksForTagNode(template.Node):
             tag = self.tag
         
         try:
-            tasks = Task.objects.filter(id__in=[i.object_id for i in TaggedItem.objects.filter(tag__name=str(tag),content_type=task_contenttype)])
+            tasks = Task.objects.filter(id__in=[i[0] for i in TaggedItem.objects.filter(tag__name=str(tag),content_type=task_contenttype).values_list('object_id')])
         except:
             return ''
         
