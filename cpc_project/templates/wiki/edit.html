@@ -3,13 +3,13 @@
 {% load i18n %}
 {% load wiki %}
 
-{% block head_title %}Wiki{% endblock %}
+{% block head_title %}Wiki - {% trans "Edit Article" %}{% endblock %}
 
 {% block body %}
     
     {# wiki_title group #}
     
-    <h2>{% trans "Edit Article" %} {{ article.title }}</h2>
+    <h2>{% trans "Edit Article" %}</h2>
     
     <form action="" class="uniForm" method="post">
         {% if form.non_field_errors %}
