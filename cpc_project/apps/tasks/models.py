@@ -133,7 +133,7 @@ class Task(models.Model):
                 # grab the new state and state description
                 new_state = str(transition[1])
                 description = transition[3]
-                
+
                 # Check to make sure we are not duplicating states.
                 # we do this off the new_state value to ensure accuracy
                 if new_state in existing_states:
@@ -142,7 +142,7 @@ class Task(models.Model):
                 else:
                     # New state so we remove the chance of duplicates
                     existing_states.append(new_state)
-                
+
                 # build new element
                 element = (new_state, description)
                 
