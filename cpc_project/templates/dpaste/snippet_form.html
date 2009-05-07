@@ -1,0 +1,16 @@
+{% load i18n %}
+<form method="post" action"." class="snippetform uniForm">
+    {% for field in snippet_form %}
+    <div class="ctrlHolder">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+        {% if request.session.userprefs.display_all_lexer %}
+        {% ifequal field.name "lexer" %}
+            <input type="button" value="{% trans "Guess lexer" %}" id="guess_lexer_btn"/>
+        {% endifequal %}
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div class="form_block"><input type="submit" value="{% trans "Paste it" %}"/></div>
+</form>
