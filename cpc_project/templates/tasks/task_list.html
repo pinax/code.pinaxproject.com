@@ -96,31 +96,32 @@
         {% ifequal group_by "tag" %}
             {% tags_for_model tasks.Task as task_tags %}
             {% for section in task_tags %}
+                {% tasks_for_tag section as tagtasks %}
                 <tbody><tr class="task_grouping">
                     <td colspan="6">
                         <span class="focus"><a href="{% focus_url group_by section %}">focus</a></span>
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {{ section }}
-                            <span class="count">({{ section.items.count }})</span>
+                            <span class="count">({{ tagtasks|length }})</span>
                         </span>
                     </td>
                 </tr></tbody>
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for item in section.items.all %}
-                        <tr class="task_{{ item.object.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ item.object.id }}</td>
-                            <td><a href="{% url task_detail item.object.id %}">{{ item.object.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ item.object.modified|shorttimesince }} ago</td>
+                    {% for item in tagtasks %}
+                        <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
+                            <td>{{ item.id }}</td>
+                            <td><a href="{% url task_detail item.id %}">{{ item.summary }}</a></td>
+                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                             <td>
-                                {% if item.object.assignee %}
-                                    <a href="{% url tasks_for_user item.object.assignee %}">{{ item.object.assignee }}</a>
+                                {% if item.assignee %}
+                                    <a href="{% url tasks_for_user item.assignee %}">{{ item.assignee }}</a>
                                 {% else %}
                                     <span class="warning">unassigned</span>
                                 {% endif %}
                             </td>
-                            <td>{% task_tags item.object %}</td>
-                            <td>{{ item.object.status }}</td>
+                            <td>{% task_tags item %}</td>
+                            <td>{{ item.status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
