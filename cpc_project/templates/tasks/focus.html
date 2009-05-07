@@ -80,29 +80,30 @@
         {% ifequal group_by "tag" %}
             {% tags_for_model tasks.Task as task_tags %}
             {% for section in task_tags %}
+                {% tasks_for_tag section as tagtasks %}
                 <tbody><tr class="task_grouping">
                     <td colspan="5">
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {{ section }}
-                            <span class="count">({{ section.items.count }})</span>
+                            <span class="count">({{ tagtasks|length }})</span>
                         </span>
                     </td>
                 </tr></tbody>
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for item in section.items.all %}
-                        <tr class="task_{{ item.object.get_state_display }} {% cycle odd,even %}">
+                    {% for item in tagtasks %}
+                        <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
                             <td>{{ item.object.id }}</td>
-                            <td><a href="{% url task_detail item.object.id %}">{{ item.object.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ item.object.modified|shorttimesince }} ago</td>
+                            <td><a href="{% url task_detail item.id %}">{{ item.summary }}</a></td>
+                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                             <td>
-                                {% if item.object.assignee %}
-                                    {{ item.object.assignee }}
+                                {% if item.assignee %}
+                                    {{ item.assignee }}
                                 {% else %}
                                     <span class="warning">unassigned</span>
                                 {% endif %}
                             </td>
-                            <td>{{ item.object.status }}</td>
+                            <td>{{ item.status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
