@@ -7,6 +7,7 @@ from django.test import TestCase
 from tasks.models import Task
 from tasks.workflow import always, is_assignee, is_assignee_or_none
 from tasks.workflow import is_creator, no_assignee, is_task_manager
+from tasks.workflow import OR
 from tasks.workflow import TASK_MANAGER
 
 class TestWorkflowFunctions(TestCase):
@@ -15,6 +16,7 @@ class TestWorkflowFunctions(TestCase):
     def setUp(self):
         self.user_admin = User.objects.get(username__exact='admin')
         self.user_joe = User.objects.get(username__exact='joe')
+        self.user_sam = User.objects.get(username__exact='sam')
 
         # The task is assigned to user joe by user admin
         self.task = Task.objects.get(pk__exact=1)
@@ -75,4 +77,10 @@ class TestWorkflowFunctions(TestCase):
         self.assertEquals(True, is_task_manager(self.task, self.user_admin))
         self.assertEquals(False, is_task_manager(self.task, self.user_joe))
         self.assertEquals(False, is_task_manager(self.task, None))                
+        
+    def test_OR(self):
+        self.assertEquals(True, OR(is_creator, is_assignee)(self.task, self.user_admin))
+        self.assertEquals(True, OR(is_creator, is_assignee)(self.task, self.user_joe))
+        self.assertEquals(False, OR(is_creator, is_assignee)(self.task, None))
+        self.assertEquals(False, OR(is_creator, is_assignee)(self.task, self.user_sam))                        
         

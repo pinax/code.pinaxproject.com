@@ -11,8 +11,8 @@ class TestAddForm(TestCase):
         self.client = Client()
     
     def tearDown(self):
-        pass        
-        
+        pass
+    
     def test_add_buttons(self):
          response = self.client.get('/tasks/add/')
          
@@ -21,8 +21,9 @@ class TestAddForm(TestCase):
          
          # check that there is an add button
          self.assertContains(response, '<input type="submit" value="Add task"/>')
-
+         
          # check that there is an add another task button
-         self.assertContains(response, '<input type="submit" value="Add task and add another" name="add-another-task"/>')         
+         self.assertContains(response, 'add-another-task')
+         
          
          

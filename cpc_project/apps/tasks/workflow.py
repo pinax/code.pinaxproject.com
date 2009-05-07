@@ -39,6 +39,10 @@ def no_assignee(task, user):
     if not task.assignee:
         return True
     return False    
+    
+def OR(*l): 
+    # lets you run multiple permissions against a single state transition
+    return lambda *args: any(f(*args) for f in l)
 
 
 STATE_TRANSITIONS = [
@@ -63,16 +67,14 @@ STATE_TRANSITIONS = [
     # in progress
     (4, 4, always, "still in progress"),
     (4, 5, is_assignee, "discussion needed"),
-    (4, 8, is_assignee, "fix needs review"),    
     (4, 6, is_task_manager, "blocked"),
-    (4, 8, is_task_manager, "fix needs review"),    
+    (4, 8, OR(is_assignee, is_task_manager), "fix needs review"),
     
     # discussion needed
     (5, 5, always, "discussion still needed"),
-    (5, 4, is_assignee, "in progress"),    
+    (5, 4, OR(is_assignee, is_task_manager), "in progress"),    
     (5, 1, is_task_manager, "move back to new"),
     (5, 2, is_task_manager, "resolved"),
-    (5, 4, is_task_manager, "in progress"),
     (5, 6, is_task_manager, "blocked"),
     
     # blocked
@@ -91,8 +93,7 @@ STATE_TRANSITIONS = [
     
     # fix needs review
     (8, 8, always, "fix needs review"),    
-    (8, 4, is_assignee, "move back to in progress"),        
-    (8, 4, is_task_manager, "move back to in progress"),            
+    (8, 4, OR(is_assignee, is_task_manager), "move back to in progress"),           
     (8, 2, is_task_manager, "resolved"),                
 ]
 
