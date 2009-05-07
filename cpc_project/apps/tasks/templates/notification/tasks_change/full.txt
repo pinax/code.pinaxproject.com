@@ -4,3 +4,7 @@
 {% else %}
 {% blocktrans %}{{ user }} has marked task '{{ task }}' as {{ new_state }}.{% endblocktrans %}
 {% endif %}
+
+{% ifequal task.state '2' %}
+{% trans "resolution:" %} {{ task.get_resolution_display }}
+{% endifequal %}
