@@ -21,6 +21,15 @@ if "notification" in settings.INSTALLED_APPS:
 else:
     notification = None
 
+try:
+    MARKUP_CHOICES = settings.WIKI_MARKUP_CHOICES  # reuse this for now; taken from wiki
+except AttributeError:
+    MARKUP_CHOICES = (
+        ('rst', _(u'reStructuredText')),
+        ('txl', _(u'Textile')),
+        ('mrk', _(u'Markdown')),
+    )
+
 # import task workflow methods
 from tasks.workflow import (is_assignee, is_creator, no_assignee,
                             is_assignee_or_none, always)
@@ -48,6 +57,8 @@ class Task(models.Model):
     
     summary = models.CharField(_('summary'), max_length=100)
     detail = models.TextField(_('detail'), blank=True)
+    markup = models.CharField(_(u'Detail Markup'), max_length=3,
+        choices=MARKUP_CHOICES, blank=True)
     creator = models.ForeignKey(User, related_name="created_tasks", verbose_name=_('creator'))
     created = models.DateTimeField(_('created'), default=datetime.now)
     modified = models.DateTimeField(_('modified'), default=datetime.now) # task modified when commented on or when various fields changed
@@ -61,8 +72,9 @@ class Task(models.Model):
     resolution = models.CharField(_('resolution'), max_length=2, choices=RESOLUTION_CHOICES, blank=True)
     
     # fields for review and saves
-    fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'tags', 'status', 'state', 'resolution')
-        
+    fields = ('summary', 'detail', 'creator', 'created', 'assignee', 'markup',
+        'tags', 'status', 'state', 'resolution')
+    
     def __unicode__(self):
         return self.summary
         
@@ -185,6 +197,8 @@ class TaskHistory(models.Model):
     group = generic.GenericForeignKey("content_type", "object_id")
     summary = models.CharField(_('summary'), max_length=100)
     detail = models.TextField(_('detail'), blank=True)
+    markup = models.CharField(_(u'Detail Markup'), max_length=3,
+        choices=MARKUP_CHOICES, blank=True)
     creator = models.ForeignKey(User, related_name="history_created_tasks", verbose_name=_('creator'))
     created = models.DateTimeField(_('created'), default=datetime.now)
     modified = models.DateTimeField(_('modified'), default=datetime.now) # task modified when commented on or when various fields changed
