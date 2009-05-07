@@ -1,1 +1,1 @@
-django-dpaste==0.2.3
+django-dpaste==0.2.4
