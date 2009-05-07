@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1>Add Task</h1>
-    
+
     {% if is_member %}
         {% comment %}
         <div class="search">
@@ -20,46 +20,46 @@
                   <li>
                       <a href="{% url task_detail task.id %}">{{ task }}</a>
                       {{ task.detail|slice:":49"}}
-                  </li>  
+                  </li>
                 {% endfor %}
                 </ul>
             {% endif %}
             <hr />
         </div>
         {% endcomment %}
-        
+
          <div class="main-form">
             <form method="POST" action="" id="task_form" class="uniForm">
-                <div class="form_block">            
+                <div class="form_block">
                 {{ task_form|as_uni_form }}
-                    <input type="submit" id="search_button" value="{% trans 'search' %}"/>
+                    <input type="submit" id="search_button" value="{% trans 'Add task' %}"/>
                 </div>
             </form>
         </div>
-        
-        
+
+
     {% else %}
         <p>{% trans 'You are not a member and so cannot add a task.' %}</p>
     {% endif %}
-    
+
 {% endblock %}
 
 {% block extra_body %}
     <script type="text/javascript">
         $().ready(function() {
             $('#id_search').after('<input type="submit" id="search_button" value="{% trans 'search' %}"/>')
-            
+
 
             $('#id_search').click(function() {
                 $('#id_search').val('');
-            });            
-            
-            
+            });
+
+
             $('#id_assignee').after(' <a href="#" onclick="$(\'#id_assignee\').val({{ user.id }}); return false;">{% trans "assign to me" %}</a>');
-            
+
             $('#id_summary').focus();
-            
-            
+
+
         });
     </script>
 {% endblock %}
