@@ -6,7 +6,8 @@
 #tasks_tab .rtab_tasks,
 #pastebin_tab .rtab_pastebin,
 #documents_tab .rtab_documents,
-#notices_tab .rtab_notices
+#notices_tab .rtab_notices,
+#paste_tab .rtab_paste
 {
     bottom: -1px !important;
     padding-bottom: 0 !important;
@@ -17,7 +18,8 @@
 #tasks_tab .rtab_tasks a,
 #pastebin_tab .rtab_pastebin a,
 #documents_tab .rtab_documents a,
-#notices_tab .rtab_notices a
+#notices_tab .rtab_notices a,
+#paste_tab .rtab_paste a
 {
     color: #000 !important; /* selected tab text colour */
 }
@@ -27,7 +29,8 @@
 #tasks_tab .rtab_tasks div,
 #pastebin_tab .rtab_pastebin div,
 #documents_tab .rtab_documents div,
-#notices_tab .rtab_notices div
+#notices_tab .rtab_notices div,
+#paste_tab .rtab_paste div
 {
     margin: 0;
     background-color: #DEF !important; /* selected tab colour */

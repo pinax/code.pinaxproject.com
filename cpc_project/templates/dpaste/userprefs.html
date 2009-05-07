@@ -1,0 +1,26 @@
+{% extends "dpaste/base.html" %}
+{% load i18n %}
+{% load uni_form %}
+
+{% block headline %}
+    <h1>{% trans "User Settings" %}</h1>
+{% endblock %}
+
+{% block content %}
+    {% if settings_saved %}
+    <div class="success">
+        {% trans "USER_PREFS_SAVED_SUCCESSFULLY" %}
+    </div>
+    {% endif %}
+
+    <h2>{% trans "User Settings" %}</h2>
+
+    <form class="snippetform uniForm" method="post" action=".">
+        {{ settings_form|as_uni_form }}
+        <div class="submit"><input type="submit" value="{% trans "Save settings" %}"/></div>
+    </form>
+
+    <div class="hint">
+        {% trans "DATA_STORED_IN_A_COOKIE_HINT" %}
+    </div>
+{% endblock %}

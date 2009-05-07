@@ -93,7 +93,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
-    
+
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
@@ -110,7 +110,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django.contrib.markup',
-    
+
     # external
     'notification', # must be first
     'django_openid',
@@ -125,18 +125,19 @@ INSTALLED_APPS = (
     'threadedcomments',
     'wiki',
     'uni_form',
-    
+    'mptt',
+
     # internal (for now)
     'basic_profiles',
     'account',
     'misc',
-    #'pastebin',
+    'dpaste',
     #'quickbar',
     'tasks',
     #'documents',
-    
+
     'tag_app',
-    
+
     'django.contrib.admin',
 
 )
@@ -157,7 +158,7 @@ LOGIN_REDIRECT_URLNAME = "home"
 
 WIKI_REQUIRES_LOGIN = True
 
-# For now we stick to a rather loose RE for the URL until the wikiapp 
+# For now we stick to a rather loose RE for the URL until the wikiapp
 # supports urls for non-wikiwords
 WIKI_WORD_RE = r'(?:[A-Z]+([0-9]|[a-z])+){2,}'
 WIKI_URL_RE  = r'[\w0-9]+'

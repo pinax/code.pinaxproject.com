@@ -14,7 +14,7 @@ from wiki import models as wiki_models
 
 urlpatterns = patterns('',
     url(r'^$', direct_to_template, {"template": "homepage.html"}, name="home"),
-    
+
     (r'^account/', include('account.urls')),
     (r'^openid/(.*)', PinaxConsumer()),
     (r'^profiles/', include('basic_profiles.urls')),
@@ -25,12 +25,13 @@ urlpatterns = patterns('',
     #(r'^documents/', include('documents.urls')),
     (r'^tasks/', include('tasks.urls')),
     (r'^comments/', include('threadedcomments.urls')),
+    (r'^paste/', include('dpaste.urls')),
     (r'^wiki/', include('wiki.urls')),
-    
+
     (r'^admin/(.*)', admin.site.root),
 )
 
 if settings.SERVE_MEDIA:
-    urlpatterns += patterns('', 
+    urlpatterns += patterns('',
         (r'^site_media/(?P<path>.*)$', 'staticfiles.views.serve')
     )
