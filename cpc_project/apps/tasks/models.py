@@ -114,7 +114,11 @@ class Task(models.Model):
         return state choices allowed given current state and user
         """
         
+        # I'm the relevant state choices.
         choices = []
+        
+        # I'm the states already allowed for the users
+        existing_states = []
         
         for transition in STATE_TRANSITIONS:
             
@@ -129,6 +133,15 @@ class Task(models.Model):
                 # grab the new state and state description
                 new_state = str(transition[1])
                 description = transition[3]
+                
+                # Check to make sure we are not duplicating states.
+                # we do this off the new_state value to ensure accuracy
+                if new_state in existing_states:
+                    # state already exists so this is a duplicate
+                    continue
+                else:
+                    # New state so we remove the chance of duplicates
+                    existing_states.append(new_state)
                 
                 # build new element
                 element = (new_state, description)
