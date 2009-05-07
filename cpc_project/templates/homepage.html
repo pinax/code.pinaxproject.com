@@ -3,33 +3,35 @@
 {% block head_title %}Homepage{% endblock %}
 
 {% block body %}
-    
+
     <h1>Pinax Project Development</h1>
-    
+
     <p><b>code.pinaxproject.com</b> currently contains the official issue/task tracker and wiki for the Pinax Project.</p>
-    
+
     <p>The main Pinax site is <a href="http://pinaxproject.com/">pinaxproject.com</a>. You can get releases there.</p>
-    
+
     <p>Development code is available at <a href="http://github.com/pinax/pinax/">http://github.com/pinax/pinax/</a>.</p>
-    
+
     <p>On this site you can find:</p>
-    
+
     <dl class="what_next">
-        
+
         <dt><a href="{% url task_list %}">Tasks</a></dt>
         <dd>to track things that need to be done and who's doing them.</dd>
-        
+
         <dt><a href="{% url wiki_index %}">Wiki</a></dt>
         <dd>to document Pinax.</dd>
-        
+
+        <dt><a href="{% url snippet_new %}">Paste</a></dt>
+        <dd>to store code snippets in our pastebin.</dd>
+
         {% if user.is_authenticated %}
             <dt><a href="{% url profile_detail user %}">Profile</a></dt>
             <dd>to tell the Pinax Project a little about yourself.</dd>
-            
+
             <dt><a href="{% url notification_notices %}">Notices</a></dt>
             <dd>to configure and view notices.</dd>
-        
         {% endif %}
-        
+
     </dl>
 {% endblock %}
