@@ -84,9 +84,9 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
     # @@@     raise Http404
     
     if group:
-        notify_list = group.member_users.all() # @@@
+        notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
-        notify_list = User.objects.all()
+        notify_list = User.objects.all().exclude(id__exact=request.user.id)
     
     is_member = True # @@@ groups.has_member(request.user)
     
@@ -171,9 +171,9 @@ def task(request, id, template_name="tasks/task.html"):
     # @@@     raise Http404
     
     if group:
-        notify_list = group.member_users.all() # @@@
+        notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
-        notify_list = User.objects.all()
+        notify_list = User.objects.all().exclude(id__exact=request.user.id)
     
     is_member = request.user.is_authenticated() # @@@ groups.has_member(request.user)
     
