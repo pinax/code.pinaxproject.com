@@ -30,8 +30,9 @@
         
          <div class="main-form">
             <form method="POST" action="" id="task_form" class="uniForm">
-                <div class="form_block">            
-                {{ task_form|as_uni_form }}
+                <div class="form_block">
+                    {{ task_form.media }}
+                    {{ task_form|as_uni_form }}
                     <input type="submit" id="search_button" value="{% trans 'search' %}"/>
                 </div>
             </form>

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from tasks.models import Task, TaskHistory
 from tasks.widgets import ReadOnlyWidget
 
+from tagging_utils.widgets import TagAutoCompleteInput
+from tagging.forms import TagField
 
 class TaskForm(forms.ModelForm):
     def __init__(self, group, *args, **kwargs):
@@ -20,6 +22,8 @@ class TaskForm(forms.ModelForm):
     def save(self, commit=True):
         
         return super(TaskForm, self).save(commit)
+    
+    tags = TagField(required=False, widget=TagAutoCompleteInput(app_label='tasks', model='task'))
     
     class Meta:
         model = Task
@@ -56,6 +60,7 @@ class EditTaskForm(forms.ModelForm):
         return super(EditTaskForm, self).save(True)
         
     status = forms.CharField(required=False, widget=forms.TextInput(attrs={'size':'50', 'maxlength': '100'}))
+    tags = TagField(required=False, widget=TagAutoCompleteInput(app_label='tasks', model='task'))
     
     class Meta(TaskForm.Meta):
         fields = ('summary','status', 'assignee', 'state', 'tags', 'resolution')
