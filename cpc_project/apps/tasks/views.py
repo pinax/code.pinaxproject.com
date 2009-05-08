@@ -1,9 +1,11 @@
 from datetime import date
+from datetime import datetime, timedelta
 from itertools import chain
 from operator import attrgetter
 
 
 from django.shortcuts import render_to_response, get_object_or_404
+from django.conf import settings
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -15,9 +17,17 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
+from django.utils.translation import ugettext
+
+# Only import dpaste Snippet Model if it's activated
+if 'dpaste' in getattr(settings, 'INSTALLED_APPS', []):
+    from dpaste.models import Snippet
+else:
+    Snippet = False
 
 from tasks.models import (Task, Nudge)
 
@@ -77,7 +87,7 @@ def tasks(request, group_slug=None, template_name="tasks/task_list.html"):
     }, context_instance=RequestContext(request))
 
 
-def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks/add.html"):
+def add_task(request, group_slug=None, secret_id=None, form_class=TaskForm, template_name="tasks/add.html"):
     group = None # get_object_or_404(Project, slug=slug)
 
     # @@@ if group.deleted:
@@ -87,8 +97,25 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
         notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
         notify_list = User.objects.all().exclude(id__exact=request.user.id)
-    
+
     is_member = True # @@@ groups.has_member(request.user)
+
+    # If we got an ID for a snippet in url, collect some initial values
+    # But only if we could import the Snippet Model so
+    if secret_id and Snippet:
+        paste = get_object_or_404(Snippet, secret_id=secret_id)
+        paste.expires = datetime.now() + timedelta(seconds=3600*24*30*12*100) # Update the expiration time to maximum
+        paste.save()
+        paste_link = ugettext('Link to the snippet: http://%(domain)s%(link)s\n\n' % {
+                                'domain': Site.objects.get_current().name,
+                                'link': reverse('snippet_details', kwargs={'snippet_id': paste.secret_id})
+                             })
+        initial = {
+            'summary': paste.title,
+            'detail': paste_link,
+        }
+    else:
+        initial = {}
 
     search_form = SearchTaskForm()
     search_results = []
@@ -122,7 +149,7 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
                     return HttpResponseRedirect(reverse('task_add'))
                 return HttpResponseRedirect(reverse("task_list"))
     else:
-        task_form = form_class(group=group)
+        task_form = form_class(group=group, initial=initial)
 
     return render_to_response(template_name, {
         "group": group,
@@ -176,7 +203,7 @@ def task(request, id, template_name="tasks/task.html"):
         notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
         notify_list = User.objects.all().exclude(id__exact=request.user.id)
-    
+
     is_member = request.user.is_authenticated() # @@@ groups.has_member(request.user)
 
     if is_member and request.method == "POST":
