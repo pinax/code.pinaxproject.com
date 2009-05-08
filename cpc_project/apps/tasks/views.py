@@ -19,7 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from tagging.models import Tag
 
-from tasks.models import (Task, Nudge)
+from tasks.models import (Task, TaskHistory, Nudge)
 
 from tasks.forms import TaskForm, EditTaskForm, SearchTaskForm
 
@@ -321,6 +321,25 @@ def focus(request, field, value, group_slug=None, template_name="tasks/focus.htm
         "is_member": is_member,
     }, context_instance=RequestContext(request))
 
+
+def tasks_history_list(request, group_slug=None, template_name="tasks/tasks_history_list.html"):
+    group = None # get_object_or_404(Project, slug=slug)
+
+    # @@@ if group.deleted:
+    # @@@     raise Http404
+
+    is_member = True # @@@ groups.has_member(request.user)
+
+    if group:
+        tasks = group.tasks_history.all() # @@@ assumes GR
+    else:
+        tasks = TaskHistory.objects.filter(object_id__isnull=True).order_by('-modified')
+    
+    return render_to_response(template_name, {
+        "group": group,
+        "task_history": tasks,
+        "is_member": is_member,
+    }, context_instance=RequestContext(request))
 
 def tasks_history(request, id, template_name="tasks/task_history.html"):
     task = get_object_or_404(Task, id=id)
