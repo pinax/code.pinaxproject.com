@@ -44,23 +44,27 @@
 
     {% show_tags_for article %}
 
-    {% get_attachments_for article %}
-    {% if attachments %}
-    <h2>{% trans "Attachments" %}</h2>
+    {% if article.id %}
 
-    <ul>
-    {% for attachment in attachments %}
-        <li>
-            <img src="{{ MEDIA_URL }}pinax/images/silk/icons/attach.png" alt="" class="inline-icon"/>
-            <a href="{{ attachment.attachment_file.url }}">{{ attachment.filename }}</a>
-            - <span class="lighter">{{ attachment.created|date:_("DATETIME_FORMAT") }}</span>
-            {% attachment_delete_link attachment %}
-        </li>
-    {% endfor %}
-    </ul>
+        {% get_attachments_for article %}
+        {% if attachments %}
+        <h2>{% trans "Attachments" %}</h2>
+
+        <ul>
+        {% for attachment in attachments %}
+            <li>
+                <img src="{{ MEDIA_URL }}pinax/images/silk/icons/attach.png" alt="" class="inline-icon"/>
+                <a href="{{ attachment.attachment_file.url }}">{{ attachment.filename }}</a>
+                - <span class="lighter">{{ attachment.created|date:_("DATETIME_FORMAT") }}</span>
+                {% attachment_delete_link attachment %}
+            </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% attachment_form article %}
+
     {% endif %}
-
-    {% attachment_form article %}
 
     {% if article.id and can_observe %}
         {% if is_observing %}
