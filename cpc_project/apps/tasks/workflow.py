@@ -16,12 +16,12 @@ def is_assignee(task, user):
     if task.assignee == user:
         return True
     return False
-    
+
 def is_assignee_or_none(task, user):
     # current user is assignee or there is no assignee
     if task.assignee == user or not task.assignee:
         return True
-    return False    
+    return False
 
 def is_creator(task, user):
     if task.creator == user:
@@ -34,17 +34,21 @@ def is_task_manager(task, user):
     if Group.objects.filter(name__exact=TASK_MANAGER).filter(user=user):
         return True
     return False
-    
+
 def no_assignee(task, user):
     if not task.assignee:
         return True
-    return False    
+    return False
+
+def OR(*l):
+    # lets you run multiple permissions against a single state transition
+    return lambda *args: any(f(*args) for f in l)
 
 
 STATE_TRANSITIONS = [
     # open
     (1, 1, always, "leave open"),
-    (1, 7, is_task_manager, "accept"),    
+    (1, 7, is_task_manager, "accept"),
     (1, 2, is_task_manager, "resolved"),
     (1, 5, is_task_manager, "discussion needed"),
     (1, 6, is_task_manager, "blocked"),
@@ -53,26 +57,24 @@ STATE_TRANSITIONS = [
     (2, 1, always, "re-open"),
     (2, 2, always, "leave resolved"),
     (2, 3, is_task_manager, "close"),
-    (2, 7, is_task_manager, "re-open (accepted)"),    
+    (2, 7, is_task_manager, "re-open (accepted)"),
     
     # closed
-    (3, 3, always, "leave closed"),    
+    (3, 3, always, "leave closed"),
     (3, 1, is_task_manager, "re-open"),
-    (3, 7, is_task_manager, "re-open (accepted)"),      
+    (3, 7, is_task_manager, "re-open (accepted)"),
     
     # in progress
     (4, 4, always, "still in progress"),
     (4, 5, is_assignee, "discussion needed"),
-    (4, 8, is_assignee, "fix needs review"),    
     (4, 6, is_task_manager, "blocked"),
-    (4, 8, is_task_manager, "fix needs review"),    
+    (4, 8, OR(is_assignee, is_task_manager), "fix needs review"),
     
     # discussion needed
     (5, 5, always, "discussion still needed"),
-    (5, 4, is_assignee, "in progress"),    
+    (5, 4, OR(is_assignee, is_task_manager), "in progress"),
     (5, 1, is_task_manager, "move back to new"),
     (5, 2, is_task_manager, "resolved"),
-    (5, 4, is_task_manager, "in progress"),
     (5, 6, is_task_manager, "blocked"),
     
     # blocked
@@ -83,17 +85,16 @@ STATE_TRANSITIONS = [
     (6, 5, is_task_manager, "discussion needed"),
     
     # accepted
-    (7, 7, always, "accepted"),    
-    (7, 4, is_assignee, "in progress"),   
+    (7, 7, always, "accepted"),
+    (7, 4, is_assignee, "in progress"),
     (7, 2, is_task_manager, "resolved"),
     (7, 5, is_task_manager, "discussion needed"),
-    (7, 6, is_task_manager, "blocked"), 
+    (7, 6, is_task_manager, "blocked"),
     
     # fix needs review
-    (8, 8, always, "fix needs review"),    
-    (8, 4, is_assignee, "move back to in progress"),        
-    (8, 4, is_task_manager, "move back to in progress"),            
-    (8, 2, is_task_manager, "resolved"),                
+    (8, 8, always, "fix needs review"),
+    (8, 4, OR(is_assignee, is_task_manager), "move back to in progress"),
+    (8, 2, is_task_manager, "resolved"),
 ]
 
 
@@ -131,23 +132,23 @@ STATE_ID_LIST = [x[0] for x in STATE_CHOICES]
 
 
 def export_state_transitions(format='csv'):
-    # ugly cowboy code that really needs refactoring    
+    # ugly cowboy code that really needs refactoring
     rows = []
     for row in STATE_TRANSITIONS:
         record = ''
         current_state = STATE_CHOICES_DICT[str(row[0])]
-        new_state = STATE_CHOICES_DICT[str(row[1])]        
+        new_state = STATE_CHOICES_DICT[str(row[1])]
         permission = str(row[2]).split()[1]
         transition_name = row[3]
         record = """ "%s","%s","%s","%s" """ % (current_state, new_state, permission, transition_name)
         rows.append(record.strip())
-        
+    
     # ick turn this into a string.
     # TODO: to this right!
     text = ''
     for row in rows:
         text += row + '\n'
     return text
-    
+
 # lame hack to speed up shell scripts
 ext = export_state_transitions
