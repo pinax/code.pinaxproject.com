@@ -110,36 +110,35 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django.contrib.markup',
+    'django.contrib.admin',
 
     # external
     'notification', # must be first
+    'ajax_validation',
+    'announcements',
+    'attachments',
+    'avatar',
+    'django_extensions',
     'django_openid',
     'emailconfirmation',
     'mailer',
-    'announcements',
-    'pagination',
-    'timezones',
-    'ajax_validation',
-    'avatar',
-    'tagging',
-    'threadedcomments',
-    'wiki',
-    'uni_form',
     'mptt',
+    'pagination',
+    'tagging',
+    'timezones',
+    'threadedcomments',
+    'uni_form',
+    'wiki',
 
     # internal (for now)
-    'basic_profiles',
     'account',
-    'misc',
+    'basic_profiles',
     'dpaste',
-    #'quickbar',
+    'misc',
     'tasks',
-    #'documents',
-
     'tag_app',
-
-    'django.contrib.admin',
-
+    #'quickbar',
+    #'documents',
 )
 
 ABSOLUTE_URL_OVERRIDES = {

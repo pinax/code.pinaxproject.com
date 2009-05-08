@@ -1,3 +1,12 @@
+form.add-attachment{
+    background-color: #eee;
+    padding: 1em;
+}
+
+form.add-attachment p{
+    margin: 0.3em 0;
+}
+
 .task_list .even {
     background-color: #EEE;
 }

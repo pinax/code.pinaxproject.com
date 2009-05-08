@@ -16,6 +16,12 @@ a, a:visited {
 img {
     border: 0;
 }
+img.inline-icon{
+    vertical-align: middle;
+}
+.lighter{
+    color: #aaa;
+}
 dt {
     font-weight: bold;
 }
@@ -181,7 +187,7 @@ span.notice_time {
 table.notice_settings td {
     line-height: 90%;
     padding: 5px 10px;
-    
+
 }
 span.notice_type_description {
     color: #666;
@@ -266,15 +272,15 @@ div.notice_settings h2 {
     padding: 2px 5px;
     cursor: default;
     display: block;
-    /* 
-    if width will be 100% horizontal scrollbar will apear 
+    /*
+    if width will be 100% horizontal scrollbar will apear
     when scroll mode will be used
     */
     /*width: 100%;*/
     font: menu;
     font-size: 12px;
-    /* 
-    it is very important, if line-height not setted or setted 
+    /*
+    it is very important, if line-height not setted or setted
     in relative units scroll will be broken in firefox
     */
     line-height: 16px;
@@ -402,7 +408,7 @@ p.what_next {
     font-size: 11px;
 }
 
-#basic-form .button{ 
+#basic-form .button{
     clear:both;
     width:125px;
     height:31px;
