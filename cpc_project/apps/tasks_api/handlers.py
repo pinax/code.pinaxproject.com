@@ -6,6 +6,13 @@ class TasksHandler(BaseHandler):
     model = Task
     exclude = ('content_type', 'creator')
     
+    def read(self, request, task_id=None):
+        if task_id:
+            task = Task.objects.get(pk=task_id)
+            return task
+        else:
+            return Task.objects.all()
+    
     def create(self, request):
         task = Task()
         

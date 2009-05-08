@@ -10,5 +10,5 @@ auth = HttpBasicAuthentication(realm="Pinax realm")
 tasks_resource = Resource(TasksHandler, authentication=auth)
 
 urlpatterns = patterns('',
-    url(r'^tasks/$', tasks_resource),
+    url(r'^tasks/(?P<task_id>\d*)$', tasks_resource),
 )
