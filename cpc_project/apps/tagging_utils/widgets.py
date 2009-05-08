@@ -1,8 +1,6 @@
 from django import forms
-from django.db.models import get_model
-from django.utils import simplejson
 from django.utils.safestring import mark_safe
-from tagging.models import Tag
+from django.core.urlresolvers import reverse
 
 class TagAutoCompleteInput(forms.TextInput):
     class Media:
@@ -16,16 +14,15 @@ class TagAutoCompleteInput(forms.TextInput):
             'js/jquery.autocomplete.min.js'
         )
     def __init__(self, app_label, model, *args, **kwargs):
-        self.model = get_model(app_label, model)
+        self.app_label = app_label
+        self.model = model
         super(TagAutoCompleteInput, self).__init__(*args, **kwargs)
         
     def render(self, name, value, attrs=None):
         output = super(TagAutoCompleteInput, self).render(name, value, attrs)
-        page_tags = Tag.objects.usage_for_model(self.model)
-        tag_list = simplejson.dumps([tag.name for tag in page_tags], ensure_ascii=False)
         
         return output + mark_safe(u'''<script type="text/javascript">
-            jQuery("#id_%s").autocomplete(%s, {
+            jQuery("#id_%s").autocomplete('%s', {
                 max: 10,
                 highlight: false,
                 multiple: true,
@@ -35,4 +32,15 @@ class TagAutoCompleteInput(forms.TextInput):
                 matchContains: true,
                 autoFill: true,
             });
-            </script>''' % (name, tag_list))
+            </script>''' % (
+                name, 
+                reverse(
+                    'tagging_utils_autocomplete', 
+                    args=[], 
+                    kwargs={
+                        'app_label': self.app_label,
+                        'model': self.model
+                    }
+                )
+            )
+        )

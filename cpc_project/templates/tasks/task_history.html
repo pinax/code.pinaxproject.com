@@ -58,7 +58,7 @@
                         {% endif %}                    
                     {% endif %}
                 </td>
-                <td>{{ change.tags }}</td>              
+                <td>{% task_tags change %}</td>
                 <td>{{ change.humanized_state }}
                     {% if change.humanized_resolution %}
                         <br />{{ change.humanized_resolution }}

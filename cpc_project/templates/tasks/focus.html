@@ -80,7 +80,8 @@
         {% ifequal group_by "tag" %}
             {% tags_for_model tasks.Task as task_tags %}
             {% for section in task_tags %}
-                {% tasks_for_tag section as tagtasks %}
+                {% tasks_for_tag section as tagtasks in tasks %}
+                {% if tagtasks %}
                 <tbody><tr class="task_grouping">
                     <td colspan="5">
                         <span class="toggle">
@@ -107,6 +108,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+                {% endif %}
             {% endfor %}
         {% else %}
             {% for section in grouped_tasks %}
