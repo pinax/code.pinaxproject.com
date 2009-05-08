@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'misc',
     'tasks',
     'tag_app',
+    'tasks_api',
     #'quickbar',
     #'documents',
 )

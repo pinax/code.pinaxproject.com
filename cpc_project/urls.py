@@ -27,6 +27,9 @@ urlpatterns = patterns('',
     (r'^attachments/', include('attachments.urls')),
     (r'^tagging_utils/', include('tagging_utils.urls')),
     
+    # piston api
+    (r'^api/', include('tasks_api.urls')),
+    
     (r'^admin/(.*)', admin.site.root),
 )
 
