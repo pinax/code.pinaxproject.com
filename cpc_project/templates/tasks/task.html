@@ -18,6 +18,7 @@
     {% if is_member %}
         <h2>{% trans "Edit" %}</h2>
         <form method="POST" action="" id="task_form" class="uniForm">
+            {{ form.media }}
             {{ form|as_uni_form }}
 
             <div class="form_block">

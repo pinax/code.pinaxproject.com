@@ -87,7 +87,7 @@ def add_task(request, group_slug=None, form_class=TaskForm, template_name="tasks
         notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
         notify_list = User.objects.all().exclude(id__exact=request.user.id)
-
+    
     is_member = True # @@@ groups.has_member(request.user)
 
     search_form = SearchTaskForm()
@@ -176,7 +176,7 @@ def task(request, id, template_name="tasks/task.html"):
         notify_list = group.member_users.all().exclude(id__exact=request.user.id) # @@@
     else:
         notify_list = User.objects.all().exclude(id__exact=request.user.id)
-
+    
     is_member = request.user.is_authenticated() # @@@ groups.has_member(request.user)
 
     if is_member and request.method == "POST":
