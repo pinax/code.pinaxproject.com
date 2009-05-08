@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^comments/', include('threadedcomments.urls')),
     (r'^paste/', include('dpaste.urls')),
     (r'^wiki/', include('wiki.urls')),
+    (r'^tagging_utils/', include('tagging_utils.urls')),
 
     (r'^admin/(.*)', admin.site.root),
 )
