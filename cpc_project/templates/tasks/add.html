@@ -31,7 +31,8 @@
          <div class="main-form">
             <form method="POST" action="" id="task_form" class="uniForm">
                 <div class="form_block">
-                {{ task_form|as_uni_form }}
+                    {{ task_form.media }}
+                    {{ task_form|as_uni_form }}
                     <input type="submit" value="{% trans 'Add task' %}"/>
                     <input type="submit" name="add-another-task" value="{% trans 'Add task and add another' %}"/>
                 </div>
