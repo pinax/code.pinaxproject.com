@@ -1,2 +1,2 @@
 django-dpaste==0.2.4
-django-attachments==0.2.1
+django-attachments==0.2.3
