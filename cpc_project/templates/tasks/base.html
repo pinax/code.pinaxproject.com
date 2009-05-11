@@ -10,6 +10,7 @@
             <li><a href="{% url task_add %}">{% trans "Add Task" %}</a></li>
             <li><a href="{% url tasks_for_user user.username %}">{% trans "Your Tasks" %}</a></li>
             <li><a href="{% url task_list %}">{% trans "All Tasks" %}</a></li>
+            <li><a href="{% url tasks_history_list %}">{% trans "Tasks History" %}</a></li>
         </ul>
     {% else %}
         &nbsp;

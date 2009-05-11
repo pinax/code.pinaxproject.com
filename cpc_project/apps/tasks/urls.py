@@ -1,4 +1,9 @@
 from django.conf.urls.defaults import *
+from tasks.feeds import AllTaskFeed
+
+tasks_feed_dict = {"feed_dict": {
+    'all': AllTaskFeed,
+}}
 
 urlpatterns = patterns('',
         url(r'^$', 'tasks.views.tasks', name="task_list"),
@@ -10,6 +15,7 @@ urlpatterns = patterns('',
         url(r'^mini_list/$', 'tasks.views.mini_list', name="tasks_mini_list"),
 
         # history
+        url(r'^history/$', 'tasks.views.tasks_history_list', name="tasks_history_list"),
         url(r'^history/(?P<id>\d+)/$', 'tasks.views.tasks_history', name="tasks_history"),
 
         # nudge
@@ -17,4 +23,7 @@ urlpatterns = patterns('',
 
         # exports
         url(r'^export_state_transitions.csv$', 'tasks.views.export_state_transitions', name="tasks_export_state_transitions"),
+        
+        # feeds
+        (r'^feeds/(.*)/$', 'django.contrib.syndication.views.feed', tasks_feed_dict),
     )
