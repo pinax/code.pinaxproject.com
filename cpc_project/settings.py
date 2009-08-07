@@ -98,8 +98,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
-    "misc.context_processors.contact_email",
-    "misc.context_processors.site_name",
+    "pinax.core.context_processors.contact_email",
+    "pinax.core.context_processors.site_name",
 )
 
 INSTALLED_APPS = (
@@ -111,6 +111,8 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.markup',
     'django.contrib.admin',
+    
+    'pinax.templatetags',
 
     # external
     'notification', # must be first
@@ -133,8 +135,8 @@ INSTALLED_APPS = (
     # internal (for now)
     'account',
     'basic_profiles',
+    'groups',
     'dpaste',
-    'misc',
     'tasks',
     'tag_app',
     'tasks_api',
@@ -146,8 +148,21 @@ ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
 }
 
+MARKUP_FILTER_FALLBACK = 'none'
+MARKUP_CHOICES = (
+    ('restructuredtext', u'reStructuredText'),
+    ('textile', u'Textile'),
+    ('markdown', u'Markdown'),
+    ('creole', u'Creole'),
+)
+WIKI_MARKUP_CHOICES = MARKUP_CHOICES
+
 AUTH_PROFILE_MODULE = 'basic_profiles.Profile'
 NOTIFICATION_LANGUAGE_MODULE = 'account.Account'
+
+ACCOUNT_OPEN_SIGNUP = True
+ACCOUNT_REQUIRED_EMAIL = False
+ACCOUNT_EMAIL_VERIFICATION = False
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
