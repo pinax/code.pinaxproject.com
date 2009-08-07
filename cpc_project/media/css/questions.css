@@ -18,6 +18,22 @@ div#responses .response {
     padding: 20px;
     margin: 20px 0;
 }
+div#responses .response > div {
+    width: 100%;
+}
+div#responses .response div.response-left {
+    float: left;
+    width: 10%;
+}
+div#responses .response div.response-left > div {
+    padding: 10px;
+    font-size: 200%;
+    font-weight: bold;
+}
+div#responses .response div.response-right {
+    float: left;
+    width: 90%;
+}
 div#responses .response div.user_info {
     border-top: 1px dotted #999;
     padding: 10px 0;
