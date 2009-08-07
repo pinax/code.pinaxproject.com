@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'tasks',
     'tag_app',
     'tasks_api',
+    'threadedcomments_extras',
     #'quickbar',
     #'documents',
 )
