@@ -1,3 +1,2 @@
 django-dpaste==0.2.4
-django-attachments==0.2.3
 django-piston==0.2
