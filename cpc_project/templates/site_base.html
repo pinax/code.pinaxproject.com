@@ -5,10 +5,12 @@
 
 {% block extra_head_base %}
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/site_tabs.css" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/code.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/tasks.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/comments.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/pagination.css" />
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/wiki.css" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/questions.css" />
     
     <link rel="alternate" type="application/atom+xml" title="Tasks Changes" href="/tasks/feeds/all/" />
     
@@ -41,7 +43,8 @@
         <ul class="tabs">{% spaceless %}
             <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
             <li id="tab_tasks"><a href="{% url task_list %}">{% trans "Tasks" %}</a></li>
-            <li id="tab_wiki"><a href='{% url wiki_article "HomePage" %}'>{% trans "Wiki" %}</a></li>
+            <li id="tab_wiki"><a href="{% url wiki_article "HomePage" %}">{% trans "Wiki" %}</a></li>
+            <li id="tab_questions"><a href="{% url questions_question_list %}">{% trans "Questions" %}</a></li>
             <li id="tab_paste"><a href='{% url snippet_new %}'>{% trans "Paste" %}</a></li>
             <li id="tab_notices"><a href="{% url notification_notices %}">{% trans "Notices" %}{% if notice_unseen_count %} ({{ notice_unseen_count }}){% endif %}</a></li>
         {% endspaceless %}</ul>

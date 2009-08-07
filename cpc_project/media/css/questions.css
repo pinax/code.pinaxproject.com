@@ -1,0 +1,29 @@
+div.comments {
+    border: 1px dotted #000;
+    border-left: none;
+    border-right: none;
+    padding: 10px 0;
+}
+div.comments .comment {
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 90%;
+    color: #888;
+}
+div#responses {
+    
+}
+div#responses .response {
+    background: #eee;
+    padding: 20px;
+    margin: 20px 0;
+}
+div#responses .response pre {
+    background: #f9f9f9;
+}
+div#responses .accepted {
+    background: #9AFF9A;
+}
+div#responses .accepted pre {
+    background: #CCFFCC;
+}

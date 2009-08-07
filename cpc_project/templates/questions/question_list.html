@@ -1,0 +1,18 @@
+{% extends "questions/base.html" %}
+
+{% load i18n %}
+
+{% block body %}
+    <h1>{% trans "Recent Questions" %}</h1>
+    
+    <p>The questions app is similar to Stack Overflow. You can ask a question and get it answered by experts.</p>
+    
+    {% if questions %}
+        {% for question in questions %}
+            <h3><a href="{{ question.get_absolute_url }}">{{ question.question }}</a></h3>
+        {% endfor %}
+    {% else %}
+        <p><b>{% trans "No questions asked yet." %}</b></p>
+    {% endif %}
+    
+{% endblock %}

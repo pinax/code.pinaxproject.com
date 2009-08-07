@@ -2,6 +2,7 @@
 
 body.profile #tab_profile a,
 body.wiki #tab_wiki a,
+body.questions #tab_questions a,
 body.tasks #tab_tasks a,
 body.pastebin #tab_pastebin a,
 body.documents #tab_documents a,
@@ -12,6 +13,7 @@ body.paste #tab_paste a
 }
 body.profile #tab_profile,
 body.wiki #tab_wiki,
+body.questions #tab_questions,
 body.tasks #tab_tasks,
 body.pastebin #tab_pastebin,
 body.documents #tab_documents,

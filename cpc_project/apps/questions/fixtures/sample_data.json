@@ -1,0 +1,18 @@
+[
+  {
+    "pk": 1, 
+    "model": "questions.question", 
+    "fields": {
+      "content": "Test content", 
+      "question": "How do I run Pinax?"
+    }
+  },
+  {
+    "pk": 2, 
+    "model": "questions.question", 
+    "fields": {
+      "content": "Test content", 
+      "question": "What version of Pinax is stable?"
+    }
+  }
+]
