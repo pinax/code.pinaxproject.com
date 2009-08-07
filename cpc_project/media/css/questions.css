@@ -18,6 +18,25 @@ div#responses .response {
     padding: 20px;
     margin: 20px 0;
 }
+div#responses .response div.user_info {
+    border-top: 1px dotted #999;
+    padding: 10px 0;
+}
+div#responses .response div.user_info div.avatar {
+    float: left;
+    margin-right: 10px;
+}
+div#responses .response div.user_info div.info {
+    float: left;
+}
+div#responses .response div.user_info div.info .username {
+    margin: 0 0 5px 0;
+    font-size: 110%;
+}
+div#responses .response div.user_info .avatar img {
+    border: 3px solid #ddd;
+    padding: 3px;
+}
 div#responses .response pre {
     background: #f9f9f9;
 }
@@ -26,4 +45,10 @@ div#responses .accepted {
 }
 div#responses .accepted pre {
     background: #CCFFCC;
+}
+div#responses .accepted div.user_info .avatar img {
+    border: 3px solid #CCFFCC;
+}
+div#responses .accepted div.user_info div.info .username {
+    font-weight: bold;
 }
