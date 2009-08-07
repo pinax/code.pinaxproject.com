@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'tagging',
     'timezones',
     'threadedcomments',
+    'django_markup',
     'uni_form',
     'wiki',
 
