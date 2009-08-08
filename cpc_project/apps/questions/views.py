@@ -86,7 +86,10 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
             response.save()
             return HttpResponseRedirect(response.get_absolute_url())
     else:
-        add_response_form = AddResponseForm()
+        if not is_me or request.user.is_staff:
+            add_response_form = AddResponseForm()
+        else:
+            add_response_form = None
     
     return render_to_response("questions/question_detail.html", {
         "group": group,
