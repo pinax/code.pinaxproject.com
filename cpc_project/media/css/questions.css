@@ -27,8 +27,8 @@ div#question .question-right {
     float: left;
     width: 90%;
 }
-div#question div.question_bottom {
-    border-top: 1px dotted #999;
+div#question .question-bottom {
+    border-top: 1px dotted #333;
 }
 div#question div.question_actions {
     padding: 10px 0;

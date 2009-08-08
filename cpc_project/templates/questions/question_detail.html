@@ -16,7 +16,7 @@
             <h1>{{ question.question }}</h1>
             {{ question.content|apply_markup:"creole" }}
             
-            <div class="question-bottom">
+            <div class="question-bottom clearfix">
                 <div class="user_info">
                     <div class="avatar">
                         <a href="{% url profile_detail question.user.username %}">{% avatar question.user 40 %}</a>
