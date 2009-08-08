@@ -44,8 +44,14 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
     question = get_object_or_404(questions, pk=question_id)
     responses = question.responses.all() # @@@ ordering
     
+    if question.user == request.user:
+        is_me = True
+    else:
+        is_me = False
+    
     return render_to_response("questions/question_detail.html", {
         "group": group,
+        "is_me": is_me,
         "question": question,
         "responses": responses,
     }, context_instance=RequestContext(request))

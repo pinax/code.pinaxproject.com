@@ -36,6 +36,30 @@
     }
   }, 
   {
+    "pk": 4, 
+    "model": "questions.question", 
+    "fields": {
+      "created": "2009-08-08 04:53:01", 
+      "question": "What features do you want to see in 0.9", 
+      "object_id": null, 
+      "content": "There isn't going to be a single answer (this question exists merely to test accept behavior for creator).", 
+      "user": 1, 
+      "content_type": null
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "questions.question", 
+    "fields": {
+      "created": "2009-08-08 04:55:49", 
+      "question": "Tell me what you think Pinax 2.0 should be", 
+      "object_id": null, 
+      "content": "Again, not a real question, but something we must ask. Actually, this exists for jtauber to test new response accepted behavior.", 
+      "user": 2, 
+      "content_type": null
+    }
+  }, 
+  {
     "pk": 2, 
     "model": "questions.response", 
     "fields": {
@@ -99,6 +123,50 @@
       "question": 3, 
       "user": 1, 
       "created": "2009-08-08 04:24:38"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "I want ponies in paradise.", 
+      "accepted": false, 
+      "question": 4, 
+      "user": 73, 
+      "created": "2009-08-08 04:53:01"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "Have you considered this bit of Python code?\r\n\r\n{{{\r\n#!code python\r\ndef question_detail(request, question_id, group_slug=None, bridge=None):\r\n    \r\n    if bridge:\r\n        try:\r\n            group = bridge.get_group(group_slug)\r\n        except ObjectDoesNotExist:\r\n            raise Http404()\r\n    else:\r\n        group = None\r\n    \r\n    questions = Question.objects.all()\r\n    \r\n    if group:\r\n        questions = group.content_objects(questions)\r\n    \r\n    question = get_object_or_404(questions, pk=question_id)\r\n    responses = question.responses.all() # @@@ ordering\r\n    \r\n    if question.user == request.user:\r\n        is_me = True\r\n    else:\r\n        is_me = False\r\n    \r\n    return render_to_response(\"questions/question_detail.html\", {\r\n        \"group\": group,\r\n        \"is_me\": is_me,\r\n        \"question\": question,\r\n        \"responses\": responses,\r\n    }, context_instance=RequestContext(request))\r\n}}}\r\n\r\nPlease do!", 
+      "accepted": false, 
+      "question": 4, 
+      "user": 3, 
+      "created": "2009-08-08 04:53:01"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "Pinax 2.0 should be better than Pinax 1.0.", 
+      "accepted": false, 
+      "question": 5, 
+      "user": 1, 
+      "created": "2009-08-08 04:55:49"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "I think Pinax 2.0 should fly with the Django pony to fight crime like coding in PHP or Ruby.", 
+      "accepted": false, 
+      "question": 5, 
+      "user": 8, 
+      "created": "2009-08-08 04:55:49"
     }
   }
 ]
