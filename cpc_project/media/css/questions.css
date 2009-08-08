@@ -15,7 +15,7 @@ div#responses {
 }
 div#responses .response {
     background: #eee;
-    padding: 20px;
+    padding: 20px 20px 20px 0;
     margin: 20px 0;
 }
 div#responses .response > div {
@@ -29,6 +29,7 @@ div#responses .response div.response-left > div {
     padding: 10px;
     font-size: 200%;
     font-weight: bold;
+    text-align: center;
 }
 div#responses .response div.response-right {
     float: left;
