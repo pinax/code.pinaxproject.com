@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load markup_tags %}
+{% load avatar_tags %}
 
 {% block body %}
 
@@ -38,11 +39,10 @@
                         <div class="response_bottom">
                             <div class="user_info">
                                 <div class="avatar">
-                                    <img src="http://www.gravatar.com/avatar/b7472bc7aa45c70641c299e9408b78ab?s=40" />
+                                    {% avatar response.user 40 %}
                                 </div>
                                 <div class="info">
-                                    <div class="username">brosner</div>
-                                    <div class="user_points">14,890</div>
+                                    <div class="username">{{ response.user.username }}</div>
                                 </div>
                             </div>
                             <div class="response_actions">
