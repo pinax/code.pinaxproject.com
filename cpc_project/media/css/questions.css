@@ -42,6 +42,14 @@ div#responses .response div.response_actions {
     padding: 10px 0;
     float: right;
 }
+div#responses .response div.response_actions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+div#responses .accepted div.response_actions li.mark_as_accepted {
+    display: none;
+}
 div#responses .response div.user_info {
     padding: 10px 0;
     float: left;
