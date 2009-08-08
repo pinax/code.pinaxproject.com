@@ -42,8 +42,10 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
         questions = group.content_objects(questions)
     
     question = get_object_or_404(questions, pk=question_id)
+    responses = question.responses.all() # @@@ ordering
     
     return render_to_response("questions/question_detail.html", {
         "group": group,
         "question": question,
+        "responses": responses,
     }, context_instance=RequestContext(request))

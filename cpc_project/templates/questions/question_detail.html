@@ -4,112 +4,57 @@
 {% load markup_tags %}
 
 {% block body %}
-{% comment %}
+
     <h1>{{ question.question }}</h1>
     
     {{ question.content|apply_markup:"creole" }}
-{% endcomment %}
-
-    <h1>How do I install Pinax?</h1>
-    <p>There seems to be many ways to install Pinax and I am very confused. This is what I've done so far:</p>
-    <pre>pinax-boot.py ./pinax-env</pre>
-    <p>What now?</p>
     
     <div id="question_comments" class="comments">
+        {% comment %}
         <div class="comment">
             What is the platform you are installing Pinax on to? &mdash; <a href="#">brosner</a>
         </div>
         <div class="comment">
             How many monitors do you have? That is relevant information you know. &mdash; <a href="#">jtauber</a>
         </div>
+        {% endcomment %}
     </div>
     
-    <h2>2 Responses</h2>
+    <h2>{{ responses.count }} Response(s)</h2>
     
     <div id="responses" class="clearfix">
-
-        <div class="response">
-            <div class="clearfix">
-                <div class="response-left">
-                    <div>
-                        -1
-                    </div>
-                </div>
-                <div class="response-right">
-                    <p>You should follow the INSTALL documentation to learn how to perform this action.</p>
-                    <p>Here is some code for you:</p>
-                    <pre>while True:
-    if self.tired():
-        time.sleep(10)</pre>
-                    <div class="response_bottom">
-                        <div class="user_info">
-                            <div class="avatar">
-                                <img src="http://www.gravatar.com/avatar/c3cd520db3ebcaa96d2dba98447bb528?s=40" />
-                            </div>
-                            <div class="info">
-                                <div class="username">jack56</div>
-                                <div class="user_points">1,679</div>
-                            </div>
-                        </div>
-                        <div class="response_actions">
-                            <ul>
-                                <li class="mark_as_accepted"><a href="#">Mark as accepted answer</a></li>
-                            </ul>
+        {% for response in responses %}
+            <div class="response{% if response.accepted %} accepted{% endif %}">
+                <div class="clearfix">
+                    <div class="response-left">
+                        <div>
+                            0
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="response accepted clearfix">
-            <div class="clearfix">
-                <div class="response-left">
-                    <div>
-                        2
-                    </div>
-                </div>
-                <div class="response-right">
-                    <p>
-                    We have provided a script that will create a virtual environment for you.
-                    Once you have downloaded the release tarball, cd into the extracted directory.
-                    Let's create a virtual environment that you will install everything into:
-                    </p>
-            
-                    <pre>$ python scripts/pinax-boot.py ../pinax-env
-$ cd ../
-$ source ./pinax-env/bin/activate
-(pinax-env)$</pre>
-            
-                    <p>
-                    Note that we have told you to create the new environment in the directory
-                    above the tarball directory. We encourage you create the environment anywhere
-                    you like.
-                    </p>
-            
-                    <p>
-                    If you use virtualenvwrapper (we highly encourage you do), you can easily
-                    replace <tt>../</tt> with your <tt>WORKON_HOME</tt>. This gives you regular access to workon
-                    to activate your environment.
-                    </p>
-                    <div class="response_bottom">
-                        <div class="user_info">
-                            <div class="avatar">
-                                <img src="http://www.gravatar.com/avatar/b7472bc7aa45c70641c299e9408b78ab?s=40" />
+                    <div class="response-right">
+                        
+                        {{ response.content|apply_markup:"creole" }}
+                        
+                        <div class="response_bottom">
+                            <div class="user_info">
+                                <div class="avatar">
+                                    <img src="http://www.gravatar.com/avatar/b7472bc7aa45c70641c299e9408b78ab?s=40" />
+                                </div>
+                                <div class="info">
+                                    <div class="username">brosner</div>
+                                    <div class="user_points">14,890</div>
+                                </div>
                             </div>
-                            <div class="info">
-                                <div class="username">brosner</div>
-                                <div class="user_points">14,890</div>
+                            <div class="response_actions">
+                                <ul>
+                                    <li class="mark_as_accepted"><a href="#">Mark as accepted answer</a></li>
+                                </ul>
                             </div>
-                        </div>
-                        <div class="response_actions">
-                            <ul>
-                                <li class="mark_as_accepted"><a href="#">Mark as accepted answer</a></li>
-                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
         
     </div>
 

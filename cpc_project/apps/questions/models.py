@@ -30,8 +30,9 @@ class Question(models.Model):
 
 class Response(models.Model):
     
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, related_name="responses")
     content = models.TextField()
+    accepted = models.BooleanField(default=False)
     user = models.ForeignKey(User, related_name="responses")
     created = models.DateTimeField(default=datetime.now)
     
