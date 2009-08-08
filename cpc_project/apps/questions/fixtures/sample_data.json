@@ -26,7 +26,7 @@
     "pk": 1, 
     "model": "questions.response", 
     "fields": {
-      "content": "You should follow the INSTALL documentation to learn how to perform this action.</p>\r\n\r\nHere is some code for you:\r\n\r\n{{{\r\nwhile True:\r\n    if self.tired():\r\n        time.sleep(10)\r\n}}}\r\n\r\nOkay?", 
+      "content": "You should follow the INSTALL documentation to learn how to perform this action.\r\n\r\nHere is some code for you:\r\n\r\n{{{\r\nwhile True:\r\n    if self.tired():\r\n        time.sleep(10)\r\n}}}\r\n\r\nOkay?", 
       "accepted": false, 
       "question": 1, 
       "user": 1, 
