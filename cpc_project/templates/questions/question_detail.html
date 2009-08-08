@@ -51,7 +51,7 @@
     
     <div id="responses" class="clearfix">
         {% for response in responses %}
-            <div class="response{% if response.accepted %} accepted{% endif %}">
+            <div id="response-{{ response.pk }}" class="response{% if response.accepted %} accepted{% endif %}">
                 <div class="clearfix">
                     <div class="response-left">
                         <div>

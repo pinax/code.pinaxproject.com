@@ -50,5 +50,5 @@ class Response(models.Model):
         self.save()
     
     def get_absolute_url(self, group=None):
-        return "%s#%d" % (self.question.get_absolute_url(group), self.pk)
+        return "%s#response-%d" % (self.question.get_absolute_url(group), self.pk)
 
