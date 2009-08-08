@@ -2,10 +2,13 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 
+from django.contrib.auth.decorators import login_required
+
 from questions.forms import AskQuestionForm, AddResponseForm
 from questions.models import Question
 
 
+@login_required # @@@
 def question_list(request, group_slug=None, bridge=None):
     
     if bridge:
@@ -27,6 +30,7 @@ def question_list(request, group_slug=None, bridge=None):
     }, context_instance=RequestContext(request))
 
 
+@login_required
 def question_create(request, group_slug=None, bridge=None):
     
     if bridge:
@@ -53,6 +57,7 @@ def question_create(request, group_slug=None, bridge=None):
     }, context_instance=RequestContext(request))
 
 
+@login_required # @@@
 def question_detail(request, question_id, group_slug=None, bridge=None):
     
     if bridge:
@@ -100,6 +105,7 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
     }, context_instance=RequestContext(request))
 
 
+@login_required
 def mark_accepted(request, question_id, response_id, group_slug=None, bridge=None):
     
     if request.method != "POST":
