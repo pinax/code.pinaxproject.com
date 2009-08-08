@@ -1,6 +1,16 @@
 from django.contrib import admin
 
-from questions.models import Question
+from questions.models import Question, Response
 
 
-admin.site.register(Question)
+class ResponseInline(admin.StackedInline):
+    model = Response
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [
+        ResponseInline,
+    ]
+
+
+admin.site.register(Question, QuestionAdmin)
