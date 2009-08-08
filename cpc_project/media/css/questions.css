@@ -35,9 +35,16 @@ div#responses .response div.response-right {
     float: left;
     width: 90%;
 }
-div#responses .response div.user_info {
+div#responses .response div.response_bottom {
     border-top: 1px dotted #999;
+}
+div#responses .response div.response_actions {
     padding: 10px 0;
+    float: right;
+}
+div#responses .response div.user_info {
+    padding: 10px 0;
+    float: left;
 }
 div#responses .response div.user_info div.avatar {
     float: left;
