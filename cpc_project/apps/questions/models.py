@@ -36,6 +36,19 @@ class Response(models.Model):
     user = models.ForeignKey(User, related_name="responses")
     created = models.DateTimeField(default=datetime.now)
     
+    def accept(self):
+        # check for another active one and mark it inactive
+        try:
+            response = Response.objects.get(question=self.question, accepted=True)
+        except Response.DoesNotExist:
+            pass
+        else:
+            if self != response:
+                response.accepted = False
+                response.save()
+        self.accepted = True
+        self.save()
+    
     def get_absolute_url(self, group=None):
         return "%s#%d" % (self.question.get_absolute_url(group), self.pk)
 
