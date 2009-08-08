@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'tag_app',
     'tasks_api',
     'questions',
+    'markup_app',
     'threadedcomments_extras',
     #'quickbar',
     #'documents',

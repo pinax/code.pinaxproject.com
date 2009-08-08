@@ -80,17 +80,6 @@
     }
   }, 
   {
-    "pk": 5, 
-    "model": "questions.response", 
-    "fields": {
-      "content": "This is fairly easy. You should have a file called {{{site_tabs.css}}} in your project. That outlines the tabs currently. You will need to manually edit the file, but here is an example tab:\r\n\r\n{{{\r\nbody.wiki #tab_wiki a {\r\n    color: #000; /* selected tab text colour */\r\n}\r\nbody.wiki #tab_wiki {\r\n    margin: 0; /* to compensate for border */\r\n    padding: 5px 0 5px;\r\n    background-color: #DEF; /* selected tab colour */\r\n    border-left: 1px solid #000; /* tab border */\r\n    border-top: 1px solid #000; /* tab border */\r\n    border-right: 1px solid #000; /* tab border */\r\n}\r\n}}}\r\n\r\nNotice how each of the CSS rules above are scoped within {{{body.wiki}}}. This is done for selecting the tab. In the base.html for the app (for example in {{{yourapp/base.html}}} you'd do:\r\n\r\n{{{\r\n{% block body_class %}wiki{% endblock %}\r\n}}}\r\n\r\nLastly, create the tab in your {{{site_base.html}}}:\r\n\r\n{{{\r\n{% block right_tabs %}\r\n    {% if user.is_authenticated %}\r\n        <ul class=\"tabs\">{% spaceless %}\r\n            <li id=\"tab_wiki\"><a href=\"{% url wiki_article \"HomePage\" %}\">{% trans \"Wiki\" %}</a></li>\r\n        {% endspaceless %}</ul>\r\n    {% endif %}\r\n{% endblock %}\r\n}}}", 
-      "accepted": false, 
-      "question": 3, 
-      "user": 1, 
-      "created": "2009-08-08 04:24:38"
-    }
-  }, 
-  {
     "pk": 6, 
     "model": "questions.response", 
     "fields": {
@@ -98,6 +87,17 @@
       "accepted": false, 
       "question": 3, 
       "user": 2, 
+      "created": "2009-08-08 04:24:38"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "This is fairly easy. You should have a file called {{{site_tabs.css}}} in your project. That outlines the tabs currently. You will need to manually edit the file, but here is an example tab:\r\n\r\n{{{\r\n#!code css\r\nbody.wiki #tab_wiki a {\r\n    color: #000; /* selected tab text colour */\r\n}\r\nbody.wiki #tab_wiki {\r\n    margin: 0; /* to compensate for border */\r\n    padding: 5px 0 5px;\r\n    background-color: #DEF; /* selected tab colour */\r\n    border-left: 1px solid #000; /* tab border */\r\n    border-top: 1px solid #000; /* tab border */\r\n    border-right: 1px solid #000; /* tab border */\r\n}\r\n}}}\r\n\r\nNotice how each of the CSS rules above are scoped within {{{body.wiki}}}. This is done for selecting the tab. In the base.html for the app (for example in {{{yourapp/base.html}}} you'd do:\r\n\r\n{{{\r\n#!code django\r\n{% block body_class %}wiki{% endblock %}\r\n}}}\r\n\r\nLastly, create the tab in your {{{site_base.html}}}:\r\n\r\n{{{\r\n#!code django\r\n{% block right_tabs %}\r\n    {% if user.is_authenticated %}\r\n        <ul class=\"tabs\">{% spaceless %}\r\n            <li id=\"tab_wiki\"><a href=\"{% url wiki_article \"HomePage\" %}\">{% trans \"Wiki\" %}</a></li>\r\n        {% endspaceless %}</ul>\r\n    {% endif %}\r\n{% endblock %}\r\n}}}", 
+      "accepted": false, 
+      "question": 3, 
+      "user": 1, 
       "created": "2009-08-08 04:24:38"
     }
   }
