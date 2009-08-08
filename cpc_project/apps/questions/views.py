@@ -76,17 +76,6 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
     else:
         is_me = False
     
-    if "accept" in request.GET:
-        response_id = int(request.GET["accept"])
-        
-        if is_me:
-            response = responses.get(pk=response_id)
-            response.accept()
-        else:
-            return HttpResponse("cannot perform action")
-        
-        return HttpResponse("good")
-    
     if request.method == "POST":
         add_response_form = AddResponseForm(request.POST)
         
@@ -106,3 +95,37 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
         "responses": responses,
         "add_response_form": add_response_form,
     }, context_instance=RequestContext(request))
+
+
+def mark_accepted(request, question_id, response_id, group_slug=None, bridge=None):
+    
+    if request.method != "POST":
+        return HttpResponse("bad")
+    
+    if bridge:
+        try:
+            group = bridge.get_group(group_slug)
+        except ObjectDoesNotExist:
+            raise Http404()
+    else:
+        group = None
+    
+    questions = Question.objects.all()
+    
+    if group:
+        questions = group.content_objects(questions)
+    
+    question = get_object_or_404(questions, pk=question_id)
+    
+    if question.user == request.user:
+        is_me = True
+    else:
+        is_me = False
+    
+    if is_me:
+        response = question.responses.get(pk=response_id)
+        response.accept()
+    else:
+        return HttpResponse("cannot perform action")
+    
+    return HttpResponse("good")

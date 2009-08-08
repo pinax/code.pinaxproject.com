@@ -74,7 +74,7 @@
                             <div class="response_actions">
                                 <ul>
                                     {% if is_me %}
-                                    <li class="mark_as_accepted"><a href="?accept={{ response.pk }}">Mark as accepted answer</a></li>
+                                    <li class="mark_as_accepted"><a href="{% url questions_mark_accepted question.id,response.id %}">Mark as accepted answer</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
