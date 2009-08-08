@@ -1,7 +1,8 @@
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 
+from questions.forms import AskQuestionForm
 from questions.models import Question
 
 
@@ -23,6 +24,32 @@ def question_list(request, group_slug=None, bridge=None):
     return render_to_response("questions/question_list.html", {
         "group": group,
         "questions": questions,
+    }, context_instance=RequestContext(request))
+
+
+def question_create(request, group_slug=None, bridge=None):
+    
+    if bridge:
+        try:
+            group = bridge.get_group(group_slug)
+        except ObjectDoesNotExist:
+            raise Http404()
+    else:
+        group = None
+    
+    if request.method == "POST":
+        form = AskQuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.user = request.user
+            question.save()
+            return HttpResponseRedirect(question.get_absolute_url())
+    else:
+        form = AskQuestionForm()
+    
+    return render_to_response("questions/question_create.html", {
+        "group": group,
+        "form": form,
     }, context_instance=RequestContext(request))
 
 

@@ -1,0 +1,16 @@
+{% extends "questions/base.html" %}
+
+{% load i18n %}
+{% load uni_form %}
+
+{% block body %}
+    <h1>{% trans "Ask a question" %}</h1>
+    <p>{% blocktrans %}Ask the Pinax experts a question. Ask your question and someone from the Pinax community will answer your question to the best of their ability.{% endblocktrans %}</p>
+    
+    <form method="POST" action="" id="task_form" class="uniForm">
+        <div class="form_block">
+            {{ form|as_uni_form }}
+            <input type="submit" value="{% trans "Ask question" %}"/>
+        </div>
+    </form>
+{% endblock %}
