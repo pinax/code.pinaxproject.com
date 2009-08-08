@@ -3,16 +3,34 @@
     "pk": 1, 
     "model": "questions.question", 
     "fields": {
-      "content": "Test content", 
-      "question": "How do I run Pinax?"
+      "created": "2009-08-08 02:59:10", 
+      "question": "How do I run Pinax?", 
+      "object_id": null, 
+      "content": "I am trying to get Pinax up and running, but am having a difficult time. Here are the steps I have taken so far:\r\n\r\n{{{\r\npinax-boot.py ../pinax-env\r\n}}}\r\n\r\nI am now not sure what to do next?", 
+      "user": 8, 
+      "content_type": null
     }
-  },
+  }, 
   {
     "pk": 2, 
-    "model": "questions.question", 
+    "model": "questions.response", 
     "fields": {
-      "content": "Test content", 
-      "question": "What version of Pinax is stable?"
+      "content": "We have provided a script that will create a virtual environment for you.\r\nOnce you have downloaded the release tarball, cd into the extracted directory.\r\nLet's create a virtual environment that you will install everything into:\r\n\r\n{{{\r\n$ python scripts/pinax-boot.py ../pinax-env\r\n$ cd ../\r\n$ source ./pinax-env/bin/activate\r\n(pinax-env)$\r\n}}}\r\n\r\nNote that we have told you to create the new environment in the directory\r\nabove the tarball directory. We encourage you create the environment anywhere\r\nyou like.\r\n\r\nIf you use virtualenvwrapper (we highly encourage you do), you can easily\r\nreplace {{{../}}} with your {{{WORKON_HOME}}}. This gives you regular access\r\nto workon to activate your environment.", 
+      "accepted": true, 
+      "question": 1, 
+      "user": 2, 
+      "created": "2009-08-08 03:09:33"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "questions.response", 
+    "fields": {
+      "content": "You should follow the INSTALL documentation to learn how to perform this action.</p>\r\n\r\nHere is some code for you:\r\n\r\n{{{\r\nwhile True:\r\n    if self.tired():\r\n        time.sleep(10)\r\n}}}\r\n\r\nOkay?", 
+      "accepted": false, 
+      "question": 1, 
+      "user": 1, 
+      "created": "2009-08-08 02:59:39"
     }
   }
 ]
