@@ -2,7 +2,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 
-from questions.forms import AskQuestionForm
+from questions.forms import AskQuestionForm, AddResponseForm
 from questions.models import Question
 
 
@@ -87,9 +87,22 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
         
         return HttpResponse("good")
     
+    if request.method == "POST":
+        add_response_form = AddResponseForm(request.POST)
+        
+        if add_response_form.is_valid():
+            response = add_response_form.save(commit=False)
+            response.question = question
+            response.user = request.user
+            response.save()
+            return HttpResponseRedirect(response.get_absolute_url())
+    else:
+        add_response_form = AddResponseForm()
+    
     return render_to_response("questions/question_detail.html", {
         "group": group,
         "is_me": is_me,
         "question": question,
         "responses": responses,
+        "add_response_form": add_response_form,
     }, context_instance=RequestContext(request))

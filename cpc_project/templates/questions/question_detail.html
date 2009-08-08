@@ -4,6 +4,7 @@
 {% load creole_formatter %}
 {% load markup_tags %}
 {% load avatar_tags %}
+{% load uni_form %}
 
 {% block body %}
     
@@ -83,6 +84,14 @@
             </div>
         {% endfor %}
         
+        <h2>Add a response</h2>
+        
+        <form method="POST" action="" id="task_form" class="uniForm">
+            <div class="form_block">
+                {{ add_response_form|as_uni_form }}
+                <input type="submit" value="{% trans "Add response" %}"/>
+            </div>
+        </form>
     </div>
 
 {% endblock %}
