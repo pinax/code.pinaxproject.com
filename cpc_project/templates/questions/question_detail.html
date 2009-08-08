@@ -19,7 +19,7 @@
             <div class="question-bottom">
                 <div class="user_info">
                     <div class="avatar">
-                        {% avatar question.user 40 %}
+                        <a href="{% url profile_detail question.user.username %}">{% avatar question.user 40 %}</a>
                     </div>
                     <div class="info">
                         <div class="username">{{ question.user.username }}</div>
@@ -63,7 +63,7 @@
                         <div class="response_bottom">
                             <div class="user_info">
                                 <div class="avatar">
-                                    {% avatar response.user 40 %}
+                                    <a href="{% url profile_detail response.user.username %}">{% avatar response.user 40 %}</a>
                                 </div>
                                 <div class="info">
                                     <div class="username">{{ response.user.username }}</div>
