@@ -10,6 +10,55 @@ div.comments .comment {
     font-size: 90%;
     color: #888;
 }
+div#question {
+    
+}
+div#question .question-left {
+    float: left;
+    width: 10%;
+}
+div#question .question-left > div {
+    padding: 10px;
+    font-size: 200%;
+    font-weight: bold;
+    text-align: center;
+}
+div#question .question-right {
+    float: left;
+    width: 90%;
+}
+div#question div.question_bottom {
+    border-top: 1px dotted #999;
+}
+div#question div.question_actions {
+    padding: 10px 0;
+    float: right;
+}
+div#question div.question_actions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+div#question div.user_info {
+    padding: 10px 0;
+    float: left;
+}
+div#question div.user_info div.avatar {
+    float: left;
+    margin-right: 10px;
+}
+div#question div.user_info div.info {
+    float: left;
+}
+div#question div.user_info div.info .username {
+    margin: 0 0 5px 0;
+    font-size: 110%;
+}
+div#question div.user_info .avatar img {
+    border: 3px solid #ddd;
+    padding: 3px;
+}
+
 div#responses {
     
 }
