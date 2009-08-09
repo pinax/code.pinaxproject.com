@@ -47,6 +47,9 @@
                     <div class="username">
                         {{ question.user.username }}
                     </div>
+                    <div class="created">
+                        {{ question.created|timesince }} ago &mdash; {{ question.created|date:"m/d/Y h:i:s" }}
+                    </div>
                 </div>
             </div>
             <div class="question_actions">
@@ -112,6 +115,9 @@
                         <div class="info">
                             <div class="username">
                                 {{ response.user.username }}
+                            </div>
+                            <div class="created">
+                                {{ response.created|timesince }} ago &mdash; {{ response.created|date:"m/d/Y h:i:s" }}
                             </div>
                         </div>
                     </div>
