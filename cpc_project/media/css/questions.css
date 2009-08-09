@@ -19,8 +19,6 @@ div#question .question-left {
 }
 div#question .question-left > div {
     padding: 10px;
-    font-size: 200%;
-    font-weight: bold;
     text-align: center;
 }
 div#question .question-right {
@@ -76,8 +74,6 @@ div#responses .response div.response-left {
 }
 div#responses .response div.response-left > div {
     padding: 10px;
-    font-size: 200%;
-    font-weight: bold;
     text-align: center;
 }
 div#responses .response div.response-right {

@@ -266,6 +266,8 @@
 <style type="text/css">
     /* The arrows */
     div.vote_badge input {
+        position: relative;
+        left: -3px;
         border: none;
         background-color: transparent;
         text-indent: -999em;
@@ -288,6 +290,11 @@
 
     div.vote_badge form.downform input.active {
         background-image: url({{ MEDIA_URL }}bookmarks/img/down_mod.png);
+    }
+    
+    div.vote_badge span.score {
+        font-size: 200%;
+        font-weight: bold;
     }
 </style>
 {% endblock %}
