@@ -74,7 +74,7 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
         questions = group.content_objects(questions)
 
     question = get_object_or_404(questions, pk=question_id)
-    responses = question.responses.all() # @@@ ordering
+    responses = question.responses.order_by("created", "id")
 
     if question.user == request.user:
         is_me = True
