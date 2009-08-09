@@ -1,1 +1,3 @@
 *.pyc
+cpc_project/site_media/attachments/*
+pip-log.txt

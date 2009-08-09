@@ -9,16 +9,16 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class Question(models.Model):
-    
+
     object_id = models.IntegerField(null=True, blank=True)
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     group = generic.GenericForeignKey()
-    
+
     question = models.CharField(max_length=100)
     content = models.TextField()
     user = models.ForeignKey(User, related_name="questions")
     created = models.DateTimeField(default=datetime.now)
-    
+
     def get_absolute_url(self, group=None):
         kwargs = {
             "question_id": self.pk,
@@ -29,13 +29,17 @@ class Question(models.Model):
 
 
 class Response(models.Model):
-    
+
     question = models.ForeignKey(Question, related_name="responses")
     content = models.TextField()
     accepted = models.BooleanField(default=False)
     user = models.ForeignKey(User, related_name="responses")
     created = models.DateTimeField(default=datetime.now)
-    
+
+    # @TODO: proposal: add a field vote_sum that stores the actual voting sum.
+    # Use sigal to update it instantly on a new vote. This reduces the db stuff
+    # a bit.
+
     def accept(self):
         # check for another active one and mark it inactive
         try:
@@ -48,7 +52,7 @@ class Response(models.Model):
                 response.save()
         self.accepted = True
         self.save()
-    
+
     def get_absolute_url(self, group=None):
         return "%s#response-%d" % (self.question.get_absolute_url(group), self.pk)
 

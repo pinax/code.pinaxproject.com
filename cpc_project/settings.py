@@ -111,7 +111,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.markup',
     'django.contrib.admin',
-    
+
     'pinax.templatetags',
 
     # external
@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'django_markup',
     'uni_form',
     'wiki',
+    'voting',
 
     # internal (for now)
     'account',
