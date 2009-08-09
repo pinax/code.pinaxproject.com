@@ -8,6 +8,8 @@
       "object_id": null, 
       "content": "I am trying to get Pinax up and running, but am having a difficult time. Here are the steps I have taken so far:\r\n\r\n{{{\r\npinax-boot.py ../pinax-env\r\n}}}\r\n\r\nI am now not sure what to do next?", 
       "user": 8, 
+      "score": 0, 
+      "vote_count": 0, 
       "content_type": null
     }
   }, 
@@ -20,6 +22,8 @@
       "object_id": null, 
       "content": "I am wondering if Pinax can run on the recently released Django 1.1? When will it be included in Pinax?", 
       "user": 25, 
+      "score": 0, 
+      "vote_count": 0, 
       "content_type": null
     }
   }, 
@@ -32,6 +36,8 @@
       "object_id": null, 
       "content": "I am looking to build an app of my own and want to know how to add a tab? This is very important to me so please answer me quickly!!", 
       "user": 54, 
+      "score": 0, 
+      "vote_count": 0, 
       "content_type": null
     }
   }, 
@@ -44,6 +50,8 @@
       "object_id": null, 
       "content": "There isn't going to be a single answer (this question exists merely to test accept behavior for creator).", 
       "user": 1, 
+      "score": 0, 
+      "vote_count": 0, 
       "content_type": null
     }
   }, 
@@ -56,6 +64,8 @@
       "object_id": null, 
       "content": "Again, not a real question, but something we must ask. Actually, this exists for jtauber to test new response accepted behavior.", 
       "user": 2, 
+      "score": 0, 
+      "vote_count": 0, 
       "content_type": null
     }
   }, 
@@ -67,6 +77,8 @@
       "accepted": true, 
       "question": 1, 
       "user": 2, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 03:09:33"
     }
   }, 
@@ -78,6 +90,8 @@
       "accepted": false, 
       "question": 1, 
       "user": 1, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 02:59:39"
     }
   }, 
@@ -89,6 +103,8 @@
       "accepted": false, 
       "question": 2, 
       "user": 1, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:23:30"
     }
   }, 
@@ -100,6 +116,8 @@
       "accepted": false, 
       "question": 3, 
       "user": 97, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:24:38"
     }
   }, 
@@ -111,6 +129,8 @@
       "accepted": false, 
       "question": 3, 
       "user": 2, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:24:38"
     }
   }, 
@@ -122,6 +142,8 @@
       "accepted": false, 
       "question": 3, 
       "user": 1, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:24:38"
     }
   }, 
@@ -133,6 +155,8 @@
       "accepted": false, 
       "question": 4, 
       "user": 73, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:53:01"
     }
   }, 
@@ -144,6 +168,8 @@
       "accepted": false, 
       "question": 4, 
       "user": 3, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:53:01"
     }
   }, 
@@ -155,6 +181,8 @@
       "accepted": false, 
       "question": 5, 
       "user": 1, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:55:49"
     }
   }, 
@@ -166,6 +194,8 @@
       "accepted": false, 
       "question": 5, 
       "user": 8, 
+      "score": 0, 
+      "vote_count": 0, 
       "created": "2009-08-08 04:55:49"
     }
   }

@@ -2,23 +2,35 @@ from datetime import datetime
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.signals import post_save
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
+from voting.models import Vote
+
 
 class Question(models.Model):
-
+    
     object_id = models.IntegerField(null=True, blank=True)
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     group = generic.GenericForeignKey()
-
+    
     question = models.CharField(max_length=100)
     content = models.TextField()
     user = models.ForeignKey(User, related_name="questions")
     created = models.DateTimeField(default=datetime.now)
-
+    
+    score = models.IntegerField(editable=False, default=0)
+    vote_count = models.IntegerField(editable=False, default=0)
+    
+    def update_score(self):
+        result = Vote.objects.get_score(self)
+        self.score = result["score"]
+        self.vote_count = result["num_votes"]
+        self.save()
+    
     def get_absolute_url(self, group=None):
         kwargs = {
             "question_id": self.pk,
@@ -35,11 +47,16 @@ class Response(models.Model):
     accepted = models.BooleanField(default=False)
     user = models.ForeignKey(User, related_name="responses")
     created = models.DateTimeField(default=datetime.now)
-
-    # @@@ add a field vote_sum that stores the actual voting sum.
-    # use signal to update it instantly on a new vote. this is good
-    # denormalization and makes ordering easier.
-
+    
+    score = models.IntegerField(editable=False, default=0)
+    vote_count = models.IntegerField(editable=False, default=0)
+    
+    def update_score(self):
+        result = Vote.objects.get_score(self)
+        self.score = result["score"]
+        self.vote_count = result["num_votes"]
+        self.save()
+        
     def accept(self):
         # check for another active one and mark it inactive
         try:
@@ -56,3 +73,13 @@ class Response(models.Model):
     def get_absolute_url(self, group=None):
         return "%s#response-%d" % (self.question.get_absolute_url(group), self.pk)
 
+
+
+def vote_save(sender, instance=None, **kwargs):
+    if instance:
+        # GFK "join" -- issues a query
+        obj = instance.object
+        if isinstance(obj, (Question, Response)):
+            obj.update_score()
+
+post_save.connect(vote_save, sender=Vote)
