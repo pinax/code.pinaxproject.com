@@ -14,7 +14,6 @@
         <!-- Vote Badge -->
         <div class="vote_badge">
             {% vote_by_user user on question as vote %}
-            {% score_for_object question as score %}
 
             {% if user.is_authenticated %}
                 <form class="upform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="up"|get_state:vote %}">
@@ -22,7 +21,7 @@
                 </form>
             {% endif %}
 
-            <span class="score">{{ score.score|default:0 }}</span>
+            <span class="score">{{ question.score|default:0 }}</span>
             <br/>
 
             {% if user.is_authenticated %}
@@ -85,7 +84,6 @@
                 <!-- Vote Badge -->
                 <div class="vote_badge">
                     {% dict_entry_for_item response from vote_dict as vote %}
-                    {% dict_entry_for_item response from score_dict as score %}
 
                     {% if user.is_authenticated %}
                         <form class="upform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="up"|get_state:vote %}">
@@ -93,7 +91,7 @@
                         </form>
                     {% endif %}
 
-                    <span class="score">{{ score.score|default:0 }}</span>
+                    <span class="score">{{ response.score|default:0 }}</span>
                     <br/>
 
                     {% if user.is_authenticated %}
