@@ -1,0 +1,26 @@
+{% comment %}
+    {% dict_entry_for_item response from vote_dict as vote %}
+    {% dict_entry_for_item response from score_dict as score %}
+{% endcomment %}
+
+
+{% load extra_voting_tags_mergeme %}
+
+{% if user.is_authenticated %}
+<form class="upform" method="POST" action="{% url questions_response_vote object_id=voting_obj.id,direction="up"|get_state:vote %}">
+    <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}"
+     value="+1"/>
+</form>
+{% endif %}
+
+<span class="score">
+    {{ score.score|default:0 }}
+</span>
+<br />
+
+{% if user.is_authenticated %}
+<form class="downform" method="POST" action="{% url questions_response_vote object_id=voting_obj.id,direction="down"|get_state:vote %}">
+    <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}"
+     value="-1"/>
+</form>
+{% endif %}

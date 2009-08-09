@@ -10,7 +10,7 @@ from questions.models import Question
 
 @login_required # @@@
 def question_list(request, group_slug=None, bridge=None):
-    
+
     if bridge:
         try:
             group = bridge.get_group(group_slug)
@@ -18,12 +18,12 @@ def question_list(request, group_slug=None, bridge=None):
             raise Http404()
     else:
         group = None
-    
+
     questions = Question.objects.all()
-    
+
     if group:
         questions = group.content_objects(questions)
-    
+
     return render_to_response("questions/question_list.html", {
         "group": group,
         "questions": questions,
@@ -32,7 +32,7 @@ def question_list(request, group_slug=None, bridge=None):
 
 @login_required
 def question_create(request, group_slug=None, bridge=None):
-    
+
     if bridge:
         try:
             group = bridge.get_group(group_slug)
@@ -40,7 +40,7 @@ def question_create(request, group_slug=None, bridge=None):
             raise Http404()
     else:
         group = None
-    
+
     if request.method == "POST":
         form = AskQuestionForm(request.POST)
         if form.is_valid():
@@ -50,7 +50,7 @@ def question_create(request, group_slug=None, bridge=None):
             return HttpResponseRedirect(question.get_absolute_url())
     else:
         form = AskQuestionForm()
-    
+
     return render_to_response("questions/question_create.html", {
         "group": group,
         "form": form,
@@ -59,7 +59,7 @@ def question_create(request, group_slug=None, bridge=None):
 
 @login_required # @@@
 def question_detail(request, question_id, group_slug=None, bridge=None):
-    
+
     if bridge:
         try:
             group = bridge.get_group(group_slug)
@@ -67,23 +67,23 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
             raise Http404()
     else:
         group = None
-    
+
     questions = Question.objects.all()
-    
+
     if group:
         questions = group.content_objects(questions)
-    
+
     question = get_object_or_404(questions, pk=question_id)
     responses = question.responses.all() # @@@ ordering
-    
+
     if question.user == request.user:
         is_me = True
     else:
         is_me = False
-    
+
     if request.method == "POST":
         add_response_form = AddResponseForm(request.POST)
-        
+
         if add_response_form.is_valid():
             response = add_response_form.save(commit=False)
             response.question = question
@@ -95,7 +95,7 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
             add_response_form = AddResponseForm()
         else:
             add_response_form = None
-    
+
     return render_to_response("questions/question_detail.html", {
         "group": group,
         "is_me": is_me,
@@ -107,10 +107,10 @@ def question_detail(request, question_id, group_slug=None, bridge=None):
 
 @login_required
 def mark_accepted(request, question_id, response_id, group_slug=None, bridge=None):
-    
+
     if request.method != "POST":
         return HttpResponse("bad")
-    
+
     if bridge:
         try:
             group = bridge.get_group(group_slug)
@@ -118,23 +118,23 @@ def mark_accepted(request, question_id, response_id, group_slug=None, bridge=Non
             raise Http404()
     else:
         group = None
-    
+
     questions = Question.objects.all()
-    
+
     if group:
         questions = group.content_objects(questions)
-    
+
     question = get_object_or_404(questions, pk=question_id)
-    
+
     if question.user == request.user:
         is_me = True
     else:
         is_me = False
-    
+
     if is_me:
         response = question.responses.get(pk=response_id)
         response.accept()
     else:
         return HttpResponse("cannot perform action")
-    
+
     return HttpResponse("good")

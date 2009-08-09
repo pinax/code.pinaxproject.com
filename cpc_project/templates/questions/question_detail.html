@@ -1,166 +1,237 @@
 {% extends "questions/base.html" %}
-
 {% load i18n %}
 {% load creole_formatter %}
 {% load markup_tags %}
 {% load avatar_tags %}
 {% load uni_form %}
 {% load voting_tags %}
-
 {% block body %}
-
-    <div id="question" class="clearfix">
-        <div class="question-left">
-		</div>
-        <div class="question-right">
-            <h1>{{ question.question }}</h1>
-            {{ question.content|apply_markup:"creole" }}
-
-            <div class="question-bottom clearfix">
-                <div class="user_info">
-                    <div class="avatar">
-                        <a href="{% url profile_detail question.user.username %}">{% avatar question.user 40 %}</a>
-                    </div>
-                    <div class="info">
-                        <div class="username">{{ question.user.username }}</div>
-                    </div>
+<div id="question" class="clearfix">
+    <div class="question-left">
+    </div>
+    <div class="question-right">
+        <h1>{{ question.question }}</h1>
+        {{ question.content|apply_markup:"creole" }}
+        <div class="question-bottom clearfix">
+            <div class="user_info">
+                <div class="avatar">
+                    <a href="{% url profile_detail question.user.username %}">{% avatar question.user 40 %}</a>
                 </div>
-                <div class="question_actions">
-                    <ul>
-                    </ul>
+                <div class="info">
+                    <div class="username">
+                        {{ question.user.username }}
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </div>
-
-    {% comment %}
-    <div id="question_comments" class="comments">
-        <div class="comment">
-            What is the platform you are installing Pinax on to? &mdash; <a href="#">brosner</a>
-        </div>
-        <div class="comment">
-            How many monitors do you have? That is relevant information you know. &mdash; <a href="#">jtauber</a>
+            <div class="question_actions">
+                <ul>
+                </ul>
+            </div>
         </div>
     </div>
-    {% endcomment %}
-
-    <h2>{{ responses.count }} Response(s)</h2>
-
-    <div id="responses" class="clearfix">
-
-		{% scores_for_objects responses as score_dict %}
-        {% for response in responses %}
-            <div id="response-{{ response.pk }}" class="response{% if response.accepted %} accepted{% endif %}">
-                <div class="clearfix">
-					<div class="response-left">
-						<div class="vote_badge">
-						{% dict_entry_for_item response from vote_dict as vote %}
-						{% dict_entry_for_item response from score_dict as score %}
-
-						{% if user.is_authenticated %}
-                        <form method="POST" action="{% url questions_response_vote object_id=response.id,direction="up" %}">
-						    <input class="vote_button vote_button_up" type="submit" value="{% trans "+1" %}"/>
-						</form>
-						{% endif %}
-
-						<span class="score">
-						  {{ score.score|default:0 }}
-						</span><br />
-
-						{% if user.is_authenticated %}
-                        <form method="POST" action="{% url questions_response_vote object_id=response.id,direction="down" %}">
-                            <input class="vote_button vote_button_down" type="submit" value="{% trans "-1" %}"/>
-                        </form>
-						{% endif %}
-						</div>
-					</div>
-                    <div class="response-right">
-
-                        {{ response.content|apply_markup:"creole" }}
-
-                        <div class="response_bottom">
-                            <div class="user_info">
-                                <div class="avatar">
-                                    <a href="{% url profile_detail response.user.username %}">{% avatar response.user 40 %}</a>
-                                </div>
-                                <div class="info">
-                                    <div class="username">{{ response.user.username }}</div>
-                                </div>
-                            </div>
-                            <div class="response_actions">
-                                <ul>
-                                    {% if is_me %}
-                                    <li class="mark_as_accepted"><a href="{% url questions_mark_accepted question.id,response.id %}">Mark as accepted answer</a></li>
-                                    {% endif %}
-                                </ul>
+</div>
+{% comment %}
+<div id="question_comments" class="comments">
+    <div class="comment">
+        What is the platform you are installing Pinax on to? &mdash; <a href="#">brosner</a>
+    </div>
+    <div class="comment">
+        How many monitors do you have? That is relevant information you know. &mdash; <a href="#">jtauber</a>
+    </div>
+</div>
+{% endcomment %}<h2>{{ responses.count }} Response(s)</h2>
+<div id="responses" class="clearfix">
+    {% votes_by_user user on responses as vote_dict %}
+    {% scores_for_objects responses as score_dict %}
+    {% for response in responses %}
+    <div id="response-{{ response.pk }}" class="response{% if response.accepted %} accepted{% endif %}">
+        <div class="clearfix">
+            <div class="response-left">
+                <div class="vote_badge">
+                    {% dict_entry_for_item response from vote_dict as vote %}
+                    {% dict_entry_for_item response from score_dict as score %}
+                    {% with response as voting_obj %}
+                    {% include "questions/includes/score_badge.html" %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="response-right">
+                {{ response.content|apply_markup:"creole" }}
+                <div class="response_bottom">
+                    <div class="user_info">
+                        <div class="avatar">
+                            <a href="{% url profile_detail response.user.username %}">{% avatar response.user 40 %}</a>
+                        </div>
+                        <div class="info">
+                            <div class="username">
+                                {{ response.user.username }}
                             </div>
                         </div>
                     </div>
+                    <div class="response_actions">
+                        <ul>
+                            {% if is_me %}
+                            <li class="mark_as_accepted">
+                                <a href="{% url questions_mark_accepted question.id,response.id %}">Mark as accepted answer</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
-        {% endfor %}
-
-        {% if add_response_form %}
-            <h2>Add a response</h2>
-
-            <form method="POST" action="" id="task_form" class="uniForm">
-                <div class="form_block">
-                    {{ add_response_form|as_uni_form }}
-                    <input type="submit" value="{% trans "Add response" %}"/>
-                </div>
-            </form>
-        {% endif %}
+        </div>
     </div>
+    {% endfor %}
+    {% if add_response_form %}<h2>Add a response</h2>
+    <form method="POST" action="" id="task_form" class="uniForm">
+        <div class="form_block">
+            {{ add_response_form|as_uni_form }}<input type="submit" value="{% trans "Add response" %}"/>
+        </div>
+    </form>{% endif %}
+</div>
 {% endblock %}
 
 
 {% block extra_body_base %}
-	{{ block.super }}
-	<script type="text/javascript">
+  {{ block.super }}
+  <script type="text/javascript">
+  $(document).ready(function(){
+      var validDirections = ['upvote', 'downvote', 'clearvote'];
+
+      /*
+       * Get the direction out of a url
+       */
+      function getDirectionFromURL(url){
+          for (var i = 0; i < validDirections.length; i++) {
+              if (url.match(validDirections[i])) {
+                  return validDirections[i];
+              }
+          }
+      }
+
+      /*
+       * Set a new direction in a url
+       */
+      function setNewDirectionURL(url, direction){
+          for (var i = 0; i < validDirections.length; i++) {
+              if (url.match(validDirections[i])) {
+                  return url.replace(validDirections[i], direction);
+              }
+          }
+      }
 
     /*
-     * A custom function that updates the score with some animation.
+     * We swap this function out of the updateBadge function.
      */
-	function animateScoreChange(score_badge, value){
-		score_badge.queue(function(){
-             $(this).fadeOut('slow');
-			 $(this).dequeue();
-		});
-        score_badge.queue(function(){
-		  $(this).text(value);
-             $(this).dequeue();
-        });
-        score_badge.queue(function(){
-             $(this).fadeIn('fast');
-             $(this).dequeue();
-        });
-	}
+    function updateScore(target, score){
+
+            target.text(score);
+
+    }
 
     /*
-     * Iterate over vote forms, if one is submitted, call the form-url via AJAX,
-     * err.. POST and update the score.
+     * Updates the badge: the URL of the arrows, the class of the arrows
+     * that marks the active one and the score
      */
-	$("div.vote_badge form").each(function(){
-		// Remember the score badge thats next to this form
-		var score_badge = $(this).parent().find('span.score');
 
-        // Bind the POST request to submit
-        $(this).submit(function(){
-			var update_url = $(this).attr('action');
-			// Do a post request and do something with the (json) response
-            $.post(update_url, {}, function(response){
-		        if(response.success){
-		            // Update the score count
-					animateScoreChange(score_badge, response.score.score)
-		        }else{
-					// Silent errors?
-					console.log('Got no valid response from the voting app');
-					console.log(response);
-				}
-			}, 'json');
-			return false;
-		});
-	});
-	</script>
+      function updateBadge(vote_badge, current_form, value){
+
+          // Get the direction from the currently clicked form. Can be either
+          // up, down or clear.
+          direction = getDirectionFromURL(current_form.attr('action'));
+
+          // Update the score
+          updateScore(vote_badge.find('span.score'), value);
+
+          // Set both arrows to inactive
+          vote_badge.find('input[type=submit]').removeClass('active');
+
+          // If we don't clicked on an clear-arrow, mark it active
+          if (direction != 'clearvote') {
+              current_form.find('input[type=submit]').addClass('active');
+          }
+
+          /*
+           * This function .... works. :o)
+           */
+          // Upvote
+          if (direction == 'upvote') {
+              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'upvote'));
+              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'clearvote'));
+          }
+          // Downvote
+          else if (direction == 'downvote') {
+              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'clearvote'));
+              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'downvote'));
+          }
+          // Clearvote
+          else {
+              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'upvote'));
+              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'downvote'));
+          }
+      }
+
+      /*
+       * Iterate over vote forms, if one is submitted, call the form-url via AJAX,
+       * err.. POST and update the score.
+       */
+      $("div.vote_badge").each(function(){
+          // Remember this badge.
+          var vote_badge = $(this);
+
+          // Iterate over forms
+          $(this).find("form").each(function(){
+
+              // Bind updateBadge function to all forms
+              var current_form = $(this);
+              $(this).submit(function(){
+                  var update_url = $(this).attr('action');
+                  // Do a post request and do something with the (json) response
+                  $.post(update_url, {}, function(response){
+                      if (response.success) {
+                          // Update the score count
+                          updateBadge(vote_badge, current_form, response.score.score)
+                      }
+                      else {
+                          // Silent error
+                          console.log('Got no valid response from the voting app');
+                          console.log(response);
+                      }
+                  }, 'json');
+                  return false;
+              });
+          });
+      });
+
+  });
+  </script>
+{% endblock %}
+
+{% block extra_head %}
+<style type="text/css">
+    /* The arrows */
+    div.vote_badge input{
+        border: none;
+        background-color: transparent;
+        text-indent: -999em;
+        width: 22px;
+        height: 18px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        background-image: url({{ MEDIA_URL }}bookmarks/img/up_grey.png);
+    }
+
+    div.vote_badge form.downform input{
+        background-image: url({{ MEDIA_URL }}bookmarks/img/down_grey.png);
+    }
+
+    /* Active arrows */
+    div.vote_badge form.upform input.active{
+        background-image: url({{ MEDIA_URL }}bookmarks/img/up_mod.png);
+    }
+    div.vote_badge form.downform input.active{
+        background-image: url({{ MEDIA_URL }}bookmarks/img/down_mod.png);
+    }
+</style>
 {% endblock %}
