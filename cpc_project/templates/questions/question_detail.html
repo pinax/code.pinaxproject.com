@@ -1,4 +1,5 @@
 {% extends "questions/base.html" %}
+
 {% load i18n %}
 {% load creole_formatter %}
 {% load markup_tags %}
@@ -7,6 +8,7 @@
 {% load voting_tags %}
 {% load extra_voting_tags_mergeme %}
 {% block body %}
+
 <div id="question" class="clearfix">
     <div class="question-left">
         <!-- Vote Badge -->
@@ -15,18 +17,18 @@
             {% score_for_object question as score %}
 
             {% if user.is_authenticated %}
-            <form class="upform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="up"|get_state:vote %}">
-                <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1"/>
-            </form>
+                <form class="upform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="up"|get_state:vote %}">
+                    <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1" />
+                </form>
             {% endif %}
 
             <span class="score">{{ score.score|default:0 }}</span>
             <br/>
 
             {% if user.is_authenticated %}
-            <form class="downform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="down"|get_state:vote %}">
-                <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1"/>
-            </form>
+                <form class="downform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="down"|get_state:vote %}">
+                    <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1" />
+                </form>
             {% endif %}
         </div>
         <!-- /Vote Badge -->
@@ -83,18 +85,18 @@
                     {% dict_entry_for_item response from score_dict as score %}
 
                     {% if user.is_authenticated %}
-                    <form class="upform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="up"|get_state:vote %}">
-                        <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1"/>
-                    </form>
+                        <form class="upform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="up"|get_state:vote %}">
+                            <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1"/>
+                        </form>
                     {% endif %}
 
                     <span class="score">{{ score.score|default:0 }}</span>
                     <br/>
 
                     {% if user.is_authenticated %}
-                    <form class="downform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="down"|get_state:vote %}">
-                        <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1"/>
-                    </form>
+                        <form class="downform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="down"|get_state:vote %}">
+                            <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1"/>
+                        </form>
                     {% endif %}
                 </div>
                 <!-- /Vote Badge -->

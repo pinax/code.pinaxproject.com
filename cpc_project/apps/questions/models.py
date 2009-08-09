@@ -36,9 +36,9 @@ class Response(models.Model):
     user = models.ForeignKey(User, related_name="responses")
     created = models.DateTimeField(default=datetime.now)
 
-    # @TODO: proposal: add a field vote_sum that stores the actual voting sum.
-    # Use sigal to update it instantly on a new vote. This reduces the db stuff
-    # a bit.
+    # @@@ add a field vote_sum that stores the actual voting sum.
+    # use signal to update it instantly on a new vote. this is good
+    # denormalization and makes ordering easier.
 
     def accept(self):
         # check for another active one and mark it inactive
