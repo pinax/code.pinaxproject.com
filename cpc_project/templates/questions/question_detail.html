@@ -143,7 +143,7 @@
 {% block extra_body_base %}
 {{ block.super }}
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function() {
 
         /*
          * Reusablity hint:
@@ -158,7 +158,7 @@
         /*
          * Get the direction out of a url
          */
-        function getDirectionFromURL(url){
+        function getDirectionFromURL(url) {
             for (var i = 0; i < validDirections.length; i++) {
                 if (url.match(validDirections[i])) {
                     return validDirections[i];
@@ -169,7 +169,7 @@
         /*
          * Set a new direction in a url
          */
-        function setNewDirectionURL(url, direction){
+        function setNewDirectionURL(url, direction) {
             for (var i = 0; i < validDirections.length; i++) {
                 if (url.match(validDirections[i])) {
                     return url.replace(validDirections[i], direction);
@@ -181,7 +181,7 @@
          * We swap this function out of the updateBadge function.
          * Add some shine when updateing the score.
          */
-        function updateScore(target, score){
+        function updateScore(target, score) {
             target.text(score);
         }
 
@@ -189,7 +189,7 @@
          * Updates the badge: the URL of the arrows, the class of the arrows
          * that marks the active one and the score
          */
-        function updateBadge(vote_badge, current_form, value){
+        function updateBadge(vote_badge, current_form, value) {
 
             // Get the direction from the currently clicked form. Can be either
             // up, down or clear.
@@ -230,19 +230,19 @@
          * Iterate over vote forms, if one is submitted, call the form-url via
          * POST and update the score, urls and arrow styles.
          */
-        $("div.vote_badge").each(function(){
+        $("div.vote_badge").each(function() {
             // Remember this badge.
             var vote_badge = $(this);
 
             // Iterate over forms
-            $(this).find("form").each(function(){
+            $(this).find("form").each(function() {
 
                 // Bind updateBadge function to all forms
                 var current_form = $(this);
-                $(this).submit(function(){
+                $(this).submit(function() {
                     var update_url = $(this).attr('action');
                     // Do a post request and do something with the (json) response
-                    $.post(update_url, {}, function(response){
+                    $.post(update_url, {}, function(response) {
                         if (response.success) {
                             // Update the score count
                             updateBadge(vote_badge, current_form, response.score.score)
