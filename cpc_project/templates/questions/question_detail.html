@@ -1,14 +1,43 @@
 {% extends "questions/base.html" %}
+
 {% load i18n %}
 {% load creole_formatter %}
 {% load markup_tags %}
 {% load avatar_tags %}
 {% load uni_form %}
 {% load voting_tags %}
+{% load extra_voting_tags_mergeme %}
+
 {% block body %}
 <div id="question" class="clearfix">
     <div class="question-left">
+
+        <!-- Vote Badge -->
+        <div class="vote_badge">
+            {% vote_by_user user on question as vote %}
+            {% score_for_object question as score %}
+
+            {% if user.is_authenticated %}
+            <form class="upform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="up"|get_state:vote %}">
+                <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1"/>
+            </form>
+            {% endif %}
+
+            <span class="score">
+                {{ score.score|default:0 }}
+            </span>
+            <br />
+
+            {% if user.is_authenticated %}
+            <form class="downform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="down"|get_state:vote %}">
+                <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1"/>
+            </form>
+            {% endif %}
+        </div>
+        <!-- /Vote Badge -->
+
     </div>
+
     <div class="question-right">
         <h1>{{ question.question }}</h1>
         {{ question.content|apply_markup:"creole" }}
@@ -30,6 +59,7 @@
         </div>
     </div>
 </div>
+
 {% comment %}
 <div id="question_comments" class="comments">
     <div class="comment">
@@ -39,21 +69,42 @@
         How many monitors do you have? That is relevant information you know. &mdash; <a href="#">jtauber</a>
     </div>
 </div>
-{% endcomment %}<h2>{{ responses.count }} Response(s)</h2>
+{% endcomment %}
+
+<h2>{{ responses.count }} Response(s)</h2>
 <div id="responses" class="clearfix">
     {% votes_by_user user on responses as vote_dict %}
     {% scores_for_objects responses as score_dict %}
+
     {% for response in responses %}
     <div id="response-{{ response.pk }}" class="response{% if response.accepted %} accepted{% endif %}">
         <div class="clearfix">
             <div class="response-left">
+
+                <!-- Vote Badge -->
                 <div class="vote_badge">
                     {% dict_entry_for_item response from vote_dict as vote %}
                     {% dict_entry_for_item response from score_dict as score %}
-                    {% with response as voting_obj %}
-                    {% include "questions/includes/score_badge.html" %}
-                    {% endwith %}
+
+                    {% if user.is_authenticated %}
+                    <form class="upform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="up"|get_state:vote %}">
+                        <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1"/>
+                    </form>
+                    {% endif %}
+
+                    <span class="score">
+                        {{ score.score|default:0 }}
+                    </span>
+                    <br />
+
+                    {% if user.is_authenticated %}
+                    <form class="downform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="down"|get_state:vote %}">
+                        <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1"/>
+                    </form>
+                    {% endif %}
                 </div>
+                <!-- /Vote Badge -->
+
             </div>
             <div class="response-right">
                 {{ response.content|apply_markup:"creole" }}
@@ -82,12 +133,14 @@
         </div>
     </div>
     {% endfor %}
+
     {% if add_response_form %}<h2>Add a response</h2>
     <form method="POST" action="" id="task_form" class="uniForm">
         <div class="form_block">
             {{ add_response_form|as_uni_form }}<input type="submit" value="{% trans "Add response" %}"/>
         </div>
-    </form>{% endif %}
+    </form>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -96,8 +149,8 @@
   {{ block.super }}
   <script type="text/javascript">
   $(document).ready(function(){
-      var validDirections = ['upvote', 'downvote', 'clearvote'];
 
+      var validDirections = ['upvote', 'downvote', 'clearvote'];
       /*
        * Get the direction out of a url
        */
@@ -122,11 +175,10 @@
 
     /*
      * We swap this function out of the updateBadge function.
+     * Add some shine when updateing the score.
      */
     function updateScore(target, score){
-
             target.text(score);
-
     }
 
     /*
