@@ -1,5 +1,4 @@
 {% extends "questions/base.html" %}
-
 {% load i18n %}
 {% load creole_formatter %}
 {% load markup_tags %}
@@ -7,11 +6,9 @@
 {% load uni_form %}
 {% load voting_tags %}
 {% load extra_voting_tags_mergeme %}
-
 {% block body %}
 <div id="question" class="clearfix">
     <div class="question-left">
-
         <!-- Vote Badge -->
         <div class="vote_badge">
             {% vote_by_user user on question as vote %}
@@ -23,10 +20,8 @@
             </form>
             {% endif %}
 
-            <span class="score">
-                {{ score.score|default:0 }}
-            </span>
-            <br />
+            <span class="score">{{ score.score|default:0 }}</span>
+            <br/>
 
             {% if user.is_authenticated %}
             <form class="downform" method="POST" action="{% url questions_question_vote object_id=question.id,direction="down"|get_state:vote %}">
@@ -58,6 +53,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 {% comment %}
@@ -72,10 +68,10 @@
 {% endcomment %}
 
 <h2>{{ responses.count }} Response(s)</h2>
+
 <div id="responses" class="clearfix">
     {% votes_by_user user on responses as vote_dict %}
     {% scores_for_objects responses as score_dict %}
-
     {% for response in responses %}
     <div id="response-{{ response.pk }}" class="response{% if response.accepted %} accepted{% endif %}">
         <div class="clearfix">
@@ -92,10 +88,8 @@
                     </form>
                     {% endif %}
 
-                    <span class="score">
-                        {{ score.score|default:0 }}
-                    </span>
-                    <br />
+                    <span class="score">{{ score.score|default:0 }}</span>
+                    <br/>
 
                     {% if user.is_authenticated %}
                     <form class="downform" method="POST" action="{% url questions_response_vote object_id=response.id,direction="down"|get_state:vote %}">
@@ -144,125 +138,132 @@
 </div>
 {% endblock %}
 
-
 {% block extra_body_base %}
-  {{ block.super }}
-  <script type="text/javascript">
-  $(document).ready(function(){
+{{ block.super }}
+<script type="text/javascript">
+    $(document).ready(function(){
 
-      var validDirections = ['upvote', 'downvote', 'clearvote'];
-      /*
-       * Get the direction out of a url
-       */
-      function getDirectionFromURL(url){
-          for (var i = 0; i < validDirections.length; i++) {
-              if (url.match(validDirections[i])) {
-                  return validDirections[i];
-              }
-          }
-      }
+        /*
+         * Reusablity hint:
+         *
+         *  Set the directions you also have in your urls.py. Order is
+         *  0: up vote; 1: down vote; 2: clear vote
+         *
+         *  The rest should work out of the box without modification.
+         */
+        var validDirections = ['upvote', 'downvote', 'clearvote'];
 
-      /*
-       * Set a new direction in a url
-       */
-      function setNewDirectionURL(url, direction){
-          for (var i = 0; i < validDirections.length; i++) {
-              if (url.match(validDirections[i])) {
-                  return url.replace(validDirections[i], direction);
-              }
-          }
-      }
+        /*
+         * Get the direction out of a url
+         */
+        function getDirectionFromURL(url){
+            for (var i = 0; i < validDirections.length; i++) {
+                if (url.match(validDirections[i])) {
+                    return validDirections[i];
+                }
+            }
+        }
 
-    /*
-     * We swap this function out of the updateBadge function.
-     * Add some shine when updateing the score.
-     */
-    function updateScore(target, score){
+        /*
+         * Set a new direction in a url
+         */
+        function setNewDirectionURL(url, direction){
+            for (var i = 0; i < validDirections.length; i++) {
+                if (url.match(validDirections[i])) {
+                    return url.replace(validDirections[i], direction);
+                }
+            }
+        }
+
+        /*
+         * We swap this function out of the updateBadge function.
+         * Add some shine when updateing the score.
+         */
+        function updateScore(target, score){
             target.text(score);
-    }
+        }
 
-    /*
-     * Updates the badge: the URL of the arrows, the class of the arrows
-     * that marks the active one and the score
-     */
+        /*
+         * Updates the badge: the URL of the arrows, the class of the arrows
+         * that marks the active one and the score
+         */
+        function updateBadge(vote_badge, current_form, value){
 
-      function updateBadge(vote_badge, current_form, value){
+            // Get the direction from the currently clicked form. Can be either
+            // up, down or clear.
+            direction = getDirectionFromURL(current_form.attr('action'));
 
-          // Get the direction from the currently clicked form. Can be either
-          // up, down or clear.
-          direction = getDirectionFromURL(current_form.attr('action'));
+            // Update the score
+            updateScore(vote_badge.find('span.score'), value);
 
-          // Update the score
-          updateScore(vote_badge.find('span.score'), value);
+            // Set both arrows to inactive
+            vote_badge.find('input[type=submit]').removeClass('active');
 
-          // Set both arrows to inactive
-          vote_badge.find('input[type=submit]').removeClass('active');
+            // If we don't clicked on an clear-arrow, mark it active
+            if (direction != validDirections[2]) {
+                current_form.find('input[type=submit]').addClass('active');
+            }
 
-          // If we don't clicked on an clear-arrow, mark it active
-          if (direction != 'clearvote') {
-              current_form.find('input[type=submit]').addClass('active');
-          }
+            /*
+             * This function .... works. :o)
+             */
+            // Upvote
+            if (direction == validDirections[0]) {
+                vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), validDirections[0]));
+                vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), validDirections[2]));
+            }
+            // Downvote
+            else if (direction == validDirections[1]) {
+                vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), validDirections[2]));
+                vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), validDirections[1]));
+            }
+            // Clearvote
+            else {
+                vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), validDirections[0]));
+                vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), validDirections[1]));
+            }
+        }
 
-          /*
-           * This function .... works. :o)
-           */
-          // Upvote
-          if (direction == 'upvote') {
-              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'upvote'));
-              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'clearvote'));
-          }
-          // Downvote
-          else if (direction == 'downvote') {
-              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'clearvote'));
-              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'downvote'));
-          }
-          // Clearvote
-          else {
-              vote_badge.find('form.upform').attr('action', setNewDirectionURL(vote_badge.find('form.upform').attr('action'), 'upvote'));
-              vote_badge.find('form.downform').attr('action', setNewDirectionURL(vote_badge.find('form.downform').attr('action'), 'downvote'));
-          }
-      }
+        /*
+         * Iterate over vote forms, if one is submitted, call the form-url via
+         * POST and update the score, urls and arrow styles.
+         */
+        $("div.vote_badge").each(function(){
+            // Remember this badge.
+            var vote_badge = $(this);
 
-      /*
-       * Iterate over vote forms, if one is submitted, call the form-url via AJAX,
-       * err.. POST and update the score.
-       */
-      $("div.vote_badge").each(function(){
-          // Remember this badge.
-          var vote_badge = $(this);
+            // Iterate over forms
+            $(this).find("form").each(function(){
 
-          // Iterate over forms
-          $(this).find("form").each(function(){
+                // Bind updateBadge function to all forms
+                var current_form = $(this);
+                $(this).submit(function(){
+                    var update_url = $(this).attr('action');
+                    // Do a post request and do something with the (json) response
+                    $.post(update_url, {}, function(response){
+                        if (response.success) {
+                            // Update the score count
+                            updateBadge(vote_badge, current_form, response.score.score)
+                        }
+                        else {
+                            // Silent error
+                            console.log('Got no valid response from the voting app');
+                            console.log(response);
+                        }
+                    }, 'json');
+                    return false;
+                });
+            });
+        });
 
-              // Bind updateBadge function to all forms
-              var current_form = $(this);
-              $(this).submit(function(){
-                  var update_url = $(this).attr('action');
-                  // Do a post request and do something with the (json) response
-                  $.post(update_url, {}, function(response){
-                      if (response.success) {
-                          // Update the score count
-                          updateBadge(vote_badge, current_form, response.score.score)
-                      }
-                      else {
-                          // Silent error
-                          console.log('Got no valid response from the voting app');
-                          console.log(response);
-                      }
-                  }, 'json');
-                  return false;
-              });
-          });
-      });
-
-  });
-  </script>
+    });
+</script>
 {% endblock %}
 
 {% block extra_head %}
 <style type="text/css">
     /* The arrows */
-    div.vote_badge input{
+    div.vote_badge input {
         border: none;
         background-color: transparent;
         text-indent: -999em;
@@ -274,15 +275,16 @@
         background-image: url({{ MEDIA_URL }}bookmarks/img/up_grey.png);
     }
 
-    div.vote_badge form.downform input{
+    div.vote_badge form.downform input {
         background-image: url({{ MEDIA_URL }}bookmarks/img/down_grey.png);
     }
 
     /* Active arrows */
-    div.vote_badge form.upform input.active{
+    div.vote_badge form.upform input.active {
         background-image: url({{ MEDIA_URL }}bookmarks/img/up_mod.png);
     }
-    div.vote_badge form.downform input.active{
+
+    div.vote_badge form.downform input.active {
         background-image: url({{ MEDIA_URL }}bookmarks/img/down_mod.png);
     }
 </style>
