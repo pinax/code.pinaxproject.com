@@ -1,2 +1,7 @@
+--find-links=http://pypi.pinaxproject.com
+--find-links=http://pypi2.pinaxproject.com
+
+
 django-dpaste==0.2.4
 django-piston==0.2
+django-mptt==0.3_pre
