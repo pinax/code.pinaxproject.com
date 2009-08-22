@@ -98,8 +98,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
-    "pinax.core.context_processors.contact_email",
-    "pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 )
 
 INSTALLED_APPS = (
