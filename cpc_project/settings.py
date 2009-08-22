@@ -98,8 +98,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
-    "pinax.core.context_processors.contact_email",
-    "pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 )
 
 INSTALLED_APPS = (
@@ -137,6 +136,7 @@ INSTALLED_APPS = (
     # internal (for now)
     'account',
     'basic_profiles',
+    'staticfiles',
     'groups',
     'dpaste',
     'tasks',
@@ -169,12 +169,19 @@ ACCOUNT_OPEN_SIGNUP = True
 ACCOUNT_REQUIRED_EMAIL = False
 ACCOUNT_EMAIL_VERIFICATION = False
 
+NOTIFICATION_QUEUE_ALL = True
+
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
 CONTACT_EMAIL = "jtauber@jtauber.com"
 SITE_NAME = "code.pinaxproject.com"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "home"
+
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('cpc_project', os.path.join(PROJECT_ROOT, 'media')),
+)
 
 WIKI_REQUIRES_LOGIN = True
 
