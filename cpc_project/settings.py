@@ -174,6 +174,11 @@ SITE_NAME = "code.pinaxproject.com"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "home"
 
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('cpc_project', os.path.join(PROJECT_ROOT, 'media')),
+)
+
 WIKI_REQUIRES_LOGIN = True
 
 # For now we stick to a rather loose RE for the URL until the wikiapp
