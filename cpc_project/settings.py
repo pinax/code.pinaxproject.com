@@ -135,6 +135,7 @@ INSTALLED_APPS = (
     # internal (for now)
     'account',
     'basic_profiles',
+    'staticfiles',
     'groups',
     'dpaste',
     'tasks',
