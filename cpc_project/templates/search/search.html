@@ -1,0 +1,46 @@
+{% extends 'site_base.html' %}
+
+{% load i18n %}
+{% load uni_form %}
+
+{% block body_class %}search{% endblock %}
+
+{% block head_title %}{% block title %}Search{% endblock %}{% endblock %}
+
+{% block rtab_id %}id="search_tab"{% endblock %}
+
+{% block subnav %}
+<ul>
+    <li><a href="{% url haystack_search %}">{% trans "New search" %}</a></li>
+</ul>
+{% endblock %}
+
+
+{% block body %}
+    <h1>Search</h1>
+
+     <div class="main-form">
+        <form method="GET" action="" id="search_form" class="uniForm">
+            <div class="form_block">
+                {{ form.media }}
+                {{ form|as_uni_form }}
+                <input type="submit" value="{% trans 'Search' %}"/>
+            </div>
+        </form>
+    </div>
+    {% if query %}
+      <h2>Search results for: <em>{{ query }}</em></h2>
+    {% endif %}
+    {% if page.object_list %}
+        {% for result in page.object_list %}
+            {% ifchanged result.verbose_name_plural %}
+                <h3>{{ result.verbose_name_plural }}</h3>
+            {% endifchanged %}
+            {{ result.rendered|safe }}
+        {% endfor %}
+    {% else %}
+        {% if query %}
+        <p>No results found.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

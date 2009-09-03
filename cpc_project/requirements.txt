@@ -6,3 +6,5 @@ django-dpaste==0.2.4
 django-piston==0.2.2
 django-mptt==0.3_pre
 django-staticfiles==0.1.2
+Whoosh==0.3.0b24
+-e git+git://github.com/toastdriven/django-haystack.git#egg=django-haystack

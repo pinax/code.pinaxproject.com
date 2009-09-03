@@ -158,7 +158,13 @@ INSTALLED_APPS = (
     'threadedcomments_extras',
     #'quickbar',
     #'documents',
+    'haystack',
+    'search_app',
 )
+
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'whoosh', 'index')
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
