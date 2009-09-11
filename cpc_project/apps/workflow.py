@@ -66,7 +66,7 @@ STATE_TRANSITIONS = [
     # resolved
     (2, 1, always, "re-open"),
     (2, 2, always, "leave resolved"),
-    (2, 3, is_task_manager, "close"),
+    (2, 3, OR(is_task_manager, is_creator), "close"),
     (2, 7, is_task_manager, "re-open (accepted)"),
     
     # closed
