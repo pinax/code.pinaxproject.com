@@ -196,6 +196,8 @@ STATICFILES_EXTRA_MEDIA = (
 
 WIKI_REQUIRES_LOGIN = True
 
+TASKS_WORKFLOW_MODULE = "workflow"
+
 # For now we stick to a rather loose RE for the URL until the wikiapp
 # supports urls for non-wikiwords
 WIKI_WORD_RE = r'(?:[A-Z]+([0-9]|[a-z])+){2,}'
