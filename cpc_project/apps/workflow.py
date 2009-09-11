@@ -85,6 +85,7 @@ STATE_TRANSITIONS = [
     (5, 5, always, "discussion still needed"),
     (5, 4, OR(is_assignee, is_task_manager), "in progress"),
     (5, 1, is_task_manager, "move back to new"),
+    (5, 7, is_task_manager, "move to accepted"),
     (5, 2, is_task_manager, "resolved"),
     (5, 6, is_task_manager, "blocked"),
     
