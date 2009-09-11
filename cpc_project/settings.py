@@ -56,10 +56,24 @@ MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "site_media")
 # Example: "http://media.lawrence.com"
 MEDIA_URL = '/site_media/'
 
+# Absolute path to the directory that holds static files like app media.
+# Example: "/home/media/media.lawrence.com/apps/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
+
+# URL that handles the static files like app media.
+# Example: "http://media.lawrence.com"
+STATIC_URL = '/site_media/static/'
+
+# Additional directories which hold static files
+STATICFILES_DIRS = (
+    ('auth_project', os.path.join(PROJECT_ROOT, 'media')),
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+)
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = os.path.join(STATIC_URL, "admin/")
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = ''
@@ -98,8 +112,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
-    "pinax.core.context_processors.contact_email",
-    "pinax.core.context_processors.site_name",
+    "pinax.core.context_processors.pinax_settings",
 )
 
 INSTALLED_APPS = (
@@ -136,6 +149,7 @@ INSTALLED_APPS = (
     # internal (for now)
     'account',
     'basic_profiles',
+    'staticfiles',
     'groups',
     'dpaste',
     'tasks',
@@ -174,6 +188,11 @@ CONTACT_EMAIL = "jtauber@jtauber.com"
 SITE_NAME = "code.pinaxproject.com"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "home"
+
+STATICFILES_EXTRA_MEDIA = (
+    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
+    ('cpc_project', os.path.join(PROJECT_ROOT, 'media')),
+)
 
 WIKI_REQUIRES_LOGIN = True
 
