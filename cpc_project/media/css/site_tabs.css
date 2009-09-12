@@ -6,7 +6,8 @@ body.tasks #tab_tasks a,
 body.pastebin #tab_pastebin a,
 body.documents #tab_documents a,
 body.notices #tab_notices a,
-body.paste #tab_paste a
+body.paste #tab_paste a,
+body.search #tab_search a
 {
     color: #000 !important; /* selected tab text colour */
 }
@@ -16,7 +17,8 @@ body.tasks #tab_tasks,
 body.pastebin #tab_pastebin,
 body.documents #tab_documents,
 body.notices #tab_notices,
-body.paste #tab_paste
+body.paste #tab_paste,
+body.search #tab_search
 {
     margin: 0; /* to compensate for border */
     padding: 5px 0 5px;

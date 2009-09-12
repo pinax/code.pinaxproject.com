@@ -44,6 +44,7 @@
             <li id="tab_wiki"><a href='{% url wiki_article "HomePage" %}'>{% trans "Wiki" %}</a></li>
             <li id="tab_paste"><a href='{% url snippet_new %}'>{% trans "Paste" %}</a></li>
             <li id="tab_notices"><a href="{% url notification_notices %}">{% trans "Notices" %}{% if notice_unseen_count %} ({{ notice_unseen_count }}){% endif %}</a></li>
+            <li id="tab_search"><a href="{% url haystack_search %}">{% trans "Search" %}</a></li>
         {% endspaceless %}</ul>
     {% endif %}
 {% endblock %}

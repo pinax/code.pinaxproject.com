@@ -66,7 +66,7 @@ STATIC_URL = '/site_media/static/'
 
 # Additional directories which hold static files
 STATICFILES_DIRS = (
-    ('auth_project', os.path.join(PROJECT_ROOT, 'media')),
+    ('cpc_project', os.path.join(PROJECT_ROOT, 'media')),
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
@@ -158,7 +158,13 @@ INSTALLED_APPS = (
     'threadedcomments_extras',
     #'quickbar',
     #'documents',
+    'haystack',
+    'search_app',
 )
+
+HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'whoosh', 'index')
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
@@ -188,11 +194,6 @@ CONTACT_EMAIL = "jtauber@jtauber.com"
 SITE_NAME = "code.pinaxproject.com"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "home"
-
-STATICFILES_EXTRA_MEDIA = (
-    ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
-    ('cpc_project', os.path.join(PROJECT_ROOT, 'media')),
-)
 
 WIKI_REQUIRES_LOGIN = True
 

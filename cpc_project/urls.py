@@ -29,7 +29,8 @@ urlpatterns = patterns('',
     
     # piston api
     (r'^api/', include('tasks_api.urls')),
-    
+    # haystack search
+    (r'^search/', include('search_app.urls')),
     (r'^admin/(.*)', admin.site.root),
 )
 
