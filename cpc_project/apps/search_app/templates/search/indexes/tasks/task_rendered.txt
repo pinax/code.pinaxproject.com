@@ -1,4 +1,4 @@
-<a href="{{ object.get_absolute_url }}">{{ object }}</a>
-<p>
-      {{ object.detail|linebreaks|truncatewords_html:20 }}
-</p>
+<li>
+  <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+  {{ object.detail|linebreaks|truncatewords_html:20 }}
+</li>
