@@ -41,7 +41,7 @@ class Question(models.Model):
 
 
 class Response(models.Model):
-
+    
     question = models.ForeignKey(Question, related_name="responses")
     content = models.TextField()
     accepted = models.BooleanField(default=False)
@@ -69,10 +69,9 @@ class Response(models.Model):
                 response.save()
         self.accepted = True
         self.save()
-
+    
     def get_absolute_url(self, group=None):
         return "%s#response-%d" % (self.question.get_absolute_url(group), self.pk)
-
 
 
 def vote_save(sender, instance=None, **kwargs):
