@@ -35,8 +35,12 @@
         {% for result in page.object_list %}
             {% ifchanged result.verbose_name_plural %}
                 <h3>{{ result.verbose_name_plural }}</h3>
+                <ul>
             {% endifchanged %}
             {{ result.rendered|safe }}
+            {% ifchanged result.verbose_name_plural %}
+                </ul>
+            {% endifchanged %}
         {% endfor %}
     {% else %}
         {% if query %}
