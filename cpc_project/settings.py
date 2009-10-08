@@ -162,7 +162,7 @@ INSTALLED_APPS = (
     'search_app',
 )
 
-HAYSTACK_SITECONF = 'search_sites'
+HAYSTACK_SITECONF = 'cpc_project.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'whoosh', 'index')
 
