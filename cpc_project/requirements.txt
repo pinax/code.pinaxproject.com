@@ -7,3 +7,5 @@ django-piston==0.2.2
 django-mptt==0.3_pre
 django-staticfiles==0.1.2
 django-haystack==1.0.1-final
+
+-e git+git://github.com/toastdriven/pysolr.git#egg=pysolr
