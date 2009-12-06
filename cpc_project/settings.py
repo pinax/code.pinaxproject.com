@@ -170,11 +170,9 @@ ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/%s/" % o.username,
 }
 
-MARKUP_FILTER_FALLBACK = 'none'
+MARKUP_FILTER_FALLBACK = 'creole'
+MARKUP_DEFAULT_FILTER = 'creole'
 MARKUP_CHOICES = (
-    ('restructuredtext', u'reStructuredText'),
-    ('textile', u'Textile'),
-    ('markdown', u'Markdown'),
     ('creole', u'Creole'),
 )
 WIKI_MARKUP_CHOICES = MARKUP_CHOICES
