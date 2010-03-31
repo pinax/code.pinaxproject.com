@@ -8,7 +8,7 @@ future.
 from django.contrib.auth.models import Group
 
 
-TASK_MANAGER = 'coredev'
+TASK_MANAGER = "coredev"
 
 
 def always(task, user):
@@ -111,25 +111,25 @@ STATE_TRANSITIONS = [
 
 
 STATE_CHOICES = (
-    ('1', 'new'),
-    ('4', 'in progress'), # the assignee is working on it
-    ('5', 'discussion needed'), # discussion needed before work can proceed
-    ('6', 'blocked'), # blocked on something or someone (other than discussion)
-    ('2', 'resolved'), # the assignee thinks it's done
-    ('3', 'closed'), # the creator has confirmed it's done
-    ('7', 'accepted'), # a task_manager has accepted the task meaning it can be moved forward
-    ('8', 'fix needs review') # the assignee wants the task manager to review things.
+    ("1", "new"),
+    ("4", "in progress"), # the assignee is working on it
+    ("5", "discussion needed"), # discussion needed before work can proceed
+    ("6", "blocked"), # blocked on something or someone (other than discussion)
+    ("2", "resolved"), # the assignee thinks it"s done
+    ("3", "closed"), # the creator has confirmed it"s done
+    ("7", "accepted"), # a task_manager has accepted the task meaning it can be moved forward
+    ("8", "fix needs review") # the assignee wants the task manager to review things.
 )
 
 
 RESOLUTION_CHOICES = (
-    ('1', 'fixed'),
-    ('2', 'duplicate'),
-    ('3', 'alreadydone — we have fixed this'),
-    ('4', 'irrelevant — another change made this no longer an issue'),
-    ('5', 'rejected — current behavior is as intended'),
-    ('6', 'nonsense — bad ticket entry'),
-    ('7', "worksforme — can't reproduce problem"),
+    ("1", "fixed"),
+    ("2", "duplicate"),
+    ("3", "alreadydone — we have fixed this"),
+    ("4", "irrelevant — another change made this no longer an issue"),
+    ("5", "rejected — current behavior is as intended"),
+    ("6", "nonsense — bad ticket entry"),
+    ("7", "worksforme — can't reproduce problem"),
 )
 
 
@@ -141,11 +141,11 @@ RESOLUTION_CHOICES_DICT = dict((item[0], item[1]) for item in RESOLUTION_CHOICES
 STATE_ID_LIST = [x[0] for x in STATE_CHOICES]
 
 
-def export_state_transitions(format='csv'):
+def export_state_transitions(format="csv"):
     # ugly cowboy code that really needs refactoring
     rows = []
     for row in STATE_TRANSITIONS:
-        record = ''
+        record = ""
         current_state = STATE_CHOICES_DICT[str(row[0])]
         new_state = STATE_CHOICES_DICT[str(row[1])]
         permission = str(row[2]).split()[1]
@@ -155,9 +155,9 @@ def export_state_transitions(format='csv'):
     
     # ick turn this into a string.
     # TODO: to this right!
-    text = ''
+    text = ""
     for row in rows:
-        text += row + '\n'
+        text += row + "\n"
     return text
 
 
