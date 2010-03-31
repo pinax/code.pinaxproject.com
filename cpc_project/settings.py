@@ -88,6 +88,7 @@ MIDDLEWARE_CLASSES = [
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django_openid.consumer.SessionConsumer",
     "account.middleware.LocaleMiddleware",
     "django.middleware.doc.XViewMiddleware",
@@ -107,6 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
     
     "notification.context_processors.notification",
     "announcements.context_processors.site_wide_announcements",
@@ -124,6 +126,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.markup",
     "django.contrib.admin",
+    "django.contrib.messages",
     
     "pinax.templatetags",
     
@@ -161,6 +164,8 @@ INSTALLED_APPS = [
     "haystack",
     "search_app",
 ]
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 HAYSTACK_SITECONF = "cpc_project.search_sites"
 HAYSTACK_SEARCH_ENGINE = "whoosh"
