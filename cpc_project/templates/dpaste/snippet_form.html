@@ -1,5 +1,6 @@
 {% load i18n %}
 <form method="post" action"." class="snippetform uniForm">
+    {% csrf_token %}
     {% for field in snippet_form %}
     <div class="ctrlHolder">
         {{ field.errors }}
