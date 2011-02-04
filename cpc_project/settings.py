@@ -29,12 +29,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
-        "NAME": "dev.db",                       # Or path to database file if using sqlite3.
-        "USER": "",                             # Not used with sqlite3.
-        "PASSWORD": "",                         # Not used with sqlite3.
-        "HOST": "",                             # Set to empty string for localhost. Not used with sqlite3.
-        "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "cpc-primary",
     }
 }
 
@@ -141,12 +137,12 @@ INSTALLED_APPS = [
     # external
     "staticfiles",
     "debug_toolbar",
-    "mailer",
     "uni_form",
     "django_openid",
     "ajax_validation",
     "timezones",
     "emailconfirmation",
+    "nashvegas",
     
     # Pinax
     "pinax.apps.account",
