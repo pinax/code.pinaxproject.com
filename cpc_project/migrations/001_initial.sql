@@ -118,6 +118,51 @@ CREATE TABLE "emailconfirmation_emailconfirmation" (
     "confirmation_key" varchar(40) NOT NULL
 )
 ;
+### New Model: tasks.Task
+CREATE TABLE "tasks_task" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "content_type_id" integer REFERENCES "django_content_type" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "object_id" integer CHECK ("object_id" >= 0),
+    "summary" varchar(100) NOT NULL,
+    "detail" text NOT NULL,
+    "markup" varchar(20) NOT NULL,
+    "creator_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "created" timestamp with time zone NOT NULL,
+    "modified" timestamp with time zone NOT NULL,
+    "assignee_id" integer REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "status" varchar(100) NOT NULL,
+    "state" varchar(1) NOT NULL,
+    "resolution" varchar(2) NOT NULL
+)
+;
+### New Model: tasks.TaskHistory
+CREATE TABLE "tasks_taskhistory" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "task_id" integer NOT NULL REFERENCES "tasks_task" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "content_type_id" integer REFERENCES "django_content_type" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "object_id" integer CHECK ("object_id" >= 0),
+    "summary" varchar(100) NOT NULL,
+    "detail" text NOT NULL,
+    "markup" varchar(20) NOT NULL,
+    "creator_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "created" timestamp with time zone NOT NULL,
+    "modified" timestamp with time zone NOT NULL,
+    "assignee_id" integer REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "status" varchar(100) NOT NULL,
+    "state" varchar(1) NOT NULL,
+    "resolution" varchar(2) NOT NULL,
+    "comment" text NOT NULL,
+    "owner_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED
+)
+;
+### New Model: tasks.Nudge
+CREATE TABLE "tasks_nudge" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "nudger_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "task_id" integer NOT NULL REFERENCES "tasks_task" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "modified" timestamp with time zone NOT NULL
+)
+;
 ### New Model: account.Account
 CREATE TABLE "account_account" (
     "id" serial NOT NULL PRIMARY KEY,
@@ -204,6 +249,16 @@ CREATE INDEX "auth_user_groups_group_id" ON "auth_user_groups" ("group_id");
 CREATE INDEX "auth_message_user_id" ON "auth_message" ("user_id");
 CREATE INDEX "emailconfirmation_emailaddress_user_id" ON "emailconfirmation_emailaddress" ("user_id");
 CREATE INDEX "emailconfirmation_emailconfirmation_email_address_id" ON "emailconfirmation_emailconfirmation" ("email_address_id");
+CREATE INDEX "tasks_task_content_type_id" ON "tasks_task" ("content_type_id");
+CREATE INDEX "tasks_task_creator_id" ON "tasks_task" ("creator_id");
+CREATE INDEX "tasks_task_assignee_id" ON "tasks_task" ("assignee_id");
+CREATE INDEX "tasks_taskhistory_task_id" ON "tasks_taskhistory" ("task_id");
+CREATE INDEX "tasks_taskhistory_content_type_id" ON "tasks_taskhistory" ("content_type_id");
+CREATE INDEX "tasks_taskhistory_creator_id" ON "tasks_taskhistory" ("creator_id");
+CREATE INDEX "tasks_taskhistory_assignee_id" ON "tasks_taskhistory" ("assignee_id");
+CREATE INDEX "tasks_taskhistory_owner_id" ON "tasks_taskhistory" ("owner_id");
+CREATE INDEX "tasks_nudge_nudger_id" ON "tasks_nudge" ("nudger_id");
+CREATE INDEX "tasks_nudge_task_id" ON "tasks_nudge" ("task_id");
 CREATE INDEX "account_otherserviceinfo_user_id" ON "account_otherserviceinfo" ("user_id");
 CREATE INDEX "account_passwordreset_user_id" ON "account_passwordreset" ("user_id");
 CREATE INDEX "signup_codes_signupcode_inviter_id" ON "signup_codes_signupcode" ("inviter_id");

@@ -143,6 +143,7 @@ INSTALLED_APPS = [
     "timezones",
     "emailconfirmation",
     "nashvegas",
+    "tasks",
     
     # Pinax
     "pinax.apps.account",
