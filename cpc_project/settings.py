@@ -146,6 +146,7 @@ INSTALLED_APPS = [
     "tasks",
     "django_filters",
     "groups",
+    "taggit",
     
     # Pinax
     "pinax.apps.account",
