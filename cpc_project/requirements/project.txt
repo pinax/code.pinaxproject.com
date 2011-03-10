@@ -16,3 +16,5 @@ django-groups==0.1.dev10
 django-avatar==1.0.5
 PIL==1.1.7
 django-markup==0.3
+dialogos==0.1.dev3
+django-pagination==1.0.7

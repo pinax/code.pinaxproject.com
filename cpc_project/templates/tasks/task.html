@@ -4,6 +4,7 @@
 {% load account_tags %}
 {% load tasks_tags %}
 {% load uni_form_tags %}
+{% load dialogos_tags %}
 {# load attachments_tags #}
 {% load group_tags %}
 {% load theme_tags %}
@@ -49,6 +50,11 @@
     {# attachment_form task #}
     
     <h2>{% trans "Comment" %}</h2>
+    
+    {% with task as object %}
+        {% include "dialogos/comments.html" %}
+    {% endwith %}
+    
 {% endblock %}
 
 {% block extra_body %}

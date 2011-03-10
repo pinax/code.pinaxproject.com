@@ -187,6 +187,21 @@ CREATE TABLE "avatar_avatar" (
     "date_uploaded" timestamp with time zone NOT NULL
 )
 ;
+### New Model: dialogos.Comment
+CREATE TABLE "dialogos_comment" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "author_id" integer REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "name" varchar(100) NOT NULL,
+    "email" varchar(255) NOT NULL,
+    "website" varchar(255) NOT NULL,
+    "content_type_id" integer NOT NULL REFERENCES "django_content_type" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "object_id" integer NOT NULL,
+    "comment" text NOT NULL,
+    "submit_date" timestamp with time zone NOT NULL,
+    "ip_address" inet,
+    "public" boolean NOT NULL
+)
+;
 ### New Model: account.Account
 CREATE TABLE "account_account" (
     "id" serial NOT NULL PRIMARY KEY,
@@ -287,6 +302,8 @@ CREATE INDEX "taggit_taggeditem_tag_id" ON "taggit_taggeditem" ("tag_id");
 CREATE INDEX "taggit_taggeditem_object_id" ON "taggit_taggeditem" ("object_id");
 CREATE INDEX "taggit_taggeditem_content_type_id" ON "taggit_taggeditem" ("content_type_id");
 CREATE INDEX "avatar_avatar_user_id" ON "avatar_avatar" ("user_id");
+CREATE INDEX "dialogos_comment_author_id" ON "dialogos_comment" ("author_id");
+CREATE INDEX "dialogos_comment_content_type_id" ON "dialogos_comment" ("content_type_id");
 CREATE INDEX "account_otherserviceinfo_user_id" ON "account_otherserviceinfo" ("user_id");
 CREATE INDEX "account_passwordreset_user_id" ON "account_passwordreset" ("user_id");
 CREATE INDEX "signup_codes_signupcode_inviter_id" ON "signup_codes_signupcode" ("inviter_id");

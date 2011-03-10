@@ -22,6 +22,7 @@ urlpatterns = patterns("",
     url(r"^openid/", include(PinaxConsumer().urls)),
     url(r"tasks/", include("tasks.urls")),
     url(r"^avatar/", include("avatar.urls")),
+    url(r"^comments/", include("dialogos.urls")),
 )
 
 
