@@ -5,6 +5,12 @@
 
 {% block body_class %}tasks{% endblock %}
 
+{% block extra_head_base %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}tasks/css/tasks.css" />
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
 {% block subnav %}
     {% if user.is_authenticated %}
         <ul>

@@ -178,6 +178,15 @@ CREATE TABLE "taggit_taggeditem" (
     "content_type_id" integer NOT NULL REFERENCES "django_content_type" ("id") DEFERRABLE INITIALLY DEFERRED
 )
 ;
+### New Model: avatar.Avatar
+CREATE TABLE "avatar_avatar" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "primary" boolean NOT NULL,
+    "avatar" varchar(1024) NOT NULL,
+    "date_uploaded" timestamp with time zone NOT NULL
+)
+;
 ### New Model: account.Account
 CREATE TABLE "account_account" (
     "id" serial NOT NULL PRIMARY KEY,
@@ -277,6 +286,7 @@ CREATE INDEX "tasks_nudge_task_id" ON "tasks_nudge" ("task_id");
 CREATE INDEX "taggit_taggeditem_tag_id" ON "taggit_taggeditem" ("tag_id");
 CREATE INDEX "taggit_taggeditem_object_id" ON "taggit_taggeditem" ("object_id");
 CREATE INDEX "taggit_taggeditem_content_type_id" ON "taggit_taggeditem" ("content_type_id");
+CREATE INDEX "avatar_avatar_user_id" ON "avatar_avatar" ("user_id");
 CREATE INDEX "account_otherserviceinfo_user_id" ON "account_otherserviceinfo" ("user_id");
 CREATE INDEX "account_passwordreset_user_id" ON "account_passwordreset" ("user_id");
 CREATE INDEX "signup_codes_signupcode_inviter_id" ON "signup_codes_signupcode" ("inviter_id");

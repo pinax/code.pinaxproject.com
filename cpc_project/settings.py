@@ -147,6 +147,8 @@ INSTALLED_APPS = [
     "django_filters",
     "groups",
     "taggit",
+    "avatar",
+    "django_markup",
     
     # Pinax
     "pinax.apps.account",
@@ -183,6 +185,8 @@ EMAIL_DEBUG = DEBUG
 DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
+
+MARKUP_DEFAULT_FILTER = "creole"
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
