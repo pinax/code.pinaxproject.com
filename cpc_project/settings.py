@@ -144,6 +144,8 @@ INSTALLED_APPS = [
     "emailconfirmation",
     "nashvegas",
     "tasks",
+    "django_filters",
+    "groups",
     
     # Pinax
     "pinax.apps.account",

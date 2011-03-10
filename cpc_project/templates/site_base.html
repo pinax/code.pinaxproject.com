@@ -13,6 +13,12 @@
     {% include "_account_bar.html" %}
 {% endblock %}
 
+{% block right_tabs %}
+    <ul class="tabs">{% spaceless %}
+        <li id="tab_tasks"><a href="{% url task_list %}">{% trans "Tasks" %}</a></li>
+    {% endspaceless %}</ul>
+{% endblock %}
+
 {% block footer %}
 <div class="legal">
     {% trans "&copy; 2010 &lt;your company here&gt;" %}
