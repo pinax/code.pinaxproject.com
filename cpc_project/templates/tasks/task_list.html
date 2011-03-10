@@ -9,12 +9,14 @@
 {% load tagging_tags %}
 {% load group_tags %}
 
-{#}{% block head_title %}Tasks for {{ project.name }}{% endblock %}#}
-{% block head_title %}Tasks{% endblock %}
+{% block head_title %}{% if group %}{{ group.name }}: {% endif %}Tasks{% endblock %}
 
 {% block body %}
-    {#<h1>{% trans "Tasks for Project" %} <a href="@@@">{{ group.name }}</a></h1> #}
-    <h1>Tasks</h1>
+    {% if group %}
+        <h1>Tasks for <a href="{{ group.get_absolute_url }}">{{ group.name }}</a></h1>
+    {% else %}
+        <h1>Tasks</h1>
+    {% endif %}
     
     <form action="" method="GET">
         <div class="task_filter">

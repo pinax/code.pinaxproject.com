@@ -11,13 +11,11 @@
 {% load tagging_tags %}
 {% load group_tags %}
 
-{#}{% block head_title %}Tasks for {{ project.name }}{% endblock %}#}
-{% block head_title %}Tasks{% endblock %}
+{% block head_title %}{% if group %}{{ group.name }}: {% endif %}Tasks{% endblock %}
 
 {% block body %}
     <p><a href="{% groupurl task_list group %}?group_by={{ field }}">&larr; {% trans "Back to All Tasks" %}</a></p>
     
-    {#<h1>{% trans "Tasks for Project" %} <a href="@@@">{{ group.name }}</a></h1> #}
     <h1>Tasks with {{ field }} = {{ value }}</h1>
     
     {% if task_filter %}

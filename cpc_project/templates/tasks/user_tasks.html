@@ -14,7 +14,6 @@
     
     <p>You can drag this '<a href="{{ bookmarklet }}">{{ SITE_NAME }} Tasks</a>' link to your bookmark bar to quickly get to your open tasks!</p>
     
-    
     <h2>Nudged Tasks</h2>
     
     {% if nudged_tasks %}
@@ -27,7 +26,6 @@
                 </ul>
             </div>
         </form>
-        
         
         {% regroup nudged_tasks by get_state_display as grouped_tasks %}
         
@@ -118,7 +116,6 @@
     {% else %}
         {% trans "You have no assigned tasks right now." %}
     {% endif %}
-    
     
     <h2>Created Tasks</h2>
     

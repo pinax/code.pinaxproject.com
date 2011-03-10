@@ -8,10 +8,9 @@
 
 {% block body %}
     <h1>Add Task</h1>
-
+    
     {% if is_member %}
-
-         <div class="main-form">
+        <div class="main-form">
             <form method="POST" action="" id="task_form" class="uniForm">
                 {% csrf_token %}
                 <div class="form_block">
@@ -22,12 +21,10 @@
                 </div>
             </form>
         </div>
-
-
     {% else %}
-        <p>{% trans 'You are not a member and so cannot add a task.' %}</p>
+        <p>{% trans "You are not a member and so cannot add a task." %}</p>
     {% endif %}
-
+    
 {% endblock %}
 
 {% block extra_body %}

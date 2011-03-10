@@ -7,10 +7,16 @@
 {% load pagination_tags %}
 {% load group_tags %}
 
-{% block head_title %}Tasks History{% endblock %}
+{% block head_title %}{% if group %}{{ group.name }}: {% endif %}Tasks History{% endblock %}
 
 {% block body %}
-    <h1>History for all Tasks</h1>
+    
+    {% if group %}
+        <h1>Tasks History for <a href="{{ group.get_absolute_url }}">{{ group.name }}</a></h1>
+    {% else %}
+        <h1>Tasks History</h1>
+    {% endif %}
+    
     <p>This page shows all changes on all tasks.</p>
     {% autopaginate task_history  50 %}
     {% paginate %}
