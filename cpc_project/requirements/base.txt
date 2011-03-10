@@ -4,9 +4,10 @@
 # versions of distributions here if needed.
 
 --extra-index-url=http://dist.pinaxproject.com/dev/
+--extra-index-url=http://dist.pinaxproject.com/fresh-start/
 
 Django==1.2.5
-Pinax==0.9a2.dev9
+Pinax==0.9a2.dev1003
 
 django-debug-toolbar==0.8.3
 django-staticfiles==0.2.0
