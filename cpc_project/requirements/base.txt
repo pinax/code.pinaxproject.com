@@ -6,7 +6,7 @@
 --extra-index-url=http://dist.pinaxproject.com/dev/
 --extra-index-url=http://dist.pinaxproject.com/fresh-start/
 
-Django==1.2.5
+Django==1.2.4
 Pinax==0.9a2.dev1004
 
 django-debug-toolbar==0.8.3
