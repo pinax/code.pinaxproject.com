@@ -95,6 +95,7 @@
             {% for section in task_tags %}
                 {% tasks_for_tag section as tagtasks in tasks %}
                 {% if tagtasks %}
+                {% if not filter_only or section.name in tags_list %}
                 <tbody><tr class="task_grouping">
                     <td colspan="6">
                         <span class="toggle">
@@ -122,6 +123,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+                {% endif %}
                 {% endif %}
             {% endfor %}
         {% else %}

@@ -445,6 +445,8 @@ def focus(request, field, value, template_name="tasks/focus.html"):
         is_member = True
     
     group_by = request.GET.get("group_by")
+    filter_only = request.GET.get("filter_only", False)
+    tags_list = []
     
     if group:
         tasks = group.content_objects(Task)
@@ -492,8 +494,8 @@ def focus(request, field, value, template_name="tasks/focus.html"):
             except User.DoesNotExist:
                 tasks = Task.objects.none() # @@@ or throw 404?
     elif field == "tag":
-        vals = urllib.unquote_plus(value).split()
-        tasks = tasks.filter(tags__name__in=vals)
+        tags_list = urllib.unquote_plus(value).split()
+        tasks = tasks.filter(tags__name__in=tags_list)
     
     if task_filter is not None:
         # Django will not merge queries that are both not distinct or distinct
@@ -513,6 +515,8 @@ def focus(request, field, value, template_name="tasks/focus.html"):
         "gbqs": group_by_querystring,
         "is_member": is_member,
         "task_tags": Task.tags.all(),
+        "filter_only": filter_only,
+        "tags_list": tags_list
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
