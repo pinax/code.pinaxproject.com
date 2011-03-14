@@ -1,4 +1,5 @@
 import datetime
+import urllib
 
 from itertools import chain
 from operator import attrgetter
@@ -491,7 +492,8 @@ def focus(request, field, value, template_name="tasks/focus.html"):
             except User.DoesNotExist:
                 tasks = Task.objects.none() # @@@ or throw 404?
     elif field == "tag":
-        tasks = tasks.filter(tags__name__in=[value])
+        vals = urllib.unquote_plus(value).split()
+        tasks = tasks.filter(tags__name__in=vals)
     
     if task_filter is not None:
         # Django will not merge queries that are both not distinct or distinct

@@ -88,6 +88,7 @@
             <th>Summary</th>
             <th>Last Modified</th>
             <th>Assignee</th>
+            <th>Tags</th>
             <th>Status</th>
         </tr>
         {% ifequal group_by "tag" %}
@@ -95,7 +96,7 @@
                 {% tasks_for_tag section as tagtasks in tasks %}
                 {% if tagtasks %}
                 <tbody><tr class="task_grouping">
-                    <td colspan="5">
+                    <td colspan="6">
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {{ section }}
@@ -116,6 +117,7 @@
                                     <span class="warning">unassigned</span>
                                 {% endif %}
                             </td>
+                            <td>{% task_tags item group %}</td>
                             <td>{{ item.status }}</td>
                         </tr>
                     {% endfor %}
@@ -125,7 +127,7 @@
         {% else %}
             {% for section in grouped_tasks %}
                 <tbody><tr class="task_grouping">
-                    <td colspan="5">
+                    <td colspan="6">
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {% ifequal group_by "state" %}
@@ -154,6 +156,7 @@
                                     <span class="warning">unassigned</span>
                                 {% endif %}
                             </td>
+                            <td>{% task_tags task group %}</td>
                             <td>{{ task.status }}</td>
                         </tr>
                     {% endfor %}
