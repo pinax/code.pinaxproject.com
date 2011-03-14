@@ -28,5 +28,5 @@
 {% block extra_body_base %}
     {{ block.super }}
     <script src="{{ STATIC_URL }}js/tasks.js" type="text/javascript"></script>
-    {% block extra_body %}{% endblock %}
+    {# extra_body is loaded by site_base.html #}
 {% endblock %}
