@@ -21,6 +21,9 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
+from taggit.models import TaggedItem
+
+
 # Only import dpaste Snippet Model if it's activated
 if "dpaste" in getattr(settings, "INSTALLED_APPS"):
     from dpaste.models import Snippet
@@ -497,7 +500,6 @@ def focus(request, field, value, template_name="tasks/focus.html"):
         tags_list = urllib.unquote_plus(value).split()
         
         expanded_tags_list = []
-        from taggit.models import TaggedItem
         task_tags = TaggedItem.tags_for(Task)
         for tag in tags_list:
             if tag.endswith(":*"):
