@@ -56,6 +56,13 @@ def OR(*l):
     return lambda *args: any(f(*args) for f in l)
 
 
+def initial_state(task, user):
+    if is_task_manager(task, user):
+        return 7
+    else:
+        return 1
+
+
 STATE_TRANSITIONS = [
     # open
     (1, 1, always, "leave open"),
