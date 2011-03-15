@@ -495,7 +495,17 @@ def focus(request, field, value, template_name="tasks/focus.html"):
                 tasks = Task.objects.none() # @@@ or throw 404?
     elif field == "tag":
         tags_list = urllib.unquote_plus(value).split()
-        tasks = tasks.filter(tags__name__in=tags_list)
+        
+        expanded_tags_list = []
+        from taggit.models import TaggedItem
+        task_tags = TaggedItem.tags_for(Task)
+        for tag in tags_list:
+            if tag.endswith(":*"):
+                expanded_tags_list.extend(t.name for t in task_tags.filter(name__startswith=tag[:-1]))
+            else:
+                expanded_tags_list.append(tag)
+        
+        tasks = tasks.filter(tags__name__in=expanded_tags_list)
     
     if task_filter is not None:
         # Django will not merge queries that are both not distinct or distinct
@@ -516,7 +526,7 @@ def focus(request, field, value, template_name="tasks/focus.html"):
         "is_member": is_member,
         "task_tags": Task.tags.all(),
         "filter_only": filter_only,
-        "tags_list": tags_list
+        "tags_list": expanded_tags_list,
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
