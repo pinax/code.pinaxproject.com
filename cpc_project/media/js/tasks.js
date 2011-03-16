@@ -17,4 +17,12 @@ $(document).ready(function() {
         $('.task_group').hide();
         $('.arrow').html("&#x25B8;");
     });
+    $(".select_all").click(function () {
+        $(this).closest("ul").find("input[type=checkbox]").attr("checked", "checked");
+        return false;
+    });
+    $(".select_none").click(function () {
+        $(this).closest("ul").find("input[type=checkbox]").attr("checked", "");
+        return false;
+    });
 });
