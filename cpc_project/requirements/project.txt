@@ -19,3 +19,4 @@ PIL==1.1.7
 django-markup==0.3
 dialogos==0.1.dev3
 django-pagination==1.0.7
+django-voting==0.1

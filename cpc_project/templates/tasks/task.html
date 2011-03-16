@@ -18,6 +18,10 @@
     
     {% show_task task nudge %}
     
+    {% with task as item %}
+        {% include "tasks/_voting.html" %}
+    {% endwith %}
+    
     {% if is_member %}
         <h2>{% trans "Edit" %}</h2>
         <form method="POST" action="" id="task_form" class="uniForm">

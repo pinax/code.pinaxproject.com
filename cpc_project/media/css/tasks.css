@@ -110,3 +110,35 @@ p.expand_collapse_all a {
 .task_filter li {
     display: inline;
 }
+
+div.vote_badge {
+    margin: 0;
+}
+div.vote_badge span.score {
+    font-weight: bold;
+}
+
+/* the arrows */
+div.vote_badge form {
+    display: inline;
+}
+div.vote_badge input {
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: gray;
+}
+
+/* active arrows */
+div.vote_badge form.upform input.active {
+    font-weight: bold;
+    color: green;
+}
+
+div.vote_badge form.downform input.active {
+    font-weight: bold;
+    color: red;
+}
+

@@ -8,6 +8,7 @@
 {% load tasks_tags %}
 {% load group_tags %}
 
+
 {% block head_title %}{% if group %}{{ group.name }}: {% endif %}Tasks{% endblock %}
 
 {% block body %}
@@ -85,6 +86,7 @@
     <table class="task_list">
         <tr>
             <th>ID</th>
+            <th>Votes</th>
             <th>Summary</th>
             <th>Last Modified</th>
             <th>Assignee</th>
@@ -96,7 +98,7 @@
                 {% tasks_for_tag section as tagtasks in tasks %}
                 {% if tagtasks %}
                     <tbody><tr class="task_grouping">
-                        <td colspan="6">
+                        <td colspan="7">
                             <span class="focus"><a href="{% focus_url group_by section group %}">focus</a></span>
                             <span class="toggle">
                                 <span class="arrow">&#x25BE;</span>
@@ -109,6 +111,7 @@
                         {% for item in tagtasks %}
                             <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
                                 <td>{{ item.id }}</td>
+                                <td>{% include "tasks/_voting.html" %}</td>
                                 <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                                 <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                                 <td>
@@ -128,7 +131,7 @@
         {% else %}
             {% for section in grouped_tasks %}
                 <tbody><tr class="task_grouping">
-                    <td colspan="6">
+                    <td colspan="7">
                         <span class="focus"><a href="{% focus_url group_by section.grouper group %}">focus</a></span>
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
@@ -146,20 +149,21 @@
                     </td>
                 </tr></tbody>
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for task in section.list %}
-                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ task.id }}</td>
-                            <td><a href="{% groupurl task_detail group id=task.id %}">{{ task.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
+                    {% for item in section.list %}
+                        <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
+                            <td>{{ item.id }}</td>
+                            <td>{% include "tasks/_voting.html" %}</td>
+                            <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
+                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                             <td>
-                                {% if task.assignee %}
-                                    <a href="{% groupurl tasks_for_user group username=task.assignee %}">{% user_display task.assignee %}</a>
+                                {% if item.assignee %}
+                                    <a href="{% groupurl tasks_for_user group username=item.assignee %}">{% user_display item.assignee %}</a>
                                 {% else %}
                                     <span class="warning">unassigned</span>
                                 {% endif %}
                             </td>
-                            <td>{% task_tags task group %}</td>
-                            <td>{{ task.status }}</td>
+                            <td>{% task_tags item group %}</td>
+                            <td>{{ item.status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
