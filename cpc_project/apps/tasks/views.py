@@ -358,7 +358,7 @@ def user_tasks(request, username, template_name="tasks/user_tasks.html"):
     state_keys = dict(workflow.STATE_CHOICES).keys()
     default_states = set(state_keys).difference(
         # don't show these states
-        set(["2", "3"])
+        set(["3"])
     )
     
     # have to store for each prefix because initial data isn't support on the
