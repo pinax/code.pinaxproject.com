@@ -54,7 +54,7 @@
 {% else %}
     {% url acct_login as acct_login_url %}
     {% url acct_signup as acct_signup_url %}
-    {% blocktrans %}
-        <h3>Please <a href="{{ acct_login_url }}?next={{ request.path }}">Log in</a> (or <a href="{{ acct_signup_url }}?next={{ request.path }}">Sign Up</a>) to leave a comment</h3>
+    {% blocktrans with request.path as request_path %}
+        <h3>Please <a href="{{ acct_login_url }}?next={{ request_path }}">Log in</a> (or <a href="{{ acct_signup_url }}?next={{ request_path }}">Sign Up</a>) to leave a comment</h3>
     {% endblocktrans %}
 {% endif %}
