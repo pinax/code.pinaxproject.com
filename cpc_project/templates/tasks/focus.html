@@ -94,6 +94,7 @@
     <table class="task_list">
         <tr>
             <th>ID</th>
+            <th>Voting</th>
             <th>Summary</th>
             <th>Last Modified</th>
             <th>Assignee</th>
@@ -106,7 +107,7 @@
                 {% if tagtasks %}
                 {% if not filter_only or section.name in tags_list %}
                 <tbody><tr class="task_grouping">
-                    <td colspan="6">
+                    <td colspan="7">
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {{ section }}
@@ -141,7 +142,7 @@
         {% else %}
             {% for section in grouped_tasks %}
                 <tbody><tr class="task_grouping">
-                    <td colspan="6">
+                    <td colspan="7">
                         <span class="toggle">
                             <span class="arrow">&#x25BE;</span>
                             {% ifequal group_by "state" %}
@@ -160,10 +161,8 @@
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
                     {% for item in section.list %}
                         <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>
-                                {{ item.id }}
-                                {% include "tasks/_voting.html" %}
-                            </td>
+                            <td>{{ item.id }}</td>
+                            <td>{% include "tasks/_voting.html" %}</td>
                             <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                             <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                             <td>
