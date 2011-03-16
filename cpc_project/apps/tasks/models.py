@@ -263,3 +263,16 @@ class Nudge(models.Model):
         verbose_name = _("task")
     )
     modified = models.DateTimeField(_("nudge date"), default=datetime.now)
+
+
+class PinnedList(models.Model):
+    
+    created_by = models.ForeignKey(User, related_name="task_sets")
+    created_on = models.DateTimeField(default=datetime.now)
+    name = models.CharField(max_length=256, null=True, blank=True)
+    tasks = models.ManyToManyField(Task)
+    
+    def __unicode__(self):
+        if self.name:
+            return unicode(self.name)
+        return unicode("Task Set %s" % self.pk)

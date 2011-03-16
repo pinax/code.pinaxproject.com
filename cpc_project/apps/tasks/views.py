@@ -33,7 +33,7 @@ else:
 notification = None
 
 from tasks.filters import TaskFilter
-from tasks.forms import TaskForm, EditTaskForm
+from tasks.forms import TaskForm, EditTaskForm, PinnedListForm
 from tasks.models import Task, TaskHistory, Nudge
 
 
@@ -100,6 +100,18 @@ def tasks(request, template_name="tasks/task_list.html"):
     group_by_querystring = group_by_querydict.urlencode()
     
     ctx = group_context(group, bridge)
+    
+    if request.method == "POST":
+        form = PinnedListForm(request.POST)
+        if form.is_valid():
+            task_set = form.save(commit=False)
+            task_set.created_by = request.user
+            task_set.save()
+            for task in task_filter.qs:
+                task_set.tasks.add(task)
+            messages.add_message(request, messages.SUCCESS, "Created pinned list %s" % task_set)
+        return HttpResponseRedirect(reverse("task_list") + "?" + request.GET.urlencode())
+    
     ctx.update({
         "group_by": group_by,
         "gbqs": group_by_querystring,
@@ -108,6 +120,7 @@ def tasks(request, template_name="tasks/task_list.html"):
         "tasks": task_filter.qs,
         "querystring": request.GET.urlencode(),
         "task_tags": Task.tags.all(),
+        "pin_form": PinnedListForm()
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
@@ -517,6 +530,17 @@ def focus(request, field, value, template_name="tasks/focus.html"):
     group_by_querydict.pop("group_by", None)
     group_by_querystring = group_by_querydict.urlencode()
     
+    if request.method == "POST":
+        form = PinnedListForm(request.POST)
+        if form.is_valid():
+            task_set = form.save(commit=False)
+            task_set.created_by = request.user
+            task_set.save()
+            for task in tasks:
+                task_set.tasks.add(task)
+            messages.add_message(request, messages.SUCCESS, "Created pinned list %s" % task_set)
+        return HttpResponseRedirect(reverse("task_focus", kwargs={"field": field, "value": value}) + "?" + request.GET.urlencode())
+    
     ctx = group_context(group, bridge)
     ctx.update({
         "task_filter": task_filter,
@@ -529,6 +553,8 @@ def focus(request, field, value, template_name="tasks/focus.html"):
         "task_tags": Task.tags.all(),
         "filter_only": filter_only,
         "tags_list": expanded_tags_list,
+        "pin_form": PinnedListForm(),
+        "querystring": request.GET.urlencode()
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))

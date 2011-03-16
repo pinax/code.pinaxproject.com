@@ -15,6 +15,28 @@
     
     <p>You can drag this '<a href="{{ bookmarklet }}">{{ SITE_NAME }} Tasks</a>' link to your bookmark bar to quickly get to your open tasks!</p>
     
+    <h2>Pinned Sets</h2>
+    
+    {% if user.task_sets.all %}
+    {% for pinned_set in user.task_sets.all %}
+        <h3>{{ pinned_set }}</h3>
+        <table class="task_list">
+            <tr><th>ID</th><th>Summary</th><th>Last Modified</th><th>Tags</th><th>Status</th></tr>
+            <tbody class="task_group" >
+                {% for task in pinned_set.tasks.all %}
+                    <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
+                        <td>{{ task.id }}</td>
+                        <td><a href="{% groupurl task_detail group id=task.id %}">{{ task.summary }}</a></td>
+                        <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
+                        <td>{% task_tags task group %}</td>
+                        <td>{{ task.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+    {% endif %}
+    
     <h2>Nudged Tasks</h2>
     
     {% if nudged_tasks %}
