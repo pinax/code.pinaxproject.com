@@ -450,6 +450,7 @@ def focus(request, field, value, template_name="tasks/focus.html"):
     group_by = request.GET.get("group_by")
     filter_only = request.GET.get("filter_only", False)
     tags_list = []
+    expanded_tags_list = []
     
     if group:
         tasks = group.content_objects(Task)
@@ -499,7 +500,6 @@ def focus(request, field, value, template_name="tasks/focus.html"):
     elif field == "tag":
         tags_list = urllib.unquote_plus(value).split()
         
-        expanded_tags_list = []
         task_tags = TaggedItem.tags_for(Task)
         for tag in tags_list:
             if tag.endswith(":*"):
