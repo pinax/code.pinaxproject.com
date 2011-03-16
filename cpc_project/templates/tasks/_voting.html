@@ -3,24 +3,23 @@
 
 <div class="vote_badge">
     {% vote_by_user user on item as vote %}
-
+    
     {% if user.is_authenticated %}
         <form class="upform" method="POST" action="{% url task_vote object_id=item.id,direction="up"|get_state:vote %}">
             {% csrf_token %}
-            <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="+1" />
+            <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="&#x2714;" />
         </form>
     {% endif %}
-
+    
     <span class="score">
         {% score_for_object item as score %}
         {{ score.score|default:0 }}
     </span>
-    <br/>
-
+    
     {% if user.is_authenticated %}
         <form class="downform" method="POST" action="{% url task_vote object_id=item.id,direction="down"|get_state:vote %}">
             {% csrf_token %}
-            <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="-1" />
+            <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="&#x2718;" />
         </form>
     {% endif %}
 </div>
