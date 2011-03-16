@@ -110,3 +110,50 @@ p.expand_collapse_all a {
 .task_filter li {
     display: inline;
 }
+
+div.vote_badge {
+  float: left;
+  margin: 5px 20px 5px 0;
+}
+
+/* the arrows */
+div.vote_badge input {
+  position: relative;
+  left: -2px;
+  border: none;
+  background-color: transparent;
+  text-indent: -999em;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background-image: url(/site_media/static/img/bookmarks/up_grey.png);
+}
+
+div.vote_badge form.upform {
+  height:16px;
+  padding: 0;
+  margin: 0;
+}
+
+div.vote_badge form.downform input {
+  background-image: url(/site_media/static/img/bookmarks/down_grey.png);
+}
+
+/* active arrows */
+div.vote_badge form.upform input.active {
+  background-image: url(/site_media/static/img/bookmarks/up_mod.png);
+}
+
+div.vote_badge form.downform input.active {
+  background-image: url(/site_media/static/img/bookmarks/down_mod.png);
+}
+
+div.vote_badge span.score {
+  font-size: 16pt;
+  font-weight: bold;
+}
+.pack.with-votes p, .pack.with-votes h2 {
+  margin-left: 50px;
+}

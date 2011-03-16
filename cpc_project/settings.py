@@ -152,6 +152,7 @@ INSTALLED_APPS = [
     "django_markup",
     "dialogos",
     "pagination",
+    "voting",
     
     # Pinax
     "pinax.apps.account",

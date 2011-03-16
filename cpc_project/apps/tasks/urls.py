@@ -1,7 +1,9 @@
 from django.conf.urls.defaults import *
 
 #from tasks.feeds import AllTaskFeed
+from tasks.models import Task
 
+from voting.views import vote_on_object
 
 #tasks_feed_dict = {"feed_dict": {
 #    "all": AllTaskFeed,
@@ -21,4 +23,15 @@ urlpatterns = patterns("",
     url(r"^nudge/(?P<id>\d+)/$", "tasks.views.nudge", name="tasks_nudge"),
     url(r"^export_state_transitions.csv$", "tasks.views.export_state_transitions", name="tasks_export_state_transitions"),
     # url(r"^feeds/(.*)/$", "django.contrib.syndication.views.feed", tasks_feed_dict),
+    
+    # Question voting
+    url(r"^vote/(?P<object_id>\d+)/(?P<direction>up|down|clear)vote/$",
+        vote_on_object, dict(
+            model = Task,
+            template_object_name = "object",
+            template_name = "tasks/confirm_vote.html",
+            allow_xmlhttprequest = True
+        ),
+        name="task_vote"
+    ),
 )
