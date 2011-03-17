@@ -31,6 +31,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "cpc-primary",
+    },
+    "old": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "pinax_cpc",
     }
 }
 
@@ -161,6 +165,7 @@ INSTALLED_APPS = [
     
     # project
     "about",
+    "cpc",
     "signals",
 ]
 
