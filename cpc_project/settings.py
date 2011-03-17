@@ -136,6 +136,7 @@ INSTALLED_APPS = [
     "pinax.templatetags",
     
     # external
+    "notification",
     "staticfiles",
     "debug_toolbar",
     "uni_form",
@@ -160,6 +161,7 @@ INSTALLED_APPS = [
     
     # project
     "about",
+    "signals",
 ]
 
 FIXTURE_DIRS = [

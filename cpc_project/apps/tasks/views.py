@@ -23,18 +23,16 @@ from django.contrib.sites.models import Site
 
 from taggit.models import TaggedItem
 
-
 # Only import dpaste Snippet Model if it's activated
 if "dpaste" in getattr(settings, "INSTALLED_APPS"):
     from dpaste.models import Snippet
 else:
     Snippet = False
 
-notification = None
-
 from tasks.filters import TaskFilter
 from tasks.forms import TaskForm, EditTaskForm, PinnedListForm
 from tasks.models import Task, TaskHistory, Nudge
+from tasks import signals
 
 
 workflow = import_module(getattr(settings, "TASKS_WORKFLOW_MODULE", "tasks.workflow"))
@@ -166,13 +164,12 @@ def add_task(request, secret_id=None, form_class=TaskForm, template_name="tasks/
                 messages.add_message(request, messages.SUCCESS,
                     ugettext("added task '%s'") % task.summary
                 )
-                if notification:
-                    if group:
-                        notify_list = group.member_queryset()
-                    else:
-                        notify_list = User.objects.all() # @@@
-                    notify_list = notify_list.exclude(id__exact=request.user.id)
-                    notification.send(notify_list, "tasks_new", {"creator": request.user, "task": task, "group": group})
+                signals.task_created.send(
+                    sender = Task,
+                    creator = request.user,
+                    task = task,
+                    group = group,
+                )
                 if request.POST.has_key("add-another-task"):
                     if group:
                         redirect_to = bridge.reverse("task_add", group)
@@ -237,10 +234,12 @@ def nudge(request, id):
         ugettext("%s has been nudged about this task") % task.assignee
     )
     
-    # send out the nudge notification
-    if notification:
-        notify_list = [task.assignee]
-        notification.send(notify_list, "tasks_nudge", {"nudger": request.user, "task": task, "count": count})
+    signals.task_nudged.send(
+        sender = Task,
+        nudger = request.user,
+        task = task,
+        count = count,
+    )
     
     return HttpResponseRedirect(task_url)
 
@@ -259,12 +258,6 @@ def task(request, id, template_name="tasks/task.html"):
         tasks = Task.objects.filter(object_id=None)
     
     task = get_object_or_404(tasks, id=id)
-    
-    if group:
-        notify_list = group.member_queryset()
-    else:
-        notify_list = User.objects.all()
-    notify_list = notify_list.exclude(id__exact=request.user.id)
     
     if not request.user.is_authenticated():
         is_member = False
@@ -285,16 +278,24 @@ def task(request, id, template_name="tasks/task.html"):
                 messages.add_message(request, messages.SUCCESS,
                     ugettext("updated your status on the task")
                 )
-                if notification:
-                    notification.send(notify_list, "tasks_status", {"user": request.user, "task": task, "group": group})
+                signals.task_status_changed.send(
+                    sender = Task,
+                    user = request.user,
+                    task = task,
+                    group = group,
+                )
             if "state" in form.changed_data:
                 messages.add_message(request, messages.SUCCESS,
                     ugettext("task marked %(state)s") % {
                         "state": task.get_state_display()
                     }
                 )
-                if notification:
-                    notification.send(notify_list, "tasks_change", {"user": request.user, "task": task, "group": group, "new_state": task.get_state_display()})
+                signals.task_changed.send(
+                    sender = Task,
+                    user = request.user,
+                    task = task,
+                    group = group,
+                )
             if "assignee" in form.changed_data:
                 messages.add_message(request, messages.SUCCESS,
                     ugettext("assigned task to '%(assignee)s'") % {
@@ -302,14 +303,22 @@ def task(request, id, template_name="tasks/task.html"):
                         "assignee": task.assignee
                     }
                 )
-                if notification:
-                    notification.send(notify_list, "tasks_assignment", {"user": request.user, "task": task, "assignee": task.assignee, "group": group})
+                signals.task_assignment_changed.send(
+                    sender = Task,
+                    user = request.user,
+                    task = task,
+                    group = group,
+                )
             if "tags" in form.changed_data:
                 messages.add_message(request, messages.SUCCESS,
                     ugettext("updated tags on the task")
                 )
-                if notification:
-                    notification.send(notify_list, "tasks_tags", {"user": request.user, "task": task, "group": group})
+                signals.task_tags_changed.send(
+                    sender = Task,
+                    user = request.user,
+                    task = task,
+                    group = group,
+                )
             form = EditTaskForm(request.user, group, instance=task)
     else:
         form = EditTaskForm(request.user, group, instance=task)
