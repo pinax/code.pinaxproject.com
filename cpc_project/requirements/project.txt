@@ -20,4 +20,4 @@ django-markup==0.3
 dialogos==0.1.dev3
 django-pagination==1.0.7
 django-voting==0.1
-django-notification==0.3a1.dev1
+django-notification==0.3a1.dev2
