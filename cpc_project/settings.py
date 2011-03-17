@@ -74,8 +74,8 @@ STATIC_URL = "/site_media/static/"
 
 # Additional directories which hold static files
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "media"),
-    os.path.join(PINAX_ROOT, "themes", PINAX_THEME, "media"),
+    os.path.join(PROJECT_ROOT, "static"),
+    os.path.join(PINAX_ROOT, "themes", PINAX_THEME, "static"),
 ]
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
