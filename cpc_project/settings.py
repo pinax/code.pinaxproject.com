@@ -162,6 +162,7 @@ INSTALLED_APPS = [
     # Pinax
     "pinax.apps.account",
     "pinax.apps.signup_codes",
+    "pinax.apps.analytics",
     
     # project
     "about",
@@ -199,6 +200,11 @@ DEBUG_TOOLBAR_CONFIG = {
 
 MARKUP_DEFAULT_FILTER = "creole"
 
+ANALYTICS_SETTINGS = {
+    "google": {
+        2: "UA-2401894-13",
+    },
+}
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:
