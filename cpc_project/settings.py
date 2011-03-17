@@ -202,7 +202,7 @@ MARKUP_DEFAULT_FILTER = "creole"
 
 ANALYTICS_SETTINGS = {
     "google": {
-        2: "UA-2401894-13",
+        "2": "UA-2401894-13",
     },
 }
 # local_settings.py can be used to override environment-specific settings
