@@ -27,6 +27,8 @@ def task_notify_list(kwargs):
 
 @signal([signals.task_created])
 def task_created(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send(task_notify_list(dict(kwargs, user=kwargs["creator"])), "tasks_new", {
         "creator": kwargs["creator"],
         "task": kwargs["task"],
@@ -36,6 +38,8 @@ def task_created(sender, **kwargs):
 
 @signal([signals.task_nudged])
 def task_nudged(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send([kwargs["task"].assignee], "tasks_nudge", {
         "nudger": kwargs["nudger"],
         "task": kwargs["task"],
@@ -44,6 +48,8 @@ def task_nudged(sender, **kwargs):
 
 @signal([signals.task_status_changed])
 def task_status_changed(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send(task_notify_list(kwargs), "tasks_status", {
         "user": kwargs["user"],
         "task": kwargs["task"],
@@ -53,6 +59,8 @@ def task_status_changed(sender, **kwargs):
 
 @signal([signals.task_changed])
 def task_changed(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send(task_notify_list(kwargs), "tasks_change", {
         "user": kwargs["user"],
         "task": kwargs["task"],
@@ -63,6 +71,8 @@ def task_changed(sender, **kwargs):
 
 @signal([signals.task_assignment_changed])
 def task_assignment_changed(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send(task_notify_list(kwargs), "tasks_assignment", {
         "user": kwargs["user"],
         "task": kwargs["task"],
@@ -73,6 +83,8 @@ def task_assignment_changed(sender, **kwargs):
 
 @signal([signals.task_tags_changed])
 def task_tags_changed(sender, **kwargs):
+    # @@@ temporarily turned off
+    return
     notification.send(task_notify_list(kwargs), "tasks_tags", {
         "user": kwargs["user"],
         "task": kwargs["task"],
