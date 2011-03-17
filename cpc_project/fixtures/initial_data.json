@@ -3,7 +3,15 @@
         "pk": 1, 
         "model": "sites.site", 
         "fields": {
-            "domain": "cpc.o1.gondor.io", 
+            "domain": "localhost:8000", 
+            "name": "Fresh Start CPC Local"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "code.pinaxproject.com", 
             "name": "Fresh Start CPC"
         }
     }
