@@ -13,8 +13,8 @@
         <li class="{% cycle even,odd %} clearfix">
             <div class="meta">
                 <div class="avatar">{% avatar comment.author 40 %}</div>
-                {% url profile_detail comment.author.username as author_url %}
-                <div class="details"><a href="#">{% user_display comment.author %}</a></div>
+                {% url tasks_for_user comment.author.username as author_url %}
+                <div class="details"><a href="{{ author_url }}">{% user_display comment.author %}</a></div>
                 {{ comment.submit_date|date }}
             </div>
             <div class="bulk">
