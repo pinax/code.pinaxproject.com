@@ -32,12 +32,7 @@
         {% endif %}
     </form>
     
-    <form action="?{{ querystring }}" method="POST" class="uniForm" accept-charset="utf-8">
-        {% csrf_token %}
-        {{ pin_form }}
-
-        <p><input type="submit" value="Pin List"></p>
-    </form>
+    {% include "tasks/_pin_list_form.html" %}
     
     <p>Group by:
         {% ifequal group_by "state" %}
