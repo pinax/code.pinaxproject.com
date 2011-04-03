@@ -38,19 +38,19 @@
 
 {% if user.is_authenticated %}
     {% comment_form task as comment_form %}
-    <fieldset class="inlineLabels">
-        <form class="uniForm" method="POST" action="{% comment_target object %}">
-            {% csrf_token %}
-                <div class="ctrlHolder">
-                    <label for="id_comment">Comment</label>
-                    {{ comment_form.comment }}
-                </div>
-                <div class="form_block">
-                    <input type="hidden" name="next" value="{{ request.path }}" />
-                    <input type="submit" value="{% trans "Post Comment" %}" />
-                </div>
-        </form>
-    </fieldset>
+    <form class="uniForm" method="POST" action="{% comment_target object %}">
+        <fieldset>
+        {% csrf_token %}
+            <div class="ctrlHolder">
+                <label for="id_comment">Comment</label>
+                {{ comment_form.comment }}
+            </div>
+            <div class="form_block">
+                <input type="hidden" name="next" value="{{ request.path }}" />
+                <input type="submit" value="{% trans "Post Comment" %}" />
+            </div>
+        </fieldset>
+    </form>
 {% else %}
     {% url acct_login as acct_login_url %}
     {% url acct_signup as acct_signup_url %}
