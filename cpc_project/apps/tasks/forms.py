@@ -7,9 +7,15 @@ from django.contrib.auth.models import User
 
 from taggit.forms import TagField
 
-from tasks.models import Task, TaskHistory, workflow
+from tasks.models import Task, TaskHistory, workflow, PinnedList
 from tasks.widgets import ReadOnlyWidget
 
+
+class PinnedListForm(forms.ModelForm):
+    
+    class Meta:
+        model = PinnedList
+        fields = ["name",]
 
 
 class TaskForm(forms.ModelForm):
