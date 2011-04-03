@@ -8,9 +8,9 @@
 # Put project-specific requirements here.
 # See http://pip-installer.org/requirement-format.html for more information.
 
-gondor==1.0a1.dev21
+gondor==1.0a1.dev37
 nashvegas==0.6.2
-psycopg2==2.3.2
+psycopg2==2.4
 django-taggit==0.9.3
 django-filter==0.5.3
 django-groups==0.1.dev10
