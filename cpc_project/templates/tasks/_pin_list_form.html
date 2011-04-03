@@ -1,8 +1,0 @@
-{% if user.is_authenticated %}
-    <form action="?{{ querystring }}" method="POST" class="uniForm" accept-charset="utf-8">
-        {% csrf_token %}
-        {{ pin_form }}
-
-        <p><input type="submit" value="Pin List"></p>
-    </form>
-{% endif %}
