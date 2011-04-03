@@ -31,15 +31,6 @@
         </form>
     {% endif %}
     
-    
-    <form action="?{{ querystring }}" method="POST" class="uniForm" accept-charset="utf-8">
-        {% csrf_token %}
-        {{ pin_form }}
-
-        <p><input type="submit" value="Pin List"></p>
-    </form>
-    
-    
     <p>Group by:
         {% ifequal group_by "state" %}
             <a href="?{% if gbqs %}{{ gbqs }}&{% endif %}group_by=modified">last modified</a>
