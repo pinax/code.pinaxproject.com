@@ -1,0 +1,51 @@
+{% load account_tags %}
+{% load group_tags %}
+{% load shorttimesince_tag %}
+{% load tasks_tags %}
+
+<table class="task_list">
+    <tr>
+        <th>ID</th>
+        <th>Votes</th>
+        <th>Summary</th>
+        <th>Last Modified</th>
+        <th>Assignee</th>
+        <th>Tags</th>
+        <th>Status</th>
+    </tr>
+    {% for section in sections %}
+        <tbody>
+            <tr class="task_grouping">
+                <td colspan="7">
+                    {% if section.focus_url %}
+                        <span class="focus"><a href="{{ section.focus_url }}">focus</a></span>
+                    {% endif %}
+                    <span class="toggle">
+                        <span class="arrow">&#x25BE;</span>
+                        {{ section }}
+                        <span class="count">({{ section.tasks|length }})</span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+        <tbody class="task_group" id="group_{{ forloop.counter }}">
+            {% for item in section.tasks %}
+                <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
+                    <td>{{ item.id }}</td>
+                    <td>{% include "tasks/_voting.html" %}</td>
+                    <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
+                    <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
+                    <td>
+                        {% if item.assignee %}
+                            <a href="{% groupurl tasks_for_user group username=item.assignee %}">{% user_display item.assignee %}</a>
+                        {% else %}
+                            <span class="warning">unassigned</span>
+                        {% endif %}
+                    </td>
+                    <td>{% task_tags item group %}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% endfor %}
+</table>
