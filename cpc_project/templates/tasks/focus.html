@@ -108,23 +108,7 @@
                 </tr></tbody>
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
                     {% for item in tagtasks %}
-                        <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
-                            <td>
-                                {{ item.object.id }}
-                                {% include "tasks/_voting.html" %}
-                            </td>
-                            <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
-                            <td>
-                                {% if item.assignee %}
-                                    {% user_display item.assignee %}
-                                {% else %}
-                                    <span class="warning">unassigned</span>
-                                {% endif %}
-                            </td>
-                            <td>{% task_tags item group %}</td>
-                            <td>{{ item.status }}</td>
-                        </tr>
+                        {% include "tasks/_task_item.html" %}
                     {% endfor %}
                 </tbody>
                 {% endif %}
@@ -151,21 +135,7 @@
                 </tr></tbody>
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
                     {% for item in section.list %}
-                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ item.id }}</td>
-                            <td>{% include "tasks/_voting.html" %}</td>
-                            <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
-                            <td>
-                                {% if item.assignee %}
-                                    {% user_display item.assignee %}
-                                {% else %}
-                                    <span class="warning">unassigned</span>
-                                {% endif %}
-                            </td>
-                            <td>{% task_tags item group %}</td>
-                            <td>{{ item.status }}</td>
-                        </tr>
+                        {% include "tasks/_task_item.html" %}
                     {% endfor %}
                 </tbody>
             {% endfor %}
