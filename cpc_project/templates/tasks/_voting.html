@@ -2,7 +2,8 @@
 {% load extra_voting_tags_mergeme %} {# in tasks.templatetags #}
 
 <div class="vote_badge">
-    {% vote_by_user user on item as vote %}
+    {% dict_entry_for_item item from task_scores as score %}
+    {% dict_entry_for_item item from user_votes as vote %}
     
     {% if user.is_authenticated %}
         <form class="upform" method="POST" action="{% url task_vote object_id=item.id,direction="up"|get_state:vote %}">
@@ -12,7 +13,6 @@
     {% endif %}
     
     <span class="score">
-        {% score_for_object item as score %}
         {{ score.score|default:0 }}
     </span>
     
