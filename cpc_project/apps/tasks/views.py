@@ -411,6 +411,7 @@ resizable=yes, status=no, toolbar=no, menuBar=no");})()""" % url
     
     ctx = group_context(group, bridge)
     ctx.update({
+        "group_by": "state",
         "assigned_filter": assigned_filter,
         "created_filter": created_filter,
         "nudged_filter": nudged_filter,

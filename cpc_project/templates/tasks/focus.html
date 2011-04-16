@@ -81,66 +81,6 @@
         {% endifequal %}
     </p>
     
-    <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
-    <table class="task_list">
-        <tr>
-            <th>ID</th>
-            <th>Voting</th>
-            <th>Summary</th>
-            <th>Last Modified</th>
-            <th>Assignee</th>
-            <th>Tags</th>
-            <th>Status</th>
-        </tr>
-        {% ifequal group_by "tag" %}
-            {% for section in task_tags %}
-                {% tasks_for_tag section as tagtasks in tasks %}
-                {% if tagtasks %}
-                {% if not filter_only or section.name in tags_list %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="7">
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {{ section }}
-                            <span class="count">({{ tagtasks|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for item in tagtasks %}
-                        {% include "tasks/_task_item.html" %}
-                    {% endfor %}
-                </tbody>
-                {% endif %}
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            {% for section in grouped_tasks %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="7">
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {% ifequal group_by "state" %}
-                            {{ section.grouper }}
-                            {% else %}
-                                {% ifequal group_by "assignee" %}
-                                    {% if section.grouper %}{{ section.grouper }}{% else %}unassigned{% endif %}
-                                {% else %}
-                                    {{ section.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}
-                                {% endifequal %}
-                            {% endifequal %}
-                            <span class="count">({{ section.list|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for item in section.list %}
-                        {% include "tasks/_task_item.html" %}
-                    {% endfor %}
-                </tbody>
-            {% endfor %}
-        {% endifequal %}
-    </table>
-    <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
+    {% include "tasks/_task_table.html" %}
     
 {% endblock %}
