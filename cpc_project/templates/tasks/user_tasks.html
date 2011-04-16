@@ -17,8 +17,8 @@
     
     <h2>Pinned Sets</h2>
     
-    {% if user.task_sets.all %}
-    {% for pinned_set in user.task_sets.all %}
+    {% if other_user.task_sets.all %}
+    {% for pinned_set in other_user.task_sets.all %}
         <h3>{{ pinned_set }}</h3>
         <table class="task_list">
             <tr><th>ID</th><th>Summary</th><th>Last Modified</th><th>Tags</th><th>Status</th></tr>
