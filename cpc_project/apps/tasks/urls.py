@@ -24,6 +24,9 @@ urlpatterns = patterns("",
     url(r"^export_state_transitions.csv$", "tasks.views.export_state_transitions", name="tasks_export_state_transitions"),
     # url(r"^feeds/(.*)/$", "django.contrib.syndication.views.feed", tasks_feed_dict),
     
+    url(r"^pinned-lists/(?P<pk>\d+)/edit/$", "tasks.views.pinned_list_edit", name="tasks_pinned_list_edit"),
+    url(r"^pinned-lists/(?P<pk>\d+)/delete/$", "tasks.views.pinned_list_delete", name="tasks_pinned_list_delete"),
+    
     # Question voting
     url(r"^vote/(?P<object_id>\d+)/(?P<direction>up|down|clear)vote/$",
         vote_on_object, dict(

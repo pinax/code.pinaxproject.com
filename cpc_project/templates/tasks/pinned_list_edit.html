@@ -1,0 +1,27 @@
+{% extends "tasks/base.html" %}
+
+{% load i18n %}
+{% load uni_form_tags %}
+{% load group_tags %}
+
+{% block head_title %}Edit Pinned List{% endblock %}
+
+{% block body %}
+    <h1>Edit Pinned List</h1>
+    
+    {% if is_member %}
+    <div class="main-form">
+        <form method="POST" action="" id="task_form" class="uniForm">
+            {% csrf_token %}
+            <div class="form_block">
+                {{ form|as_uni_form }}
+                <input type="submit" value="{% trans 'Edit Pinned List' %}"/>
+                <input type="submit" name="delete-pinned-list" value="{% trans 'Delete Pinned List' %}"/>
+            </div>
+        </form>
+    </div>
+    {% else %}
+    <p>You can only edit pinned lists that you created.</p>
+    {% endif %}
+    
+{% endblock %}

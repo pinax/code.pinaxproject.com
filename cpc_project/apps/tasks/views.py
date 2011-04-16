@@ -5,20 +5,16 @@ from itertools import chain
 from operator import attrgetter
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.core.urlresolvers import reverse
-from django.db.models import Q, get_app
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.utils.importlib import import_module
 from django.utils.translation import ugettext
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
 from taggit.models import TaggedItem
@@ -30,8 +26,8 @@ else:
     Snippet = False
 
 from tasks.filters import TaskFilter
-from tasks.forms import TaskForm, EditTaskForm, PinnedListForm
-from tasks.models import Task, TaskHistory, Nudge
+from tasks.forms import TaskForm, EditTaskForm, PinnedListForm, PinnedListDeleteForm
+from tasks.models import Task, TaskHistory, Nudge, PinnedList
 from tasks import signals
 
 
@@ -433,6 +429,64 @@ resizable=yes, status=no, toolbar=no, menuBar=no");})()""" % url
         "other_user": other_user,
         "bookmarklet": bookmarklet,
     })
+    
+    return render_to_response(template_name, RequestContext(request, ctx))
+
+
+@login_required
+def pinned_list_edit(request, pk, template_name="tasks/pinned_list_edit.html"):
+    
+    pinned_list = get_object_or_404(PinnedList, pk=pk)
+    
+    if request.user == pinned_list.created_by:
+        is_member = True
+    else:
+        is_member = False
+    
+    if request.method == "POST" and is_member:
+        if request.POST.get("delete-pinned-list"):
+            return redirect("tasks_pinned_list_delete", pk=pk)
+        
+        form = PinnedListForm(request.POST, instance=pinned_list)
+        if form.is_valid():
+            form.save()
+            return redirect("tasks_for_user", username=request.user.username)
+    else:
+        form = PinnedListForm(instance=pinned_list)
+    
+    ctx = {
+        "pinned_list": pinned_list,
+        "form": form,
+        "is_member": is_member
+    }
+    
+    return render_to_response(template_name, RequestContext(request, ctx))
+
+
+@login_required
+def pinned_list_delete(request, pk, template_name="tasks/pinned_list_delete.html"):
+    
+    pinned_list = get_object_or_404(PinnedList, pk=pk)
+    
+    if request.user == pinned_list.created_by:
+        is_member = True
+    else:
+        is_member = False
+    
+    if request.method == "POST" and is_member:
+        form = PinnedListDeleteForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data["delete"]:
+                pinned_list.delete()
+                return redirect("tasks_for_user", username=request.user.username)
+    else:
+        form = PinnedListDeleteForm()
+    
+    ctx = {
+        "pinned_list": pinned_list,
+        "form": form,
+        "is_member": is_member
+    }
     
     return render_to_response(template_name, RequestContext(request, ctx))
 

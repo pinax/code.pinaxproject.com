@@ -18,6 +18,11 @@ class PinnedListForm(forms.ModelForm):
         fields = ["name",]
 
 
+class PinnedListDeleteForm(forms.Form):
+    
+    delete = forms.BooleanField(label="Confirm Deletion")
+
+
 class TaskForm(forms.ModelForm):
     """
     Form for creating tasks

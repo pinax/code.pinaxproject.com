@@ -19,7 +19,13 @@
     
     {% if other_user.task_sets.all %}
     {% for pinned_set in other_user.task_sets.all %}
-        <h3>{{ pinned_set }}</h3>
+        <h3>
+            <div style="float:right;">
+                <a href="{% url tasks_pinned_list_edit pk=pinned_set.pk %}">Edit</a> 
+                <a href="{% url tasks_pinned_list_delete pk=pinned_set.pk %}">Delete</a>
+            </div>
+            {{ pinned_set }}
+        </h3>
         <table class="task_list">
             <tr><th>ID</th><th>Summary</th><th>Last Modified</th><th>Tags</th><th>Status</th></tr>
             <tbody class="task_group" >
