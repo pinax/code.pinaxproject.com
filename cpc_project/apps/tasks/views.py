@@ -153,7 +153,7 @@ def add_task(request, secret_id=None, form_class=TaskForm, template_name="tasks/
                 )
                 signals.task_created.send(
                     sender = Task,
-                    creator = request.user,
+                    user = request.user,
                     task = task,
                     group = group,
                 )

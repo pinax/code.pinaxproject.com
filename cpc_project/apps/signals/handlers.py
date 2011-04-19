@@ -29,8 +29,8 @@ def task_notify_list(kwargs):
 def task_created(sender, **kwargs):
     # @@@ temporarily turned off
     return
-    notification.send(task_notify_list(dict(kwargs, user=kwargs["creator"])), "tasks_new", {
-        "creator": kwargs["creator"],
+    notification.send(task_notify_list(dict(kwargs, user=kwargs["user"])), "tasks_new", {
+        "creator": kwargs["user"],
         "task": kwargs["task"],
         "group": kwargs["group"]
     })
