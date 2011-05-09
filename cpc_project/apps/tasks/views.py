@@ -93,6 +93,15 @@ def tasks(request, template_name="tasks/task_list.html"):
     
     task_filter = TaskFilter(filter_data, queryset=tasks)
     
+    if group_by == "tag":
+        grouped_tasks = []
+        for tag in Task.tags.all():
+            tasktags = task_filter.qs.filter(tags__name__in=[str(tag)])
+            if tasktags:
+                grouped_tasks.append({ "grouper": tag, "list": tasktags })
+    else:
+        grouped_tasks = None
+    
     group_by_querydict = request.GET.copy()
     group_by_querydict.pop("group_by", None)
     group_by_querystring = group_by_querydict.urlencode()
@@ -105,7 +114,7 @@ def tasks(request, template_name="tasks/task_list.html"):
         "task_filter": task_filter,
         "tasks": task_filter.qs,
         "querystring": request.GET.urlencode(),
-        "task_tags": Task.tags.all(),
+        "grouped_tasks": grouped_tasks,
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
