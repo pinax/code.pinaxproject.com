@@ -3,7 +3,7 @@ import django.dispatch
 
 task_created = django.dispatch.Signal(
     providing_args=[
-        "creator", "task", "group"
+        "user", "task", "group"
     ]
 )
 task_nudged = django.dispatch.Signal(
