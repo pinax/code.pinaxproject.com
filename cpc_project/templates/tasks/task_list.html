@@ -82,6 +82,11 @@
         {% endifequal %}
     </p>
     
+    <form action="{% url task_list %}?{{ request.META.QUERY_STRING }}" method="POST" class="uniForm" accept-charset="utf-8">
+        {% csrf_token %}
+        {{ form.action }} <input type="submit" value="Submit">
+    
+    
     <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
     <table class="task_list">
         <tr>
@@ -110,7 +115,10 @@
                     <tbody class="task_group" id="group_{{ forloop.counter }}">
                         {% for item in tagtasks %}
                             <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
-                                <td>{{ item.id }}</td>
+                                <td style="white-space: nowrap">
+                                    <input type="checkbox" name="objects" value="{{ item.pk }}" id="id_object_{{ forloop.counter0 }}"> 
+                                    {{ item.id }}
+                                </td>
                                 <td>{% include "tasks/_voting.html" %}</td>
                                 <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                                 <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
@@ -151,7 +159,10 @@
                 <tbody class="task_group" id="group_{{ forloop.counter }}">
                     {% for item in section.list %}
                         <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ item.id }}</td>
+                            <td style="white-space: nowrap">
+                                <input type="checkbox" name="objects" value="{{ item.pk }}" id="id_object_{{ forloop.counter0 }}"> 
+                                {{ item.id }}
+                            </td>
                             <td>{% include "tasks/_voting.html" %}</td>
                             <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                             <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
@@ -172,4 +183,5 @@
     </table>
     <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
     
+    </form>
 {% endblock %}

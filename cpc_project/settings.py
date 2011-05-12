@@ -168,6 +168,7 @@ INSTALLED_APPS = [
     "about",
     "cpc",
     "signals",
+    "bulk_actions"
 ]
 
 FIXTURE_DIRS = [

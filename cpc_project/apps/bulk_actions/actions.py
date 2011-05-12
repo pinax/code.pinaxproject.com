@@ -1,0 +1,3 @@
+class BulkActionBase(object):
+    
+    pass

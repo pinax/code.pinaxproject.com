@@ -29,6 +29,7 @@ if "dpaste" in getattr(settings, "INSTALLED_APPS"):
 else:
     Snippet = False
 
+from bulk_actions.forms import BulkActionForm
 from tasks.filters import TaskFilter
 from tasks.forms import TaskForm, EditTaskForm
 from tasks.models import Task, TaskHistory, Nudge
@@ -97,6 +98,18 @@ def tasks(request, template_name="tasks/task_list.html"):
     group_by_querydict.pop("group_by", None)
     group_by_querystring = group_by_querydict.urlencode()
     
+    if request.method == "POST":
+        form = BulkActionForm(request.POST)
+        form.fields["objects"].queryset = task_filter.qs
+        if form.is_valid():
+            action = form.cleaned_data["action"]
+            if not action:
+                raise Exception("Something is broken")
+            return action.show_form(request, form.cleaned_data["objects"])
+    else:
+        form = BulkActionForm()
+        form.fields["objects"].queryset = task_filter.qs
+    
     ctx = group_context(group, bridge)
     ctx.update({
         "group_by": group_by,
@@ -106,6 +119,7 @@ def tasks(request, template_name="tasks/task_list.html"):
         "tasks": task_filter.qs,
         "querystring": request.GET.urlencode(),
         "task_tags": Task.tags.all(),
+        "form": form
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
