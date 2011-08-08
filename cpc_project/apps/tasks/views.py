@@ -1,4 +1,5 @@
 import datetime
+import json
 import urllib
 
 from itertools import chain
@@ -21,7 +22,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
-from taggit.models import TaggedItem
+from taggit.models import TaggedItem, Tag
 
 # Only import dpaste Snippet Model if it's activated
 if "dpaste" in getattr(settings, "INSTALLED_APPS"):
@@ -601,6 +602,16 @@ def tasks_history(request, id, template_name="tasks/task_history.html"):
     })
     
     return render_to_response(template_name, RequestContext(request, ctx))
+
+
+def tags_autocomplete_source(request):
+    term = request.GET.get("term", "")
+    tags = Tag.objects.filter(name__istartswith=term).values_list("name", flat=True)
+    tags = [str(t) for t in tags]
+    return HttpResponse(
+        json.dumps(tags),
+        mimetype="application/json"
+    )
 
 
 def export_state_transitions(request):

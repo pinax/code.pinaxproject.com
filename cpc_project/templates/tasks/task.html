@@ -77,6 +77,10 @@
                 $('#id_resolution').attr("disabled", false);
             }
         }
+        
+        $("#id_tags").tagit({
+            tagSource: "{% url tags_autocomplete_source %}"
+        });
     });
     
     $('#id_state').change(function(){
