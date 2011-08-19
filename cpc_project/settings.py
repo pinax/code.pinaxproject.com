@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Django settings for basic pinax project.
+# Django settings for account project
 
 import os.path
 import posixpath
@@ -14,33 +14,40 @@ PINAX_THEME = "default"
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-# tells Pinax to serve media through django.views.static.serve.
+# tells Pinax to serve media through the staticfiles app.
 SERVE_MEDIA = DEBUG
 
-ADMINS = (
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+ADMINS = [
     # ("Your Name", "your_email@domain.com"),
-)
+]
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = "sqlite3"    # "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "ado_mssql".
-DATABASE_NAME = "dev.db"       # Or path to database file if using sqlite3.
-DATABASE_USER = ""             # Not used with sqlite3.
-DATABASE_PASSWORD = ""         # Not used with sqlite3.
-DATABASE_HOST = ""             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ""             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "cpc-primary",
+    },
+    "old": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "pinax_cpc",
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
-# http://www.postgresql.org/docs/8.1/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
-# although not all variations may be possible on all operating systems.
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = "US/Eastern"
 
 # Language code for this installation. All choices can be found here:
-# http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-# http://blogs.law.harvard.edu/tech/stories/storyReader$15
-LANGUAGE_CODE = "en"
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = "en-us"
 
 SITE_ID = 1
 
@@ -52,8 +59,9 @@ USE_I18N = True
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, "site_media", "media")
 
-# URL that handles the media served from MEDIA_ROOT.
-# Example: "http://media.lawrence.com"
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash if there is a path component (optional in other cases).
+# Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = "/site_media/media/"
 
 # Absolute path to the directory that holds static files like app media.
@@ -66,8 +74,8 @@ STATIC_URL = "/site_media/static/"
 
 # Additional directories which hold static files
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "media"),
-    os.path.join(PINAX_ROOT, "media", PINAX_THEME),
+    os.path.join(PROJECT_ROOT, "static"),
+    os.path.join(PINAX_ROOT, "themes", PINAX_THEME, "static"),
 ]
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
@@ -76,7 +84,7 @@ STATICFILES_DIRS = [
 ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ""
+SECRET_KEY = "65u^g8$8snvxjjo%4!io$&(w@o53s-vf-e-w3gk6esq%!^d@n("
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = [
@@ -89,125 +97,114 @@ MIDDLEWARE_CLASSES = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
     "django_openid.consumer.SessionConsumer",
-    "account.middleware.LocaleMiddleware",
-    "django.middleware.doc.XViewMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "pinax.apps.account.middleware.LocaleMiddleware",
     "pagination.middleware.PaginationMiddleware",
+    "pinax.middleware.security.HideSensistiveFieldsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "cpc_project.urls"
 
 TEMPLATE_DIRS = [
-    os.path.join(os.path.dirname(__file__), "templates"),
-    os.path.join(PINAX_ROOT, "templates", PINAX_THEME),
+    os.path.join(PROJECT_ROOT, "templates"),
+    os.path.join(PINAX_ROOT, "themes", PINAX_THEME, "templates"),
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = [
-    "django.core.context_processors.auth",
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     
-    "notification.context_processors.notification",
-    "announcements.context_processors.site_wide_announcements",
-    "account.context_processors.openid",
-    "account.context_processors.account",
+    "staticfiles.context_processors.static_url",
+    
     "pinax.core.context_processors.pinax_settings",
+    
+    "pinax.apps.account.context_processors.account",
 ]
 
 INSTALLED_APPS = [
-    # included
+    # Django
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
-    "django.contrib.humanize",
-    "django.contrib.markup",
-    "django.contrib.admin",
     "django.contrib.messages",
+    "django.contrib.humanize",
     
     "pinax.templatetags",
     
     # external
-    "notification", # must be first
-    "ajax_validation",
-    "announcements",
-    "attachments",
-    "avatar",
-    "django_extensions",
-    "django_openid",
-    "emailconfirmation",
-    "mailer",
-    "mptt",
-    "pagination",
-    "tagging",
-    "timezones",
-    "threadedcomments",
-    "django_markup",
-    "uni_form",
-    "wiki",
-    
-    # internal (for now)
-    "account",
-    "basic_profiles",
+    "notification",
     "staticfiles",
-    "groups",
-    "dpaste",
+    "debug_toolbar",
+    "uni_form",
+    "django_openid",
+    "ajax_validation",
+    "timezones",
+    "emailconfirmation",
+    "nashvegas",
     "tasks",
-    "tag_app",
-    "tasks_api",
-    "threadedcomments_extras",
-    #"quickbar",
-    #"documents",
-    "haystack",
-    "search_app",
+    "django_filters",
+    "groups",
+    "taggit",
+    "avatar",
+    "django_markup",
+    "dialogos",
+    "pagination",
+    "voting",
+    
+    # Pinax
+    "pinax.apps.account",
+    "pinax.apps.signup_codes",
+    "pinax.apps.analytics",
+    
+    # project
+    "about",
+    "cpc",
+    "signals",
+]
+
+FIXTURE_DIRS = [
+    os.path.join(PROJECT_ROOT, "fixtures"),
 ]
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
-HAYSTACK_SITECONF = "cpc_project.search_sites"
-HAYSTACK_SEARCH_ENGINE = "whoosh"
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, "whoosh", "index")
-
-ABSOLUTE_URL_OVERRIDES = {
-    "auth.user": lambda o: "/profiles/%s/" % o.username,
-}
-
-MARKUP_FILTER_FALLBACK = "creole"
-MARKUP_DEFAULT_FILTER = "creole"
-MARKUP_CHOICES = [
-    ("creole", u"Creole"),
-]
-WIKI_MARKUP_CHOICES = MARKUP_CHOICES
-
-AUTH_PROFILE_MODULE = "basic_profiles.Profile"
-NOTIFICATION_LANGUAGE_MODULE = "account.Account"
+# EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 ACCOUNT_OPEN_SIGNUP = True
 ACCOUNT_REQUIRED_EMAIL = False
 ACCOUNT_EMAIL_VERIFICATION = False
+ACCOUNT_EMAIL_AUTHENTICATION = False
+ACCOUNT_UNIQUE_EMAIL = EMAIL_CONFIRMATION_UNIQUE_EMAIL = False
 
-NOTIFICATION_QUEUE_ALL = True
+AUTHENTICATION_BACKENDS = [
+    "pinax.apps.account.auth_backends.AuthenticationBackend",
+]
+
+LOGIN_URL = "/account/login/" # @@@ any way this can be a url name?
+LOGIN_REDIRECT_URLNAME = "what_next"
 
 EMAIL_CONFIRMATION_DAYS = 2
 EMAIL_DEBUG = DEBUG
-CONTACT_EMAIL = "jtauber@jtauber.com"
-SITE_NAME = "code.pinaxproject.com"
-LOGIN_URL = "/account/login/"
-LOGIN_REDIRECT_URLNAME = "home"
 
-WIKI_REQUIRES_LOGIN = True
+DEBUG_TOOLBAR_CONFIG = {
+    "INTERCEPT_REDIRECTS": False,
+}
 
-TASKS_WORKFLOW_MODULE = "workflow"
+MARKUP_DEFAULT_FILTER = "creole"
 
-# For now we stick to a rather loose RE for the URL until the wikiapp
-# supports urls for non-wikiwords
-WIKI_WORD_RE = r"(?:[A-Z]+([0-9]|[a-z])+){2,}"
-WIKI_URL_RE  = r"[\w0-9]+"
-
+ANALYTICS_SETTINGS = {
+    "google": {
+        "2": "UA-2401894-13",
+    },
+}
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.
 try:

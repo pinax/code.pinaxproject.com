@@ -1,71 +1,38 @@
 {% extends "base.html" %}
 
+{% load analytics_tags %}
 {% load i18n %}
-{% load openid_tags %}
 
 {% block extra_head_base %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/site_tabs.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}tasks/css/tasks.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/comments.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/pagination.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/wiki.css" />
-    
-    <link rel="alternate" type="application/atom+xml" title="Tasks Changes" href="/tasks/feeds/all/" />
-    
+    <link rel="stylesheet" href="{{ STATIC_URL }}uni_form/uni-form.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}pinax/css/account.css" />
     {% block extra_head %}{% endblock %}
-{% endblock %}
-
-{% block login %}
-    {% if user.is_authenticated %}
-        {% openid_icon openid user %}<b>{{ user }}</b> | <a href="{% url acct_email %}">{% trans "Account" %}</a> | {% if user.is_staff %}<a href="/admin/">{% trans "Admin" %}</a> | {% endif %}<a href="/openid/logout/?next={% url acct_logout %}">{% trans "Logout" %}</a>
-    {% else %}
-        <a href="{% url acct_login %}">{% trans "Login" %}</a> or
-        <a href="{% url acct_signup %}">{% trans "Signup" %}</a>
-    {% endif %}
 {% endblock %}
 
 {% block logo_link_image %}<a href="{% url home %}"><img src="{{ STATIC_URL }}pinax/img/logo.png" alt="Pinax"/></a>{% endblock %}
 
-{% block left_tabs %}
-{% comment %}
-    <table>
-        <tr>
-            <td class="tab tab_home"><div><a href="{% url home %}">{% trans "Home" %}</a></div></td>
-        </tr>
-    </table>
-{% endcomment %}
+{% block login %}
+    {% include "_account_bar.html" %}
 {% endblock %}
 
 {% block right_tabs %}
-    {% if user.is_authenticated %}
-        <ul class="tabs">{% spaceless %}
-            <li id="tab_profile"><a href="{% url profile_detail user %}">{% trans "Profile" %}</a></li>
-            <li id="tab_tasks"><a href="{% url task_list %}">{% trans "Tasks" %}</a></li>
-            <li id="tab_wiki"><a href='{% url wiki_article "HomePage" %}'>{% trans "Wiki" %}</a></li>
-            <li id="tab_paste"><a href='{% url snippet_new %}'>{% trans "Paste" %}</a></li>
-            <li id="tab_notices"><a href="{% url notification_notices %}">{% trans "Notices" %}{% if notice_unseen_count %} ({{ notice_unseen_count }}){% endif %}</a></li>
-            <li id="tab_search"><a href="{% url haystack_search %}">{% trans "Search" %}</a></li>
-        {% endspaceless %}</ul>
-    {% endif %}
-{% endblock %}
-
-{% block extra_body_base %}
-    <script src="{{ STATIC_URL }}tasks/js/tasks.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}pinax/js/comments.js" type="text/javascript"></script>
-    {% block extra_body %}{% endblock %}
-    <script type="text/javascript">
-        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-        try {
-            var pageTracker = _gat._getTracker("UA-2401894-13");
-            pageTracker._trackPageview();
-        } catch(err) {
-        }
-    </script>
+    <ul class="tabs">{% spaceless %}
+        <li id="tab_tasks"><a href="{% url task_list %}">{% trans "Tasks" %}</a></li>
+    {% endspaceless %}</ul>
 {% endblock %}
 
 {% block footer %}
-<div class="legal">Hosting provided by <a href="http://eldarion.com">Eldarion</a>.</div>
+<div class="legal">
+    {% blocktrans %}
+    Hosted on <a href="http://gondor.io/">Gondor</a> thanks to <a href="http://eldarion.com/">Eldarion</a>.
+    {% endblocktrans %}
+</div>
+{% endblock %}
+
+{% block extra_body_base %}
+    {% analytics %}
+    <script src="{{ STATIC_URL }}pinax/js/jquery-1.5.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}uni_form/uni-form.jquery.js" type="text/javascript"></script>
+    {% block extra_body %}{% endblock %}
 {% endblock %}

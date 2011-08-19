@@ -1,0 +1,33 @@
+{% extends group_base|default:"site_base.html" %}
+
+{% load i18n %}
+{% load group_tags %}
+
+{% block body_class %}tasks{% endblock %}
+
+{% block extra_head_base %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/comments.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/tasks.css" />
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block subnav %}
+    {% if user.is_authenticated %}
+        <ul>
+            <li><a href="{% groupurl task_add group %}">{% trans "Add Task" %}</a></li>
+            <li><a href="{% groupurl tasks_for_user group username=user.username %}">{% trans "Your Tasks" %}</a></li>
+            <li><a href="{% groupurl task_list group %}">{% trans "All Tasks" %}</a></li>
+            <li><a href="{% groupurl tasks_history_list group %}">{% trans "Tasks History" %}</a></li>
+        </ul>
+    {% else %}
+        &nbsp;
+    {% endif %}
+{% endblock %}
+
+{% block extra_body_base %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}js/tasks.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/voting.js" type="text/javascript"></script>
+    {# extra_body is loaded by site_base.html #}
+{% endblock %}

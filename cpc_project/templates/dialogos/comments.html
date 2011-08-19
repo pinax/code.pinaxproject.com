@@ -1,0 +1,60 @@
+{% load dialogos_tags %}
+{% load account_tags %}
+{% load i18n %}
+{% load uni_form_tags %}
+{% load pagination_tags %}
+{% load avatar_tags %}
+
+{% comments object as comments %}
+{% autopaginate comments %}
+
+<ul class="responses">
+    {% for comment in comments %}
+        <li class="{% cycle even,odd %} clearfix">
+            <div class="meta">
+                <div class="avatar">{% avatar comment.author 40 %}</div>
+                {% url tasks_for_user comment.author.username as author_url %}
+                <div class="details"><a href="{{ author_url }}">{% user_display comment.author %}</a></div>
+                {{ comment.submit_date|date }}
+            </div>
+            <div class="bulk">
+                <div class="body">{{ comment.comment|urlize|linebreaks }}</div>
+                {% comment %}
+                @@@ support comment deletion
+                {% if user == comment.author %}
+                    <form method="POST" action="{% url tc_comment_delete response.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="{% trans "Delete Post" %}" />
+                        <input type="hidden" name="next" value="{{ request.path }}" />
+                    </form>
+                {% endif %}
+                {% endcomment %}
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% paginate %}
+
+{% if user.is_authenticated %}
+    {% comment_form task as comment_form %}
+    <form class="uniForm" method="POST" action="{% comment_target object %}">
+        <fieldset>
+        {% csrf_token %}
+            <div class="ctrlHolder">
+                <label for="id_comment">Comment</label>
+                {{ comment_form.comment }}
+            </div>
+            <div class="form_block">
+                <input type="hidden" name="next" value="{{ request.path }}" />
+                <input type="submit" value="{% trans "Post Comment" %}" />
+            </div>
+        </fieldset>
+    </form>
+{% else %}
+    {% url acct_login as acct_login_url %}
+    {% url acct_signup as acct_signup_url %}
+    {% blocktrans with request.path as request_path %}
+        <h3>Please <a href="{{ acct_login_url }}?next={{ request_path }}">Log in</a> (or <a href="{{ acct_signup_url }}?next={{ request_path }}">Sign Up</a>) to leave a comment</h3>
+    {% endblocktrans %}
+{% endif %}

@@ -1,0 +1,18 @@
+[
+    {
+        "pk": 1, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "localhost:8000", 
+            "name": "Fresh Start CPC Local"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "code.pinaxproject.com", 
+            "name": "Fresh Start CPC"
+        }
+    }
+]

@@ -1,37 +1,37 @@
 {% extends "site_base.html" %}
 
-{% block head_title %}Homepage{% endblock %}
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
 
 {% block body %}
-
-    <h1>Pinax Project Development</h1>
-
-    <p><b>code.pinaxproject.com</b> currently contains the official issue/task tracker and wiki for the Pinax Project.</p>
-
-    <p>The main Pinax site is <a href="http://pinaxproject.com/">pinaxproject.com</a>. You can get releases there.</p>
-
-    <p>Development code is available at <a href="http://github.com/pinax/pinax/">http://github.com/pinax/pinax/</a>.</p>
-
-    <p>On this site you can find:</p>
-
-    <dl class="what_next">
-
-        <dt><a href="{% url task_list %}">Tasks</a></dt>
-        <dd>to track things that need to be done and who's doing them.</dd>
-
-        <dt><a href="{% url wiki_index %}">Wiki</a></dt>
-        <dd>to document Pinax.</dd>
-
-        <dt><a href="{% url snippet_new %}">Paste</a></dt>
-        <dd>to store code snippets in our pastebin.</dd>
-
-        {% if user.is_authenticated %}
-            <dt><a href="{% url profile_detail user %}">Profile</a></dt>
-            <dd>to tell the Pinax Project a little about yourself.</dd>
-
-            <dt><a href="{% url notification_notices %}">Notices</a></dt>
-            <dd>to configure and view notices.</dd>
-        {% endif %}
-
-    </dl>
+    
+    <h1>{% trans "Fresh-Start Pinax Project Development" %}</h1>
+    
+    <p>
+        {% blocktrans %}
+        Welcome to the issue tracker for the fresh-start branch of Pinax. For
+        information about the motivation for the fresh-start branch see this
+        <a href="http://groups.google.com/group/pinax-core-dev/msg/ce51f79236ea4331">post to pinax-core-dev</a>.
+        {% endblocktrans %}
+    </p>
+    
+    <p>
+        {% blocktrans %}
+        This site is <b>ONLY</b> for issues relating to the fresh-start branch.
+        For the previous issue tracker, covering the current version of Pinax,
+        see <a href="http://code-old.pinaxproject.com/">http://code-old.pinaxproject.com/</a>
+        {% endblocktrans %}
+    </p>
+    
+    <p>
+        {% blocktrans %}
+        We have done a one-time migration of user accounts so your previous
+        credentials will work here. Accounts will not be synchronized moving forward, though, and, at some
+        point, code-old will be taken down.
+        {% endblocktrans %}
+    </p>
 {% endblock %}

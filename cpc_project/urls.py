@@ -1,40 +1,32 @@
-from django.conf.urls.defaults import *
 from django.conf import settings
-
+from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
-
-from account.openid_consumer import PinaxConsumer
 
 from django.contrib import admin
 admin.autodiscover()
 
-import os
+from pinax.apps.account.openid_consumer import PinaxConsumer
 
-from wiki import models as wiki_models
+
+handler500 = "pinax.views.server_error"
+
 
 urlpatterns = patterns("",
-    url(r"^$", direct_to_template, {"template": "homepage.html"}, name="home"),
-    
-    (r"^account/", include("account.urls")),
-    (r"^openid/(.*)", PinaxConsumer()),
-    (r"^profiles/", include("basic_profiles.urls")),
-    (r"^notices/", include("notification.urls")),
-    (r"^announcements/", include("announcements.urls")),
-    (r"^tasks/", include("tasks.urls")),
-    (r"^comments/", include("threadedcomments.urls")),
-    (r"^paste/", include("dpaste.urls")),
-    (r"^wiki/", include("wiki.urls")),
-    (r"^attachments/", include("attachments.urls")),
-    (r"^tagging_utils/", include("tagging_utils.urls")),
-    
-    # piston api
-    (r"^api/", include("tasks_api.urls")),
-    # haystack search
-    (r"^search/", include("search_app.urls")),
-    (r"^admin/(.*)", admin.site.root),
+    url(r"^$", direct_to_template, {
+        "template": "homepage.html",
+    }, name="home"),
+    url(r"^admin/invite_user/$", "pinax.apps.signup_codes.views.admin_invite_user", name="admin_invite_user"),
+    url(r"^admin/", include(admin.site.urls)),
+    url(r"^about/", include("about.urls")),
+    url(r"^account/", include("pinax.apps.account.urls")),
+    url(r"^openid/", include(PinaxConsumer().urls)),
+    url(r"tasks/", include("tasks.urls")),
+    url(r"^avatar/", include("avatar.urls")),
+    url(r"^comments/", include("dialogos.urls")),
 )
+
 
 if settings.SERVE_MEDIA:
     urlpatterns += patterns("",
-        (r"", include("staticfiles.urls")),
+        url(r"", include("staticfiles.urls")),
     )
