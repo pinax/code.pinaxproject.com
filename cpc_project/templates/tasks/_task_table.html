@@ -6,6 +6,7 @@
 {% load tasks_tags %}
 {% load group_tags %}
 {% load voting_tags %}
+{% load extra_voting_tags_mergeme %}
 
 <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
 <table class="task_list">
@@ -36,7 +37,30 @@
                 {% for item in section.list %}
                     <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
                         <td>{{ item.id }}</td>
-                        <td>{% include "tasks/_voting.html" with user_votes=user_votes task_scores=task_scores %}</td>
+                        <td>
+                            <div class="vote_badge">
+                                {% dict_entry_for_item item from task_scores as score %}
+                                {% dict_entry_for_item item from user_votes as vote %}
+                                
+                                {% if user.is_authenticated %}
+                                    <form class="upform" method="POST" action="{% url task_vote object_id=item.id,direction="up"|get_state:vote %}">
+                                        {% csrf_token %}
+                                        <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="&#x2714;" />
+                                    </form>
+                                {% endif %}
+                                
+                                <span class="score">
+                                    {{ score.score|default:0 }}
+                                </span>
+                                
+                                {% if user.is_authenticated %}
+                                    <form class="downform" method="POST" action="{% url task_vote object_id=item.id,direction="down"|get_state:vote %}">
+                                        {% csrf_token %}
+                                        <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="&#x2718;" />
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
                         <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                         <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                         <td>
