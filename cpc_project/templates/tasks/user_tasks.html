@@ -29,38 +29,7 @@
         </form>
         
         {% regroup nudged_tasks by get_state_display as grouped_tasks %}
-        
-        <table class="task_list">
-            <tr>
-                <th>ID</th>
-                <th>Summary</th>
-                <th>Last Modified</th>
-                <th>Tags</th>
-                <th>Status</th>
-            </tr>
-            {% for section in grouped_tasks %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="5">
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {{ section.grouper }}
-                            <span class="count">({{ section.list|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for task in section.list %}
-                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ task.id }}</td>
-                            <td><a href="{% groupurl task_detail group id=task.id %}">{{ task.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
-                            <td>{% task_tags task group %}</td>
-                            <td>{{ task.status }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endfor %}
-        </table>
+        {% include "tasks/_task_table.html" %}
         
     {% else %}
         {% trans "You have no nudged tasks right now." %}
@@ -81,38 +50,7 @@
         </form>
         
         {% regroup assigned_tasks by get_state_display as grouped_tasks %}
-        
-        <table class="task_list">
-            <tr>
-                <th>ID</th>
-                <th>Summary</th>
-                <th>Last Modified</th>
-                <th>Tags</th>
-                <th>Status</th>
-            </tr>
-            {% for section in grouped_tasks %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="5">
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {{ section.grouper }}
-                            <span class="count">({{ section.list|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for task in section.list %}
-                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ task.id }}</td>
-                            <td><a href="{% groupurl task_detail group id=task.id %}">{{ task.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
-                            <td>{% task_tags task group %}</td>
-                            <td>{{ task.status }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endfor %}
-        </table>
+        {% include "tasks/_task_table.html" %}
         
     {% else %}
         {% trans "You have no assigned tasks right now." %}
@@ -132,38 +70,7 @@
         </form>
         
         {% regroup created_tasks by get_state_display as grouped_tasks %}
-        
-        <table class="task_list">
-            <tr>
-                <th>ID</th>
-                <th>Summary</th>
-                <th>Last Modified</th>
-                <th>Tags</th>
-                <th>Status</th>
-            </tr>
-            {% for section in grouped_tasks %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="5">
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {{ section.grouper }}
-                            <span class="count">({{ section.list|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for task in section.list %}
-                        <tr class="task_{{ task.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ task.id }}</td>
-                            <td><a href="{% groupurl task_detail group id=task.id %}">{{ task.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ task.modified|shorttimesince }} ago</td>
-                            <td>{% task_tags task group %}</td>
-                            <td>{{ task.status }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endfor %}
-        </table>
+        {% include "tasks/_task_table.html" %}
         
     {% else %}
         {% trans "You have no created tasks right now." %}

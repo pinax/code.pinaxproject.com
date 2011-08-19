@@ -65,7 +65,6 @@
                     <a href="?{% if gbqs %}{{ gbqs }}&{% endif %}group_by=assignee">assignee</a>
                     or
                     <b>tag</b>
-                    {# do no manipulation here as we'll special case below #}
                 {% else %}
                     <b>last modified</b>
                     or
@@ -82,94 +81,6 @@
         {% endifequal %}
     </p>
     
-    <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
-    <table class="task_list">
-        <tr>
-            <th>ID</th>
-            <th>Votes</th>
-            <th>Summary</th>
-            <th>Last Modified</th>
-            <th>Assignee</th>
-            <th>Tags</th>
-            <th>Status</th>
-        </tr>
-        {% ifequal group_by "tag" %}
-            {% for section in task_tags %}
-                {% tasks_for_tag section as tagtasks in tasks %}
-                {% if tagtasks %}
-                    <tbody><tr class="task_grouping">
-                        <td colspan="7">
-                            <span class="focus"><a href="{% focus_url group_by section group %}">focus</a></span>
-                            <span class="toggle">
-                                <span class="arrow">&#x25BE;</span>
-                                {{ section }}
-                                <span class="count">({{ tagtasks|length }})</span>
-                            </span>
-                        </td>
-                    </tr></tbody>
-                    <tbody class="task_group" id="group_{{ forloop.counter }}">
-                        {% for item in tagtasks %}
-                            <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
-                                <td>{{ item.id }}</td>
-                                <td>{% include "tasks/_voting.html" %}</td>
-                                <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
-                                <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
-                                <td>
-                                    {% if item.assignee %}
-                                        <a href="{% groupurl tasks_for_user group username=item.assignee %}">{% user_display item.assignee %}</a>
-                                    {% else %}
-                                        <span class="warning">unassigned</span>
-                                    {% endif %}
-                                </td>
-                                <td>{% task_tags item group %}</td>
-                                <td>{{ item.status }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            {% for section in grouped_tasks %}
-                <tbody><tr class="task_grouping">
-                    <td colspan="7">
-                        <span class="focus"><a href="{% focus_url group_by section.grouper group %}">focus</a></span>
-                        <span class="toggle">
-                            <span class="arrow">&#x25BE;</span>
-                            {% ifequal group_by "state" %}
-                                {{ section.grouper }}
-                            {% else %}
-                                {% ifequal group_by "assignee" %}
-                                    {% if section.grouper %}{{ section.grouper }}{% else %}unassigned{% endif %}
-                                {% else %}
-                                    {{ section.grouper|naturalday:_("MONTH_DAY_FORMAT")|capfirst }}
-                                {% endifequal %}
-                            {% endifequal %}
-                            <span class="count">({{ section.list|length }})</span>
-                        </span>
-                    </td>
-                </tr></tbody>
-                <tbody class="task_group" id="group_{{ forloop.counter }}">
-                    {% for item in section.list %}
-                        <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
-                            <td>{{ item.id }}</td>
-                            <td>{% include "tasks/_voting.html" %}</td>
-                            <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
-                            <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
-                            <td>
-                                {% if item.assignee %}
-                                    <a href="{% groupurl tasks_for_user group username=item.assignee %}">{% user_display item.assignee %}</a>
-                                {% else %}
-                                    <span class="warning">unassigned</span>
-                                {% endif %}
-                            </td>
-                            <td>{% task_tags item group %}</td>
-                            <td>{{ item.status }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            {% endfor %}
-        {% endifequal %}
-    </table>
-    <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
+    {% include "tasks/_task_table.html" %}
     
 {% endblock %}
