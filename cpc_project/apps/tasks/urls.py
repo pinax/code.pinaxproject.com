@@ -24,6 +24,8 @@ urlpatterns = patterns("",
     url(r"^export_state_transitions.csv$", "tasks.views.export_state_transitions", name="tasks_export_state_transitions"),
     # url(r"^feeds/(.*)/$", "django.contrib.syndication.views.feed", tasks_feed_dict),
     
+    url(r"^tags/autocomplete/", "tasks.views.tags_autocomplete_source", name="tags_autocomplete_source"),
+    
     # Question voting
     url(r"^vote/(?P<object_id>\d+)/(?P<direction>up|down|clear)vote/$",
         vote_on_object, dict(
