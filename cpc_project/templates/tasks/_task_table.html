@@ -36,7 +36,7 @@
                 {% for item in section.list %}
                     <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
                         <td>{{ item.id }}</td>
-                        <td>{% include "tasks/_voting.html" %}</td>
+                        <td>{% include "tasks/_voting.html" with user_votes=user_votes task_scores=task_scores %}</td>
                         <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                         <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
                         <td>
