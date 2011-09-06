@@ -78,6 +78,13 @@ STATICFILES_DIRS = [
     os.path.join(PINAX_ROOT, "themes", PINAX_THEME, "static"),
 ]
 
+STATICFILES_FINDERS = [
+    "staticfiles.finders.FileSystemFinder",
+    "staticfiles.finders.AppDirectoriesFinder",
+    "staticfiles.finders.LegacyAppDirectoriesFinder",
+    #"compressor.finders.CompressorFinder",
+]
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
