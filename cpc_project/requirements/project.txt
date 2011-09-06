@@ -2,13 +2,11 @@
 # required by your project to run.
 
 --requirement=base.txt
---extra-index-url=http://dist.eldarion.com/gondor/
---extra-index-url=http://dist.gondor.io/dev/
 
 # Put project-specific requirements here.
 # See http://pip-installer.org/requirement-format.html for more information.
 
-gondor==1.0b1.post12
+gondor==1.0
 nashvegas==0.6.2
 psycopg2==2.4
 django-taggit==0.9.3
