@@ -8,31 +8,32 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
-    
-    <h1>{% trans "Fresh-Start Pinax Project Development" %}</h1>
-    
-    <p>
-        {% blocktrans %}
-        Welcome to the issue tracker for new "fresh-start" master branch of Pinax. For
-        information about the motivation for the fresh-start branch see this
-        <a href="http://groups.google.com/group/pinax-core-dev/msg/ce51f79236ea4331">post to pinax-core-dev</a>
-        although note that that post refers to the branch as  "fresh-start" but we have now renamed that to "master".
-        {% endblocktrans %}
-    </p>
-    
-    <p>
-        {% blocktrans %}
-        This site is <b>ONLY</b> for issues relating to the new master branch.
-        For the previous issue tracker, covering the older version of Pinax (now on master-old branch),
-        see <a href="http://code-old.pinaxproject.com/">http://code-old.pinaxproject.com/</a>
-        {% endblocktrans %}
-    </p>
-    
-    <p>
-        {% blocktrans %}
-        We have done a one-time migration of user accounts so your previous
-        credentials will work here. Accounts will not be synchronized moving forward, though, and, at some
-        point, code-old will be taken down.
-        {% endblocktrans %}
-    </p>
+    <div class="span12">
+        <h1>{% trans "Pinax Project Development" %}</h1>
+        
+        <p>
+            {% blocktrans %}
+            Welcome to the issue tracker for new "fresh-start" master branch of Pinax. For
+            information about the motivation for the fresh-start branch see this
+            <a href="http://groups.google.com/group/pinax-core-dev/msg/ce51f79236ea4331">post to pinax-core-dev</a>
+            although note that that post refers to the branch as  "fresh-start" but we have now renamed that to "master".
+            {% endblocktrans %}
+        </p>
+        
+        <p>
+            {% blocktrans %}
+            This site is <b>ONLY</b> for issues relating to the new master branch.
+            For the previous issue tracker, covering the older version of Pinax (now on master-old branch),
+            see <a href="http://code-old.pinaxproject.com/">http://code-old.pinaxproject.com/</a>
+            {% endblocktrans %}
+        </p>
+        
+        <p>
+            {% blocktrans %}
+            We have done a one-time migration of user accounts so your previous
+            credentials will work here. Accounts will not be synchronized moving forward, though, and, at some
+            point, code-old will be taken down.
+            {% endblocktrans %}
+        </p>
+    </div>
 {% endblock %}
