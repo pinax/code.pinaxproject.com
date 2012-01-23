@@ -6,6 +6,7 @@
 {% load shorttimesince_tag %}
 {% load humanize %}
 {% load group_tags %}
+{% load bootstrap_tags %}
 
 {% block head_title %}Tasks for {% user_display other_user %}{% endblock %}
 
@@ -15,17 +16,13 @@
     
     <p>You can drag this '<a href="{{ bookmarklet }}">{{ SITE_NAME }} Tasks</a>' link to your bookmark bar to quickly get to your open tasks!</p>
     
-    <h2>Nudged Tasks</h2>
+    <h3>Nudged Tasks</h3>
     
     {% if nudged_tasks %}
-        
-        <form action="" method="GET">
-            <div class="task_filter">
-                <ul>
-                    {{ nudged_filter.form.as_ul }}
-                    <li><input type="submit" value="filter"/></li>
-                </ul>
-            </div>
+
+        <form action="" method="GET" class="task-filter well">
+            {{ nudged_filter.form|as_bootstrap }}
+            <input type="submit" class="btn small primary" value="Filter"/>
         </form>
         
         {% regroup nudged_tasks by get_state_display as grouped_tasks %}
@@ -36,17 +33,13 @@
     {% endif %}
     
     
-    <h2>Assigned Tasks</h2>
+    <h3>Assigned Tasks</h3>
     
     {% if assigned_tasks %}
         
-        <form action="" method="GET">
-            <div class="task_filter">
-                <ul>
-                    {{ assigned_filter.form.as_ul }}
-                    <li><input type="submit" value="filter"/></li>
-                </ul>
-            </div>
+        <form action="" method="GET" class="task-filter well">
+            {{ assigned_filter.form|as_bootstrap }}
+            <input type="submit" class="btn small primary" value="Filter"/>
         </form>
         
         {% regroup assigned_tasks by get_state_display as grouped_tasks %}
@@ -56,17 +49,13 @@
         {% trans "You have no assigned tasks right now." %}
     {% endif %}
     
-    <h2>Created Tasks</h2>
+    <h3>Created Tasks</h3>
     
     {% if created_tasks %}
         
-        <form action="" method="GET">
-            <div class="task_filter">
-                <ul>
-                    {{ created_filter.form.as_ul }}
-                    <li><input type="submit" value="filter"/></li>
-                </ul>
-            </div>
+        <form action="" method="GET" class="task-filter well">
+            {{ created_filter.form|as_bootstrap }}
+            <input type="submit" class="btn small primary" value="Filter"/>
         </form>
         
         {% regroup created_tasks by get_state_display as grouped_tasks %}

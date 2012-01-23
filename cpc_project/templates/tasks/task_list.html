@@ -7,6 +7,7 @@
 {% load humanize %}
 {% load tasks_tags %}
 {% load group_tags %}
+{% load bootstrap_tags %}
 
 
 {% block head_title %}{% if group %}{{ group.name }}: {% endif %}Tasks{% endblock %}
@@ -18,15 +19,11 @@
         <h1>Tasks</h1>
     {% endif %}
     
-    <form action="" method="GET">
-        <div class="task_filter">
-            <ul>
-                {{ task_filter.form.as_ul }}
-                <li><input type="submit" value="filter"/></li>
-                <li><a href="#" class="select_all">Select All</a></li>
-                <li><a href="#" class="select_none">Select None</a></li>
-            </ul>
-        </div>
+    <form action="" method="GET" class="task-filter well">
+        {{ task_filter.form|as_bootstrap }}
+        <a href="#" class="btn small select_all">Select All</a>
+        <a href="#" class="btn small select_none">Select None</a>
+        <input type="submit" class="btn small primary" value="Filter"/>
         {% if group_by %}
             <input type="hidden" name="group_by" value="{{ group_by }}" />
         {% endif %}

@@ -9,22 +9,24 @@
 {% load extra_voting_tags_mergeme %}
 
 <p class="expand_collapse_all"><a class="expand_all">expand all</a> &ndash; <a class="collapse_all">collapse all</a></p>
-<table class="task_list">
-    <tr>
-        <th>ID</th>
-        <th>Votes</th>
-        <th>Summary</th>
-        <th>Last Modified</th>
-        <th>Assignee</th>
-        <th>Tags</th>
-        <th>Status</th>
-    </tr>
+<table class="table table-condensed table-striped task_list">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th colspan=3>Votes</th>
+            <th>Summary</th>
+            <th>Last Modified</th>
+            <th>Assignee</th>
+            <th>Tags</th>
+            <th>Status</th>
+        </tr>
+    </thead>
     {% if grouped_tasks %}
         {% for section in grouped_tasks %}
             {% votes_by_user request.user on section.list as user_votes %}
             {% scores_for_objects section.list as task_scores %}
             <tbody><tr class="task_grouping">
-                <td colspan="7">
+                <td colspan="9">
                     <span class="focus"><a href="{% focus_url group_by section.grouper group %}">focus</a></span>
                     <span class="toggle">
                         <span class="arrow">&#x25BE;</span>
@@ -35,31 +37,30 @@
             </tr></tbody>
             <tbody class="task_group" id="group_{{ forloop.counter }}">
                 {% for item in section.list %}
+                    {% dict_entry_for_item item from task_scores as score %}
+                    {% dict_entry_for_item item from user_votes as vote %}
                     <tr class="task_{{ item.get_state_display }} {% cycle odd,even %}">
                         <td>{{ item.id }}</td>
+                        <td> 
+                            {% if user.is_authenticated %}
+                                <form class="downform vote-form" method="POST" action="{% url task_vote object_id=item.id,direction="down"|get_state:vote %}">
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn small {% if vote and vote.is_downvote %}active{% endif %}" value="&#x2718;" />
+                                </form>
+                            {% endif %}
+                        </td>
                         <td>
-                            <div class="vote_badge">
-                                {% dict_entry_for_item item from task_scores as score %}
-                                {% dict_entry_for_item item from user_votes as vote %}
-                                
-                                {% if user.is_authenticated %}
-                                    <form class="upform" method="POST" action="{% url task_vote object_id=item.id,direction="up"|get_state:vote %}">
-                                        {% csrf_token %}
-                                        <input type="submit" class="{% if vote and vote.is_upvote %}active{% endif %}" value="&#x2714;" />
-                                    </form>
-                                {% endif %}
-                                
-                                <span class="score">
-                                    {{ score.score|default:0 }}
-                                </span>
-                                
-                                {% if user.is_authenticated %}
-                                    <form class="downform" method="POST" action="{% url task_vote object_id=item.id,direction="down"|get_state:vote %}">
-                                        {% csrf_token %}
-                                        <input type="submit" class="{% if vote and vote.is_downvote %}active{% endif %}" value="&#x2718;" />
-                                    </form>
-                                {% endif %}
-                            </div>
+                            <span class="score">
+                                {{ score.score|default:0 }}
+                            </span>
+                        </td>
+                        <td>                               
+                            {% if user.is_authenticated %}
+                                <form class="upform vote-form" method="POST" action="{% url task_vote object_id=item.id,direction="up"|get_state:vote %}">
+                                    {% csrf_token %}
+                                    <input type="submit" class="btn small {% if vote and vote.is_upvote %}active{% endif %}" value="&#x2714;" />
+                                </form>
+                            {% endif %}
                         </td>
                         <td><a href="{% groupurl task_detail group id=item.id %}">{{ item.summary }}</a></td>
                         <td style="white-space: nowrap">{{ item.modified|shorttimesince }} ago</td>
