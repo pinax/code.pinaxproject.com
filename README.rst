@@ -4,7 +4,7 @@ code.pinaxproject.com (CPC)
 .. image:: http://slack.pinaxproject.com/badge.svg
    :target: http://slack.pinaxproject.com/
 
-Thisis the site behind code.pinaxproject.com http://code.pinaxproject.com
+This is the site behind code.pinaxproject.com http://code.pinaxproject.com
 
 Pinax is an open-source platform built on the Django Web Framework. It is an ecosystem of reusable Django apps, themes, and starter project templates. 
 This collection can be found at http://pinaxproject.com.
